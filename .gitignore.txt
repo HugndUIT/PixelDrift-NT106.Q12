@@ -1,14 +1,17 @@
-# Ignore Visual Studio temporary files, build results, and cache
-.vs/
+# Build results
 bin/
 obj/
-Debug/
-Release/
+
+# User-specific files
+.vs/
 *.user
 *.suo
-*.cache
-*.pdb
-*.db
+
+# Debug / Release folders
+Debug/
+Release/
+
+# Others
 *.log
-*.vspscc
-*.vssscc
+*.tmp
+
