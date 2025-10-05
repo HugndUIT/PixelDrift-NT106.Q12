@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PixelDirft")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22a2b5cc0b74210645107db1fc41c18b9aa2b12c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d3cf25ee54443b213ae9f9c3e8a72b5da617a0db")]
 [assembly: System.Reflection.AssemblyProductAttribute("PixelDirft")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PixelDirft")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
