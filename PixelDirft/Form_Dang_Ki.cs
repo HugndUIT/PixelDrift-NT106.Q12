@@ -1,4 +1,6 @@
 ﻿using System.Data.SqlClient;
+using System.Text;
+using System.Security.Cryptography;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 namespace PixelDirft
 {
@@ -32,6 +34,19 @@ namespace PixelDirft
         private void tb_xacnhanmk_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        // Ham ma hoa mat khau
+        string MaHoa(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                    builder.Append(b.ToString("x2")); // Chuyen byte sang hex de luu
+                return builder.ToString();
+            }
         }
 
         private void btn_xacnhan_Click(object sender, EventArgs e)
