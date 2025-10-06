@@ -15,7 +15,7 @@ namespace PixelDirft
     {
         private void ConnectToDatabase()
         {
-            string connectionString = "Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;Trust Server Certificate=True";
+            string connectionString = "Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
 
@@ -57,4 +57,5 @@ namespace PixelDirft
         }
     }
 }
+
 
