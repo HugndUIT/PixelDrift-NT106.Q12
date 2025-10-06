@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions; // Này để dùng Regex kiểm tra định dạng
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 namespace PixelDirft
 {
@@ -63,9 +64,21 @@ namespace PixelDirft
                 return;
             }
             // Kiem tra dinh dang email
-
+              bool isEmail = Regex.IsMatch(emailsdt, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");  // định dạng Gmail
+            bool isPhone = Regex.IsMatch(emailsdt, @"^(0[0-9]{9})$"); // số điện thoại VN: bắt đầu bằng 0, 10 số
+            if (!isEmail && !isPhone)
+            {
+            MessageBox.Show("Vui lòng nhập đúng định dạng Gmail hoặc số điện thoại (10 số, bắt đầu bằng 0)!",
+                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             // Kiem tra do manh yeu cua mat khau
-
+            if (!KiemTraDoManhMatKhau(password))
+            {
+                MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!",
+                    "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             // Kiem tra xac nhan mat khau
             if (password != confirmpass)
             {
@@ -73,7 +86,7 @@ namespace PixelDirft
                 return;
             }
             // Ma hoa mat khau
-
+            string hashedPassword = MaHoa(password);
             // Ket noi voi co so du lieu
             try
             {
@@ -121,4 +134,5 @@ namespace PixelDirft
             }
         }
     }
+
 }
