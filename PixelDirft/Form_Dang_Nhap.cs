@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Security.Cryptography;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
@@ -37,6 +38,19 @@ namespace PixelDirft
 
         }
 
+        // Ham ma hoa mat khau
+        string MaHoa(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                    builder.Append(b.ToString("x2")); // Chuyen byte sang hex de luu
+                return builder.ToString();
+            }
+        }
+
         private void btn_vaogame_Click(object sender, EventArgs e)
         {
 
@@ -56,10 +70,11 @@ namespace PixelDirft
                 {
                     conn.Open();
 
-                    string query = "SELECT COUNT(*) FROM USERS WHERE Username=@user AND Pass=@pass";
+                    string query = "SELECT COUNT(*) FROM Users WHERE Username=@user AND Password=@pass";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@user", username);
-                    cmd.Parameters.AddWithValue("@pass", password);
+                    string MaHoaMK = MaHoa(password);
+                    cmd.Parameters.AddWithValue("@pass", MaHoaMK);
 
                     int count = (int)cmd.ExecuteScalar();
 
