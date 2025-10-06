@@ -49,6 +49,18 @@ namespace PixelDirft
                 return builder.ToString();
             }
         }
+        // Ham kiem tra do manh yeu cua mat khau
+        bool KiemTraDoManhMatKhau(string password)
+        {
+            if (password.Length < 8) return false; // tối thiểu 8 ký tự
+            bool coChuHoa = Regex.IsMatch(password, "[A-Z]");
+            bool coChuThuong = Regex.IsMatch(password, "[a-z]");
+            bool coSo = Regex.IsMatch(password, "[0-9]");
+            bool coKyTuDacBiet = Regex.IsMatch(password, @"[@$!%*?&#]");
+
+            return coChuHoa && coChuThuong && coSo && coKyTuDacBiet;
+        }
+
 
         private void btn_xacnhan_Click(object sender, EventArgs e)
         {
@@ -127,7 +139,7 @@ namespace PixelDirft
         }
         public static class Database
         {
-            private static string ConnStr = @"Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;Trust Server Certificate=True";
+            private static string ConnStr = @"Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;";
             public static SqlConnection GetConnection()
             {
                 return new SqlConnection(ConnStr);
@@ -136,3 +148,4 @@ namespace PixelDirft
     }
 
 }
+
