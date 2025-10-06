@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions; // Này để dùng Regex kiểm tra định dạng
@@ -49,6 +49,7 @@ namespace PixelDirft
                 return builder.ToString();
             }
         }
+
         // Ham kiem tra do manh yeu cua mat khau
         bool KiemTraDoManhMatKhau(string password)
         {
@@ -60,8 +61,6 @@ namespace PixelDirft
 
             return coChuHoa && coChuThuong && coSo && coKyTuDacBiet;
         }
-
-
         private void btn_xacnhan_Click(object sender, EventArgs e)
         {
             // Lay thong tin nguoi dung
@@ -76,7 +75,7 @@ namespace PixelDirft
                 return;
             }
             // Kiem tra dinh dang email
-              bool isEmail = Regex.IsMatch(emailsdt, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");  // định dạng Gmail
+            bool isEmail = Regex.IsMatch(emailsdt, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");  // định dạng Gmail
             bool isPhone = Regex.IsMatch(emailsdt, @"^(0[0-9]{9})$"); // số điện thoại VN: bắt đầu bằng 0, 10 số
             if (!isEmail && !isPhone)
             {
@@ -122,7 +121,7 @@ namespace PixelDirft
                     using (SqlCommand cmd = new SqlCommand(InsertQuery, Connection))
                     {
                         cmd.Parameters.AddWithValue("@u", username);
-                        cmd.Parameters.AddWithValue("@p", password);
+                        cmd.Parameters.AddWithValue("@p", hashedPassword);
                         cmd.Parameters.AddWithValue("@e", emailsdt);
                         int rows = cmd.ExecuteNonQuery();
                         if (rows > 0)
@@ -148,4 +147,3 @@ namespace PixelDirft
     }
 
 }
-
