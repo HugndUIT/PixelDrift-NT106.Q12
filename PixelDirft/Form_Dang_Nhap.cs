@@ -62,7 +62,7 @@ namespace PixelDirft
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin đăng nhập!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            string connectionString = "Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;Trust Server Certificate=True";
+            string connectionString = "Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -103,3 +103,4 @@ namespace PixelDirft
         }
     }
 }
+
