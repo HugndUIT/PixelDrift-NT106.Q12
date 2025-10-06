@@ -1,7 +1,6 @@
-﻿using System.Data.SqlClient;
 using System.Text;
+using System.Data.SqlClient;
 using System.Security.Cryptography;
-using System.Text.RegularExpressions; // Thư viện dùng Regex kiểm tra định dạng
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 namespace PixelDirft
 {
@@ -49,18 +48,7 @@ namespace PixelDirft
                 return builder.ToString();
             }
         }
-        
-        // Ham kiem tra do manh yeu cua mat khau
-        bool KiemTraDoManhMatKhau(string password)
-        {
-            if (password.Length < 8) return false; // tối thiểu 8 ký tự
-            bool coChuHoa = Regex.IsMatch(password, "[A-Z]");
-            bool coChuThuong = Regex.IsMatch(password, "[a-z]");
-            bool coSo = Regex.IsMatch(password, "[0-9]");
-            bool coKyTuDacBiet = Regex.IsMatch(password, @"[@$!%*?&#]");
-            return coChuHoa && coChuThuong && coSo && coKyTuDacBiet;
-        }
-        
+
         private void btn_xacnhan_Click(object sender, EventArgs e)
         {
             // Lay thong tin nguoi dung
@@ -74,21 +62,10 @@ namespace PixelDirft
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // Kiem tra dinh dang email/so dien thoai
-            // Cho phep nhap 1 trong 2 loai cung 1 o
-            bool isEmail = Regex.IsMatch(emailsdt, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");  // định dạng Gmail
-            bool isPhone = Regex.IsMatch(emailsdt, @"^(0[0-9]{9})$"); // số điện thoại VN: bắt đầu bằng 0, 10 số
-            if (!isEmail && !isPhone)
-            {
-                MessageBox.Show("Vui lòng nhập đúng định dạng Gmail hoặc số điện thoại (10 số, bắt đầu bằng 0)!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            // Kiem tra do manh yeu cua mat khau    
-            if (!KiemTraDoManhMatKhau(password))
-            {
-                MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            // Kiem tra dinh dang email
+
+            // Kiem tra do manh yeu cua mat khau
+
             // Kiem tra xac nhan mat khau
             if (password != confirmpass)
             {
@@ -96,7 +73,7 @@ namespace PixelDirft
                 return;
             }
             // Ma hoa mat khau
-            string hashedPassword = MaHoa(password);
+
             // Ket noi voi co so du lieu
             try
             {
@@ -137,7 +114,7 @@ namespace PixelDirft
         }
         public static class Database
         {
-            private static string ConnStr = @"Data Source=DESKTOP-SJ246G6;Initial Catalog=QlyNguoiDung;Integrated Security=True";
+            private static string ConnStr = @"Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;Trust Server Certificate=True";
             public static SqlConnection GetConnection()
             {
                 return new SqlConnection(ConnStr);
