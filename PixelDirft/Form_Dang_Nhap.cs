@@ -70,7 +70,7 @@ namespace PixelDirft
                 {
                     conn.Open();
 
-                    string query = "SELECT COUNT(*) FROM Users WHERE Username=@user AND Password=@pass";
+                    string query = "SELECT COUNT(*) FROM Users WHERE Email=@user AND Password=@pass";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@user", username);
                     string MaHoaMK = MaHoa(password);
@@ -103,4 +103,3 @@ namespace PixelDirft
         }
     }
 }
-
