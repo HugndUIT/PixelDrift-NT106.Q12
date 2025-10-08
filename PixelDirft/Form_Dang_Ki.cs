@@ -125,7 +125,12 @@ namespace PixelDirft
                         cmd.Parameters.AddWithValue("@e", emailsdt);
                         int rows = cmd.ExecuteNonQuery();
                         if (rows > 0)
+                        {
                             MessageBox.Show("Đăng ký thành công!");
+                            Form_Dang_Nhap dangnhap = new Form_Dang_Nhap();
+                            dangnhap.ShowDialog();
+                            this.Close();
+                        }
                         else
                             MessageBox.Show("Đăng ký thất bại!");
                     }
@@ -147,3 +152,4 @@ namespace PixelDirft
     }
 
 }
+
