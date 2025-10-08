@@ -83,7 +83,7 @@ namespace PixelDirft
                         MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         Form_Dang_Nhap mainForm = new Form_Dang_Nhap();
                         mainForm.Show();
-                        this.Hide();
+                        this.Close();
                     }
                     else
                     {
@@ -103,3 +103,4 @@ namespace PixelDirft
         }
     }
 }
+
