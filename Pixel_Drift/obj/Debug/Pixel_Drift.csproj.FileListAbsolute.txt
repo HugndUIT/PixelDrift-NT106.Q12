@@ -24,3 +24,17 @@ C:\Users\huysa\Desktop\PixelDrift-NT106.Q12\Pixel_Drift\bin\Debug\Pixel_Drift.ex
 C:\Users\huysa\Desktop\PixelDrift-NT106.Q12\Pixel_Drift\bin\Debug\Pixel_Drift.exe
 C:\Users\huysa\Desktop\PixelDrift-NT106.Q12\Pixel_Drift\bin\Debug\Pixel_Drift.pdb
 C:\Users\huysa\Desktop\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.Open_Form.resources
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\bin\Debug\Pixel_Drift.exe.config
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\bin\Debug\Pixel_Drift.exe
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\bin\Debug\Pixel_Drift.pdb
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.csproj.AssemblyReference.cache
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.exe.config
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.Form_Dang_Ki.resources
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.Form_Dang_Nhap.resources
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.Form_Thong_Tin.resources
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.Open_Form.resources
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.Properties.Resources.resources
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.csproj.GenerateResource.cache
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.exe
+C:\Users\LENOVO\Source\Repos\PixelDrift-NT106.Q12\Pixel_Drift\obj\Debug\Pixel_Drift.pdb

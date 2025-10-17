@@ -64,17 +64,17 @@
     <Compile Include="Form_Thong_Tin.Designer.cs">
       <DependentUpon>Form_Thong_Tin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game_Window.cs">
+    <Compile Include="Form_Game_Play.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Game_Window.Designer.cs">
-      <DependentUpon>Game_Window.cs</DependentUpon>
+    <Compile Include="Form_Game_Play.Designer.cs">
+      <DependentUpon>Form_Game_Play.cs</DependentUpon>
     </Compile>
-    <Compile Include="Open_Form.cs">
+    <Compile Include="Form_Mo_Dau.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Open_Form.Designer.cs">
-      <DependentUpon>Open_Form.cs</DependentUpon>
+    <Compile Include="Form_Mo_Dau.Designer.cs">
+      <DependentUpon>Form_Mo_Dau.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,8 +87,8 @@
     <EmbeddedResource Include="Form_Thong_Tin.resx">
       <DependentUpon>Form_Thong_Tin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Open_Form.resx">
-      <DependentUpon>Open_Form.cs</DependentUpon>
+    <EmbeddedResource Include="Form_Mo_Dau.resx">
+      <DependentUpon>Form_Mo_Dau.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

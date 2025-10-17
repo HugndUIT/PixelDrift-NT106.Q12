@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Pixel_Drift
 {
-    public partial class Open_Form : Form
+    public partial class Form_Mo_Dau : Form
     {
-        public Open_Form()
+        public Form_Mo_Dau()
         {
             InitializeComponent();
         }
