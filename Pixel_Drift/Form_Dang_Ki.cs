@@ -10,14 +10,19 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Supabase;
 
 namespace Pixel_Drift
 {
     public partial class Form_Dang_Ki : Form
     {
+        private const string Supabase_URL = "https://rppuqqzvoarjmoefezyj.supabase.co";
+        private const string Supabase_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcHVxcXp2b2Fyam1vZWZlenlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3OTEzNTIsImV4cCI6MjA3NjM2NzM1Mn0.IjiZuVa99-g5PxolFVXJ7hb76QWcNzLuhPJLYxnV_FM";
+        private Supabase.Client _supabase;
         public Form_Dang_Ki()
         {
             InitializeComponent();
+            _supabase = new Supabase.Client(Supabase_URL, Supabase_KEY);
         }
 
         // Ham ma hoa mat khau
@@ -44,7 +49,7 @@ namespace Pixel_Drift
 
             return coChuHoa && coChuThuong && coSo && coKyTuDacBiet;
         }
-        private void btn_xacnhan_Click(object sender, EventArgs e)
+        private async void btn_xacnhan_Click(object sender, EventArgs e)
         {
             // Lay thong tin nguoi dung
             string username = tb_tendangnhap.Text.Trim();
@@ -84,53 +89,44 @@ namespace Pixel_Drift
             // Ket noi voi co so du lieu
             try
             {
-                using (SqlConnection Connection = Database.GetConnection())
+
+                // Kiem tra email da ton tai chua?
+                var CheckResponse = await _supabase.From<TaiKhoanNguoiDung>().Where(u => u.Email == emailsdt).Limit(1).Get();
+
+                if (CheckResponse.Models.Count > 0)
                 {
-                    Connection.Open();
-                    // Kiem tra email da ton tai chua?
-                    string CheckQuery = "SELECT COUNT(*) FROM Users WHERE Email = @e";
-                    using (SqlCommand Checkmail = new SqlCommand(CheckQuery, Connection))
-                    {
-                        Checkmail.Parameters.AddWithValue("@e", emailsdt);
-                        int count = (int)Checkmail.ExecuteScalar();
-                        if (count > 0)
-                        {
-                            MessageBox.Show("Email hoặc số điện thoại đã tồn tại, vui lòng sử dụng email hoặc số điện thoại khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                    }
-                    // Them email, so dien thoai moi
-                    string InsertQuery = "INSERT INTO Users (Username, Password, Email) VALUES (@u, @p, @e)";
-                    using (SqlCommand cmd = new SqlCommand(InsertQuery, Connection))
-                    {
-                        cmd.Parameters.AddWithValue("@u", username);
-                        cmd.Parameters.AddWithValue("@p", hashedPassword);
-                        cmd.Parameters.AddWithValue("@e", emailsdt);
-                        int rows = cmd.ExecuteNonQuery();
-                        if (rows > 0)
-                        {
-                            MessageBox.Show("Đăng ký thành công!");
-                            Form_Dang_Nhap dangnhap = new Form_Dang_Nhap();
-                            dangnhap.ShowDialog();
-                            this.Close();
-                        }
-                        else
-                            MessageBox.Show("Đăng ký thất bại!");
-                    }
+                    MessageBox.Show("Email hoặc số điện thoại đã tồn tại, vui lòng sử dụng email hoặc số điện thoại khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
+
+                // Them email, so dien thoai moi
+                var NewUser = new TaiKhoanNguoiDung()
+                {
+                    Username = username,
+                    Password = hashedPassword,
+                    Email = emailsdt
+                };
+
+                var InsertRespose = await _supabase.From<TaiKhoanNguoiDung>().Insert(NewUser);
+
+                if (InsertRespose.Models.Count > 0)
+                {
+                    MessageBox.Show("Đăng ký thành công!");
+                    Form_Dang_Nhap dangnhap = new Form_Dang_Nhap();
+                    dangnhap.ShowDialog();
+                    this.Close();
+                }
+                else
+                    MessageBox.Show("Đăng ký thất bại!");
+
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message);
             }
         }
-        public static class Database
-        {
-            private static string ConnStr = @"Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;";
-            public static SqlConnection GetConnection()
-            {
-                return new SqlConnection(ConnStr);
-            }
-        }
     }
 }
+
+
