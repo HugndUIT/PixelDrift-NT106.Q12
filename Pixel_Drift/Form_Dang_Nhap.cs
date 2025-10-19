@@ -1,75 +1,109 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
+using System;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using Supabase;
-using Supabase.Postgrest.Models;
-using Supabase.Postgrest.Attributes;
 
 namespace Pixel_Drift
 {
     public partial class Form_Dang_Nhap : Form
     {
-        private const string Supabase_URL = "https://rppuqqzvoarjmoefezyj.supabase.co";
-        private const string Supabase_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcHVxcXp2b2Fyam1vZWZlenlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3OTEzNTIsImV4cCI6MjA3NjM2NzM1Mn0.IjiZuVa99-g5PxolFVXJ7hb76QWcNzLuhPJLYxnV_FM";
-        private Supabase.Client _supabase;
-
+        private string serverIP = "172.16.16.33";   // IP máy chủ
+        private int serverPort = 1111;              // Cổng TCP
 
         public Form_Dang_Nhap()
         {
             InitializeComponent();
-            _supabase = new Supabase.Client(Supabase_URL, Supabase_KEY);
         }
 
-        
-
-        // Ham ma hoa mat khau
-        string MaHoa(string password)
+        // 🔒 Hàm mã hóa SHA-256
+        private string MaHoa(string password)
         {
-            using (SHA256 sha256 = SHA256.Create())
+            using (SHA256 sha = SHA256.Create())
             {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
                 StringBuilder builder = new StringBuilder();
                 foreach (byte b in bytes)
-                    builder.Append(b.ToString("x2")); // Chuyen byte sang hex de luu
+                    builder.Append(b.ToString("x2"));
                 return builder.ToString();
             }
         }
 
-        private async void btn_vaogame_Click(object sender, EventArgs e)
+        // 🚀 Hàm gửi JSON đến server và nhận phản hồi
+        private string SendRequest(object data)
         {
+            string json = JsonSerializer.Serialize(data);
 
+            using (TcpClient client = new TcpClient())
+            {
+                client.Connect(serverIP, serverPort);
+                NetworkStream ns = client.GetStream();
+
+                // Gửi JSON request
+                byte[] sendBytes = Encoding.UTF8.GetBytes(json);
+                ns.Write(sendBytes, 0, sendBytes.Length);
+
+                // Nhận phản hồi từ server
+                byte[] buffer = new byte[4096];
+                int len = ns.Read(buffer, 0, buffer.Length);
+                string response = Encoding.UTF8.GetString(buffer, 0, len);
+
+                return response;
+            }
+        }
+
+        private void btn_vaogame_Click(object sender, EventArgs e)
+        {
             string username = textBox1.Text.Trim();
             string password = textBox2.Text.Trim();
 
             if (username == "" || password == "")
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin đăng nhập!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
             try
             {
-                string MaHoaMK = MaHoa(password);
-                var Response = await _supabase.From<TaiKhoanNguoiDung>().Where(u => u.Email == username && u.Password == MaHoaMK).Limit(1).Get();
+                // Mã hóa mật khẩu
+                string hashedPassword = MaHoa(password);
 
-                if (Response.Models.Count > 0)
+                // Gửi yêu cầu login qua TCP
+                var request = new
+                {
+                    action = "login",
+                    username = username,
+                    password = hashedPassword
+                };
+
+                string response = SendRequest(request);
+                Console.WriteLine("Server response: " + response); // debug
+
+                // Phân tích phản hồi JSON
+                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
+
+                if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
                     MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Form_Dang_Nhap mainForm = new Form_Dang_Nhap();
-                    mainForm.Show();
-                    this.Close();
+                    Game_Window main = new Game_Window();
+                    main.Show();
+                    this.Hide();
                 }
                 else
                 {
-                    MessageBox.Show("Sai tên đăng nhập hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string msg = dict.ContainsKey("message") ? dict["message"] : "Sai tài khoản hoặc mật khẩu!";
+                    MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+            catch (JsonException)
+            {
+                MessageBox.Show("Dữ liệu từ server không hợp lệ (không phải JSON).", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show("Không thể kết nối tới server. Hãy kiểm tra IP và cổng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
