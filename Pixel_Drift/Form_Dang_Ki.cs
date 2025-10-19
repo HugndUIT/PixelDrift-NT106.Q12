@@ -1,47 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
+using System;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Supabase;
 
 namespace Pixel_Drift
 {
     public partial class Form_Dang_Ki : Form
     {
-        private const string Supabase_URL = "https://rppuqqzvoarjmoefezyj.supabase.co";
-        private const string Supabase_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcHVxcXp2b2Fyam1vZWZlenlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA3OTEzNTIsImV4cCI6MjA3NjM2NzM1Mn0.IjiZuVa99-g5PxolFVXJ7hb76QWcNzLuhPJLYxnV_FM";
-        private Supabase.Client _supabase;
+        // Địa chỉ IP và cổng của server TCP 
+        private const string SERVER_IP = "172.16.16.33";
+        private const int SERVER_PORT = 1111;  // trùng với server của bạn
+
         public Form_Dang_Ki()
         {
             InitializeComponent();
-            _supabase = new Supabase.Client(Supabase_URL, Supabase_KEY);
         }
 
-        // Ham ma hoa mat khau
-        string MaHoa(string password)
+        // Hàm mã hoá mật khẩu bằng SHA256
+        private string MaHoa(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
                 StringBuilder builder = new StringBuilder();
                 foreach (byte b in bytes)
-                    builder.Append(b.ToString("x2")); // Chuyen byte sang hex de luu
+                    builder.Append(b.ToString("x2"));
                 return builder.ToString();
             }
         }
 
-        // Ham kiem tra do manh yeu cua mat khau
-        bool KiemTraDoManhMatKhau(string password)
+        // Kiểm tra độ mạnh của mật khẩu
+        private bool KiemTraDoManhMatKhau(string password)
         {
-            if (password.Length < 8) return false; // tối thiểu 8 ký tự
+            if (password.Length < 8) return false;
             bool coChuHoa = Regex.IsMatch(password, "[A-Z]");
             bool coChuThuong = Regex.IsMatch(password, "[a-z]");
             bool coSo = Regex.IsMatch(password, "[0-9]");
@@ -49,84 +43,91 @@ namespace Pixel_Drift
 
             return coChuHoa && coChuThuong && coSo && coKyTuDacBiet;
         }
+
         private async void btn_xacnhan_Click(object sender, EventArgs e)
         {
-            // Lay thong tin nguoi dung
             string username = tb_tendangnhap.Text.Trim();
             string password = tb_matkhau.Text.Trim();
             string confirmpass = tb_xacnhanmk.Text.Trim();
             string emailsdt = tb_emailsdt.Text.Trim();
-            // Kiem tra du lieu trong
+
+            // Kiểm tra dữ liệu đầu vào
             if (username == "" || password == "" || emailsdt == "")
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // Kiem tra dinh dang email
-            bool isEmail = Regex.IsMatch(emailsdt, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");  // định dạng Gmail
-            bool isPhone = Regex.IsMatch(emailsdt, @"^(0[0-9]{9})$"); // số điện thoại VN: bắt đầu bằng 0, 10 số
+
+            bool isEmail = Regex.IsMatch(emailsdt, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
+            bool isPhone = Regex.IsMatch(emailsdt, @"^(0[0-9]{9})$");
             if (!isEmail && !isPhone)
             {
-                MessageBox.Show("Vui lòng nhập đúng định dạng Gmail hoặc số điện thoại (10 số, bắt đầu bằng 0)!",
-                        "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Email hoặc số điện thoại không hợp lệ!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // Kiem tra do manh yeu cua mat khau
+
             if (!KiemTraDoManhMatKhau(password))
             {
                 MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!",
                     "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // Kiem tra xac nhan mat khau
+
             if (password != confirmpass)
             {
                 MessageBox.Show("Mật khẩu không khớp!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            // Ma hoa mat khau
+
+            // Mã hóa mật khẩu
             string hashedPassword = MaHoa(password);
-            // Ket noi voi co so du lieu
+
             try
             {
+                string response = await SendRegisterRequest(username, emailsdt, hashedPassword);
 
-                // Kiem tra email da ton tai chua?
-                var CheckResponse = await _supabase.From<TaiKhoanNguoiDung>().Where(u => u.Email == emailsdt).Limit(1).Get();
-
-                if (CheckResponse.Models.Count > 0)
+                // Xử lý phản hồi
+                if (response.StartsWith("SUCCESS"))
                 {
-                    MessageBox.Show("Email hoặc số điện thoại đã tồn tại, vui lòng sử dụng email hoặc số điện thoại khác!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Them email, so dien thoai moi
-                var NewUser = new TaiKhoanNguoiDung()
-                {
-                    Username = username,
-                    Password = hashedPassword,
-                    Email = emailsdt
-                };
-
-                var InsertRespose = await _supabase.From<TaiKhoanNguoiDung>().Insert(NewUser);
-
-                if (InsertRespose.Models.Count > 0)
-                {
-                    MessageBox.Show("Đăng ký thành công!");
-                    Form_Dang_Nhap dangnhap = new Form_Dang_Nhap();
-                    dangnhap.ShowDialog();
+                    MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
                 else
-                    MessageBox.Show("Đăng ký thất bại!");
-
-
+                {
+                    MessageBox.Show(response, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi: " + ex.Message);
+                MessageBox.Show("Không thể kết nối đến server: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // Gửi yêu cầu đăng ký qua TCP
+        private async Task<string> SendRegisterRequest(string username, string email, string hashedPassword)
+        {
+            return await Task.Run(() =>
+            {
+                using (TcpClient client = new TcpClient())
+                {
+                    client.Connect(SERVER_IP, SERVER_PORT);
+                    NetworkStream stream = client.GetStream();
+
+                    // Tạo gói tin: REGISTER|username|email|password_hash
+                    string message = $"REGISTER|{username}|{email}|{hashedPassword}";
+                    byte[] data = Encoding.UTF8.GetBytes(message);
+
+                    // Gửi dữ liệu lên server
+                    stream.Write(data, 0, data.Length);
+
+                    // Đọc phản hồi
+                    byte[] buffer = new byte[1024];
+                    int bytes = stream.Read(buffer, 0, buffer.Length);
+                    string response = Encoding.UTF8.GetString(buffer, 0, bytes);
+
+                    return response;
+                }
+            });
         }
     }
 }
-
-
