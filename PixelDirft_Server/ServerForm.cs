@@ -1,16 +1,22 @@
-﻿using System;
+using Supabase;
+using Supabase.Postgrest;
+using Supabase.Postgrest.Models;
+using Supabase.Postgrest.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-// Thêm thư viện để làm việc với mạng và luồng
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace PixelDirft_Server
 {
@@ -62,6 +68,14 @@ namespace PixelDirft_Server
                             Log("Client connected: " + Client.Client.RemoteEndPoint.ToString());
                             // Lưu client vào danh sách quản lý
                             Clients.Add(Client);
+                            // Tạo thread riêng cho client này
+                            Thread t = new Thread(() => HandleClient(Client));
+                            lock (t)
+                            {
+                                ClientThreads.Add(t);
+                            }
+                            t.Start();
+
                         }
                         else
                         {
@@ -80,11 +94,112 @@ namespace PixelDirft_Server
                     }
                 }
             }
-            catch (Exception ex)  
+            catch (Exception ex)
             {
                 Log("Lỗi: " + ex.Message);
             }
         }
+
+
+
+        private List<Thread> ClientThreads = new List<Thread>();
+        private void HandleClient(TcpClient client)
+        {
+            try
+            {
+                NetworkStream ns = client.GetStream();
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+
+                while ((bytesRead = ns.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    Log($"[{client.Client.RemoteEndPoint}] gửi: {message}");
+
+                    try
+                    {
+                        var data = JsonSerializer.Deserialize<Dictionary<string, string>>(message);
+                        string action = data.ContainsKey("action") ? data["action"] : "";
+
+                        string response;
+
+                        switch (action)
+                        {
+                            case "login":
+                                response = HandleLogin(data);
+                                break;
+
+                            case "register":
+                                response = HandleRegister(data);
+                                break;
+
+                            case "get_info": // 👈 Thêm dòng này
+                                response = HandleGetInfo(data);
+                                break;
+
+                            default:
+                                response = JsonSerializer.Serialize(new { status = "error", message = "Unknown action" });
+                                break;
+                        }
+
+                        byte[] respBytes = Encoding.UTF8.GetBytes(response);
+                        ns.Write(respBytes, 0, respBytes.Length);
+                    }
+                    catch (JsonException)
+                    {
+                        Log("❌ Dữ liệu từ client không phải JSON hợp lệ!");
+                    }
+                }
+            }
+            catch { }
+            finally
+            {
+                Log($"Client {client.Client.RemoteEndPoint} đã ngắt kết nối.");
+            }
+        }
+
+
+
+        private string HandleGetInfo(Dictionary<string, string> data)
+        {
+            if (!data.ContainsKey("username"))
+            {
+                return JsonSerializer.Serialize(new { status = "error", message = "Thiếu tham số username!" });
+            }
+
+            string username = data["username"];
+
+            try
+            {
+                var client = SupabaseHelper.Client;
+                var result = client.From<TaiKhoanNguoiDung>().Where(u => u.Username == username).Get().Result;
+
+                if (result.Models.Count > 0)
+                {
+                    var user = result.Models[0];
+
+                    return JsonSerializer.Serialize(new
+                    {
+                        status = "success",
+                        data = new
+                        {
+                            Username = user.Username,
+                            Email = user.Email,
+                            Birthday = user.Birthday.ToString("yyyy-MM-dd")
+                        }
+                    });
+                }
+                else
+                {
+                    return JsonSerializer.Serialize(new { status = "error", message = "Không tìm thấy người dùng!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonSerializer.Serialize(new { status = "error", message = "Lỗi Supabase: " + ex.Message });
+            }
+        }
+
 
         public ServerForm()
         {
@@ -124,7 +239,7 @@ namespace PixelDirft_Server
                 if (ListenThread != null && ListenThread.IsAlive)
                 {
                     // Chờ tối đa 0.5 giây cho thread dừng hẳn
-                    ListenThread.Join(500); 
+                    ListenThread.Join(500);
                     ListenThread = null;
                 }
                 Log("Server stopped.");
@@ -169,26 +284,113 @@ namespace PixelDirft_Server
                     NetworkStream ns = Client.GetStream();
                     ns.Write(Data, 0, Data.Length);
                 }
-                catch 
-                { 
+                catch
+                {
                 }
-            } 
+            }
             Log("Đã gửi broadcast: " + Message);
         }
 
-        private void tb_hienthi_TextChanged(object sender, EventArgs e)
+        private async void ServerForm_Load(object sender, EventArgs e)
         {
-
+            try
+            {
+                await SupabaseHelper.Initialize();
+                Log("Supabase đã sẵn sàng!");
+            }
+            catch (Exception ex)
+            {
+                Log("Lỗi Supabase: " + ex.Message);
+            }
         }
 
-        private void tb_nhaptinnhan_TextChanged(object sender, EventArgs e)
-        {
 
+        //Xử lí nhận tín hiệu từ form đăng kí
+        private string HandleRegister(Dictionary<string, string> data)
+        {
+            string username = data["username"];
+            string email = data["email"];
+            string password = data["password"];
+
+            try
+            {
+                //Kết nối với database và kiểm tra username đã có chưa
+                var client = SupabaseHelper.Client;
+                var existing = client.From<TaiKhoanNguoiDung>().Where(u => u.Username == username).Get().Result; 
+
+                if (existing.Models.Count > 0)
+                {
+                    return JsonSerializer.Serialize(new
+                    {
+                        status = "error",
+                        message = "Tên người dùng đã tồn tại!"
+                    });
+                }
+
+                var newUser = new TaiKhoanNguoiDung
+                {
+                    Username = username,
+                    Email = email,
+                    Password = password,
+                    Birthday = DateTime.Now
+                };
+
+                client.From<TaiKhoanNguoiDung>().Insert(newUser).Wait();
+
+                return JsonSerializer.Serialize(new
+                {
+                    status = "success",
+                    message = "Đăng ký thành công!"
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonSerializer.Serialize(new
+                {
+                    status = "error",
+                    message = "Lỗi Supabase: " + ex.Message
+                });
+            }
         }
 
-        private void lb_danhsachclient_SelectedIndexChanged(object sender, EventArgs e)
+        //Xử lí nhận tín hiệu từ form đăng nhập
+        private string HandleLogin(Dictionary<string, string> data)
         {
+            string username = data["username"];
+            string password = data["password"];
 
+            try
+            {
+                //Kết nốidatatabase à kiểm tra xem thông tin có trùng khớp không
+                var client = SupabaseHelper.Client;
+                var result = client.From<TaiKhoanNguoiDung>().Where(u => u.Email == username && u.Password == password).Get().Result; 
+
+                if (result.Models.Count > 0)
+                {
+                    return JsonSerializer.Serialize(new
+                    {
+                        status = "success",
+                        message = "Đăng nhập thành công!"
+                    });
+                }
+                else
+                {
+                    return JsonSerializer.Serialize(new
+                    {
+                        status = "error",
+                        message = "Sai tài khoản hoặc mật khẩu!"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonSerializer.Serialize(new
+                {
+                    status = "error",
+                    message = "Lỗi Supabase: " + ex.Message
+                });
+            }
         }
     }
 }
+
