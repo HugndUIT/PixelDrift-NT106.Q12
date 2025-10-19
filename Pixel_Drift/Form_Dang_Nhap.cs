@@ -18,7 +18,7 @@ namespace Pixel_Drift
             InitializeComponent();
         }
 
-        // 🔒 Hàm mã hóa SHA-256
+        // Hàm mã hóa SHA-256
         private string MaHoa(string password)
         {
             using (SHA256 sha = SHA256.Create())
@@ -31,7 +31,7 @@ namespace Pixel_Drift
             }
         }
 
-        // 🚀 Hàm gửi JSON đến server và nhận phản hồi
+        // Hàm gửi JSON đến server và nhận phản hồi
         private string SendRequest(object data)
         {
             string json = JsonSerializer.Serialize(data);
