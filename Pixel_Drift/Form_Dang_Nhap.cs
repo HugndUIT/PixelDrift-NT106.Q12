@@ -5,12 +5,13 @@ using System.Text;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Pixel_Drift;
 
 namespace Pixel_Drift
 {
     public partial class Form_Dang_Nhap : Form
     {
-        private string serverIP = "172.16.16.33";   // IP máy chủ
+        private string serverIP = "172.16.16.34";   // IP máy chủ
         private int serverPort = 1111;              // Cổng TCP
 
         public Form_Dang_Nhap()
@@ -87,10 +88,18 @@ namespace Pixel_Drift
                 if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
                     MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Game_Window main = new Game_Window();
-                    main.Show();
+
+                    //  Ẩn form đăng nhập hiện tại
                     this.Hide();
+
+                    //  Tạo và mở form thông tin
+                    Form_Thong_Tin formThongTin = new Form_Thong_Tin();
+                    formThongTin.ShowDialog();
+
+                    //  Sau khi đóng form thông tin -> thoát form đăng nhập
+                    this.Close();
                 }
+
                 else
                 {
                     string msg = dict.ContainsKey("message") ? dict["message"] : "Sai tài khoản hoặc mật khẩu!";
