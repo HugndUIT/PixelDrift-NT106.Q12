@@ -1,0 +1,11 @@
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\bin\Debug\PixelDirft_Server.exe.config
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\bin\Debug\PixelDirft_Server.exe
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\bin\Debug\PixelDirft_Server.pdb
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.AssemblyReference.cache
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.Properties.Resources.resources
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.GenerateResource.cache
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.CoreCompileInputs.cache
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.exe
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.pdb
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.exe.config
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.ServerForm.resources
