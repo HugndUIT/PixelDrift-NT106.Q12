@@ -12,7 +12,7 @@ namespace Pixel_Drift
     {
         // Địa chỉ IP và cổng của server TCP 
         private const string SERVER_IP = "172.16.16.33";
-        private const int SERVER_PORT = 1111;  // trùng với server của bạn
+        private const int SERVER_PORT = 1111;  // trùng với server
 
         public Form_Dang_Ki()
         {
