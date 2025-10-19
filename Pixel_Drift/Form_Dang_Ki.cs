@@ -2,16 +2,19 @@ using System;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using  Pixel_Drift;
 
 namespace Pixel_Drift
 {
     public partial class Form_Dang_Ki : Form
     {
         // Địa chỉ IP và cổng của server TCP 
-        private const string SERVER_IP = "172.16.16.33";
+        private const string SERVER_IP = "172.16.16.34";
         private const int SERVER_PORT = 1111;  // trùng với server
 
         public Form_Dang_Ki()
@@ -86,24 +89,44 @@ namespace Pixel_Drift
             {
                 string response = await SendRegisterRequest(username, emailsdt, hashedPassword);
 
-                // Xử lý phản hồi
-                if (response.StartsWith("SUCCESS"))
+                // Phân tích phản hồi JSON
+                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
+
+                if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
-                    MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close();
+                    DialogResult result = MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Sau khi bấm OK, chuyển qua form đăng nhập (nằm ở namespace khác)
+                    if (result == DialogResult.OK)
+                    {
+                        this.Hide(); // ẩn form đăng ký
+                        Pixel_Drift.Form_Dang_Nhap formDangNhap = new Pixel_Drift.Form_Dang_Nhap();
+                        formDangNhap.ShowDialog(); // hiển thị form đăng nhập
+                        this.Close(); // đóng form đăng ký
+                    }
                 }
+
                 else
                 {
-                    MessageBox.Show(response, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string msg = dict.ContainsKey("message") ? dict["message"] : "Đăng ký thất bại!";
+                    MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+            catch (JsonException)
+            {
+                MessageBox.Show("Dữ liệu phản hồi từ server không hợp lệ (không phải JSON).", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show("Không thể kết nối đến server. Kiểm tra IP và cổng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Không thể kết nối đến server: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // Gửi yêu cầu đăng ký qua TCP
+        // Gửi yêu cầu đăng ký qua TCP (định dạng JSON)
         private async Task<string> SendRegisterRequest(string username, string email, string hashedPassword)
         {
             return await Task.Run(() =>
@@ -113,17 +136,23 @@ namespace Pixel_Drift
                     client.Connect(SERVER_IP, SERVER_PORT);
                     NetworkStream stream = client.GetStream();
 
-                    // Tạo gói tin: REGISTER|username|email|password_hash
-                    string message = $"REGISTER|{username}|{email}|{hashedPassword}";
-                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    // Tạo JSON request
+                    var data = new
+                    {
+                        action = "register",
+                        username = username,
+                        email = email,
+                        password = hashedPassword
+                    };
 
-                    // Gửi dữ liệu lên server
-                    stream.Write(data, 0, data.Length);
+                    string json = JsonSerializer.Serialize(data);
+                    byte[] sendBytes = Encoding.UTF8.GetBytes(json);
+                    stream.Write(sendBytes, 0, sendBytes.Length);
 
-                    // Đọc phản hồi
-                    byte[] buffer = new byte[1024];
-                    int bytes = stream.Read(buffer, 0, buffer.Length);
-                    string response = Encoding.UTF8.GetString(buffer, 0, bytes);
+                    // Nhận phản hồi từ server
+                    byte[] buffer = new byte[4096];
+                    int len = stream.Read(buffer, 0, buffer.Length);
+                    string response = Encoding.UTF8.GetString(buffer, 0, len);
 
                     return response;
                 }
