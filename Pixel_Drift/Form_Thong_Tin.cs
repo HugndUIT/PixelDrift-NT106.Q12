@@ -1,58 +1,83 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Text.Json;
 
 namespace Pixel_Drift
 {
     public partial class Form_Thong_Tin : Form
     {
-        private void ConnectToDatabase()
-        {
-            string connectionString = "Data Source=DESKTOP-VOALG2L;Initial Catalog=QlyNguoiDung;Integrated Security=True;";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
+        private string serverIP = "172.16.16.34";
+        private int serverPort = 1111;
+        private string currentUsername;
 
-                connection.Open();
-                int id = 1;
-
-                SqlCommand command = new SqlCommand($"SELECT * FROM Users Where Id = {id}", connection);
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    lbl_Indentify.Text += reader["Id"].ToString();
-                    lbl_TenDangNhap.Text += reader["Username"].ToString();
-                    lbl_Email.Text += reader["Email"].ToString();
-
-                }
-                reader.Close();
-            }
-        }
-        public Form_Thong_Tin()
+        public Form_Thong_Tin(string username)
         {
             InitializeComponent();
+            currentUsername = username;
         }
 
-        private void btnThoat_Click(object sender, EventArgs e)
+        private void Form_Thong_Tin_Load(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn thoát ?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            try
             {
-                this.Close();
+                var request = new
+                {
+                    action = "get_info",
+                    username = currentUsername
+                };
+
+                string response = SendRequest(request);
+
+                var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
+
+                if (dict.ContainsKey("status") && dict["status"].ToString() == "success")
+                {
+                    var dataJson = dict["data"].ToString();
+                    var userData = JsonSerializer.Deserialize<Dictionary<string, string>>(dataJson);
+
+                    lbl_TenDangNhap.Text = userData["Username"];
+                    lbl_Email.Text = userData["Email"];
+                    lbl_Birthday.Text = userData["Birthday"];
+                }
+                else
+                {
+                    MessageBox.Show("Không thể tải thông tin người dùng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải thông tin: " + ex.Message);
             }
         }
 
-        private void frmThongTin_Load(object sender, EventArgs e)
+        private string SendRequest(object data)
         {
-            ConnectToDatabase();
+            string json = JsonSerializer.Serialize(data);
+            using (TcpClient client = new TcpClient(serverIP, serverPort))
+            using (NetworkStream ns = client.GetStream())
+            {
+                byte[] sendBytes = Encoding.UTF8.GetBytes(json);
+                ns.Write(sendBytes, 0, sendBytes.Length);
 
+                byte[] buffer = new byte[4096];
+                int len = ns.Read(buffer, 0, buffer.Length);
+                return Encoding.UTF8.GetString(buffer, 0, len);
+            }
+        }
+
+        private void btnThoat_Click_1(object sender, EventArgs e)
+        {
+            Game_Window game = new Game_Window();
+            game.Show();
         }
     }
 }
