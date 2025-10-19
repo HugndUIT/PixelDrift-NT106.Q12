@@ -93,7 +93,7 @@ namespace Pixel_Drift
                     this.Hide();
 
                     //  Tạo và mở form thông tin
-                    Form_Thong_Tin formThongTin = new Form_Thong_Tin();
+                    Form_Thong_Tin formThongTin = new Form_Thong_Tin(username);
                     formThongTin.ShowDialog();
 
                     //  Sau khi đóng form thông tin -> thoát form đăng nhập
