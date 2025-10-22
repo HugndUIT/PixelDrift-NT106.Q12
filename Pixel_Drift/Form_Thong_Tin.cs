@@ -10,12 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.Json;
+using System.IO;
 
 namespace Pixel_Drift
 {
     public partial class Form_Thong_Tin : Form
     {
-        private string serverIP = "172.16.16.34";
+        private string serverIP = "192.168.1.6";
         private int serverPort = 1111;
         private string currentUsername;
 
@@ -23,6 +24,7 @@ namespace Pixel_Drift
         {
             InitializeComponent();
             currentUsername = username;
+
         }
 
         private void Form_Thong_Tin_Load(object sender, EventArgs e)
@@ -44,9 +46,9 @@ namespace Pixel_Drift
                     var dataJson = dict["data"].ToString();
                     var userData = JsonSerializer.Deserialize<Dictionary<string, string>>(dataJson);
 
-                    lbl_TenDangNhap.Text = userData["Username"];
-                    lbl_Email.Text = userData["Email"];
-                    lbl_Birthday.Text = userData["Birthday"];
+                    lbl_TenDangNhap.Text += userData["username"];
+                    lbl_Email.Text += userData["email"];
+                    lbl_Birthday.Text += userData["birthday"];
                 }
                 else
                 {
@@ -62,7 +64,11 @@ namespace Pixel_Drift
         private string SendRequest(object data)
         {
             string json = JsonSerializer.Serialize(data);
-            using (TcpClient client = new TcpClient(serverIP, serverPort))
+            TcpClient client = new TcpClient();
+            File.WriteAllText("GuiDi.json", json);
+
+            client.Connect(serverIP, serverPort);
+
             using (NetworkStream ns = client.GetStream())
             {
                 byte[] sendBytes = Encoding.UTF8.GetBytes(json);
@@ -70,6 +76,7 @@ namespace Pixel_Drift
 
                 byte[] buffer = new byte[4096];
                 int len = ns.Read(buffer, 0, buffer.Length);
+                File.WriteAllText("Output.text", Encoding.UTF8.GetString(buffer, 0, len)); 
                 return Encoding.UTF8.GetString(buffer, 0, len);
             }
         }
