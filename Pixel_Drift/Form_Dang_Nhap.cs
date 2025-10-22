@@ -6,12 +6,13 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Pixel_Drift;
+using System.IO;
 
 namespace Pixel_Drift
 {
     public partial class Form_Dang_Nhap : Form
     {
-        private string serverIP = "172.16.16.34";   // IP máy chủ
+        private string serverIP = "192.168.1.6";   // IP máy chủ
         private int serverPort = 1111;              // Cổng TCP
 
         public Form_Dang_Nhap()
@@ -36,9 +37,11 @@ namespace Pixel_Drift
         private string SendRequest(object data)
         {
             string json = JsonSerializer.Serialize(data);
+            File.WriteAllText("DangNhap.json", json); //Test xem nó gửi đi cái gì 
 
             using (TcpClient client = new TcpClient())
             {
+
                 client.Connect(serverIP, serverPort);
                 NetworkStream ns = client.GetStream();
 
@@ -46,10 +49,12 @@ namespace Pixel_Drift
                 byte[] sendBytes = Encoding.UTF8.GetBytes(json);
                 ns.Write(sendBytes, 0, sendBytes.Length);
 
+
                 // Nhận phản hồi từ server
                 byte[] buffer = new byte[4096];
                 int len = ns.Read(buffer, 0, buffer.Length);
                 string response = Encoding.UTF8.GetString(buffer, 0, len);
+
 
                 return response;
             }
@@ -94,6 +99,7 @@ namespace Pixel_Drift
 
                     //  Tạo và mở form thông tin
                     Form_Thong_Tin formThongTin = new Form_Thong_Tin(username);
+
                     formThongTin.ShowDialog();
 
                     //  Sau khi đóng form thông tin -> thoát form đăng nhập
