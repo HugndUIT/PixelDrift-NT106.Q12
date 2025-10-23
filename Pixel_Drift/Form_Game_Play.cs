@@ -21,6 +21,14 @@ namespace Pixel_Drift
         static int LeftRoadSpeed;
         static int RightRoadSpeed;
 
+        //Tạo biến chỉ trạng thái di chuyển của người chơi
+        bool Player1_left, Player1_right;
+
+        bool Player2_left, Player2_right;
+
+        //Tốc độ di chuyển ngang của xe
+        int PlayerSpeed = 12;
+
         Random Rand = new Random();
 
         private void Game_Window_Load(object sender, EventArgs e)
@@ -40,6 +48,48 @@ namespace Pixel_Drift
             ResetBuffPositionRight(ptb_decreasingroad2);
             // Bắt đầu chạy game
             game_timer.Start();
+
+            btn_startgame.Enabled = false;
+
+        }
+
+        private void KiemTraVaCham()
+        {
+            //Kiểm tra xem xe 1 có ăn buff tăng tốc không
+            if (ptb_player1.Bounds.IntersectsWith(ptb_increasingroad1.Bounds))
+            {
+                LeftRoadSpeed += 2;
+
+                //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
+                ResetBuffPositionLeft(ptb_increasingroad1);
+            }
+
+            //Kiểm tra xem xe 1 có ăn buff tăng tốc không
+            if (ptb_player1.Bounds.IntersectsWith(ptb_decreasingroad1.Bounds))
+            {
+                LeftRoadSpeed -= 2;
+
+                //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
+                ResetBuffPositionLeft(ptb_decreasingroad1);
+            }
+
+            //Kiểm tra xem xe 2 có ăn buff tăng tốc không
+            if (ptb_player2.Bounds.IntersectsWith(ptb_increasingroad2.Bounds))
+            {
+                RightRoadSpeed += 2;
+
+                //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
+                ResetBuffPositionLeft(ptb_increasingroad2);
+            }
+
+            //Kiểm tra xem xe 1 có ăn buff tăng tốc không
+            if (ptb_player2.Bounds.IntersectsWith(ptb_decreasingroad2.Bounds))
+            {
+                RightRoadSpeed -= 2;
+
+                //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
+                ResetBuffPositionLeft(ptb_decreasingroad2);
+            }
         }
 
         private void game_timer_Tick(object sender, EventArgs e)
@@ -48,6 +98,40 @@ namespace Pixel_Drift
             MoveRoad2();
             MoveBuffRoad1();
             MoveBuffRoad2();
+
+            // Di chuyển xe 1 (người chơi này)
+            if (Player1_left)
+            {
+                ptb_player1.Left -= PlayerSpeed;
+            }
+            if (Player1_right)
+            {
+                ptb_player1.Left += PlayerSpeed;
+            }
+
+            // Di chuyển xe 2 (người chơi này)
+            if (Player2_left)
+            {
+                ptb_player2.Left -= PlayerSpeed;
+            }
+            if (Player2_right)
+            {
+                ptb_player2.Left += PlayerSpeed;
+            }
+
+            // Thêm giới hạn di chuyển cho xe 1
+            int p1_minX = 40;
+            int p1_maxX = 420 - ptb_player1.Width;
+            ptb_player1.Left = Math.Max(ptb_player1.Left, p1_minX);
+            ptb_player1.Left = Math.Min(ptb_player1.Left, p1_maxX);
+
+            //Thêm giới hạn di chuyển cho xe 2
+            int p2_minX = 40; // 500 là lề trái của đường 2
+            int p2_maxX = 415 - ptb_player2.Width; // 890 là lề phải của đường 2
+            ptb_player2.Left = Math.Max(ptb_player2.Left, p2_minX);
+            ptb_player2.Left = Math.Min(ptb_player2.Left, p2_maxX);
+
+            KiemTraVaCham();
         }
 
         // Hiển thị buff ở làn bên trái
@@ -162,6 +246,54 @@ namespace Pixel_Drift
         private void ptb_increasingroad2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Game_Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Kiểm soát di chuyển của player1
+            if (e.KeyCode == Keys.Left)
+            {
+                Player1_left = true;
+            }
+            if (e.KeyCode == Keys.Right)
+            {
+                Player1_right = true;
+            }
+
+            //Kiểm soát di chuyển của player2
+            if (e.KeyCode == Keys.A)
+            {
+                Player2_left = true;
+            }
+            if (e.KeyCode == Keys.D)
+            {
+                Player2_right = true;
+            }
+
+
+        }
+
+        private void Game_Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            //Kiểm soát di chuyển của player1
+            if (e.KeyCode == Keys.Left)
+            {
+                Player1_left = false;
+            }
+            if (e.KeyCode == Keys.Right)
+            {
+                Player1_right = false;
+            }
+
+            //Kiểm soát di chuyển của player2
+            if (e.KeyCode == Keys.A)
+            {
+                Player2_left = false;
+            }
+            if (e.KeyCode == Keys.D)
+            {
+                Player2_right = false;
+            }
         }
 
         private void ptb_decreasingroad2_Click(object sender, EventArgs e)
