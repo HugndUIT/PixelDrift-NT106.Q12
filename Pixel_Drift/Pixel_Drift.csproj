@@ -158,6 +158,12 @@
     <Compile Include="Form_Dang_Nhap.Designer.cs">
       <DependentUpon>Form_Dang_Nhap.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form_Scoreboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_Scoreboard.Designer.cs">
+      <DependentUpon>Form_Scoreboard.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_Thong_Tin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_Game_Play.resx">
       <DependentUpon>Form_Game_Play.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_Scoreboard.resx">
+      <DependentUpon>Form_Scoreboard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_Thong_Tin.resx">
       <DependentUpon>Form_Thong_Tin.cs</DependentUpon>

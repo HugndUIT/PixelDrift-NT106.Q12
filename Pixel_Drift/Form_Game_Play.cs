@@ -70,6 +70,7 @@ namespace Pixel_Drift
             game_timer.Start();
 
             btn_startgame.Enabled = false;
+            btn_Scoreboard.Enabled = false;
 
         }
 
@@ -365,6 +366,11 @@ namespace Pixel_Drift
             }
         }
 
+        private void btn_Scoreboard_Click(object sender, EventArgs e)
+        {
+            Form_ScoreBoard scoreBoard = new Form_ScoreBoard();
+            scoreBoard.ShowDialog();
+        }
 
         private void Game_Window_KeyDown(object sender, KeyEventArgs e)
         {
