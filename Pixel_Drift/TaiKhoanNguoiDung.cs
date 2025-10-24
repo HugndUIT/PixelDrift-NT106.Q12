@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Supabase.Postgrest.Models;
+using Supabase.Postgrest.Attributes;
+
+namespace Pixel_Drift
+{
+    [Table("taikhoannguoidung")]
+    public class TaiKhoanNguoiDung: BaseModel
+    {
+        public long UserID { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+        public DateTime Birthday { get; set; }
+    }
+}

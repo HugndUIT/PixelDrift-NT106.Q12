@@ -52,14 +52,14 @@ namespace Pixel_Drift
             // 
             // lb_user
             // 
-            lb_user.AutoSize = true;
-            lb_user.Font = new Font("Times New Roman", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            lb_user.Location = new Point(8, 67);
-            lb_user.Margin = new Padding(2, 0, 2, 0);
-            lb_user.Name = "lb_user";
-            lb_user.Size = new Size(176, 19);
-            lb_user.TabIndex = 1;
-            lb_user.Text = "Email hoặc số điện thoại";
+            this.lb_user.AutoSize = true;
+            this.lb_user.Font = new System.Drawing.Font("Times New Roman", 11F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.lb_user.Location = new System.Drawing.Point(4, 71);
+            this.lb_user.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_user.Name = "lb_user";
+            this.lb_user.Size = new System.Drawing.Size(209, 22);
+            this.lb_user.TabIndex = 1;
+            this.lb_user.Text = "Email hoặc số điện thoại";
             // 
             // lb_pass
             // 
