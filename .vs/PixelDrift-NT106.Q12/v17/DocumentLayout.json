@@ -1,0 +1,36 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\PC\\source\\repos\\PixelDrift-NT106.Q12\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|c:\\users\\pc\\source\\repos\\pixeldrift-nt106.q12\\pixel_drift\\form_dang_ki.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|solutionrelative:pixel_drift\\form_dang_ki.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form_Dang_Ki.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\PC\\source\\repos\\PixelDrift-NT106.Q12\\Pixel_Drift\\Form_Dang_Ki.cs",
+              "RelativeDocumentMoniker": "Pixel_Drift\\Form_Dang_Ki.cs",
+              "ToolTip": "C:\\Users\\PC\\source\\repos\\PixelDrift-NT106.Q12\\Pixel_Drift\\Form_Dang_Ki.cs [Design]",
+              "RelativeToolTip": "Pixel_Drift\\Form_Dang_Ki.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T12:52:46.409Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
