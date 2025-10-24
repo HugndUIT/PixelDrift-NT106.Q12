@@ -33,7 +33,11 @@ namespace Pixel_Drift
 
         private void Game_Window_Load(object sender, EventArgs e)
         {
-
+            // Ẩn toàn bộ xe khi chưa bắt đầu
+            ptb_AICar1.Visible = false;
+            ptb_AICar3.Visible = false;
+            ptb_AICar5.Visible = false;
+            ptb_AICar6.Visible = false;
         }
 
         private void btn_startgame_Click(object sender, EventArgs e)
@@ -46,6 +50,22 @@ namespace Pixel_Drift
             ResetBuffPositionLeft(ptb_decreasingroad1);
             ResetBuffPositionRight(ptb_increasingroad2);
             ResetBuffPositionRight(ptb_decreasingroad2);
+
+            // Đặt vị trí xuất hiện cho xe từ trên xuống
+            int startY = -200;
+            ptb_AICar1.Location = new Point(20, startY - 100);
+            ptb_AICar5.Location = new Point(160, startY - 200);
+
+            ptb_AICar3.Location = new Point(360, startY - 150);
+            ptb_AICar6.Location = new Point(460, startY - 250);
+
+            // Hiển thị xe lại
+            ptb_AICar1.Visible = true;
+            ptb_AICar3.Visible = true;
+            ptb_AICar5.Visible = true;
+            ptb_AICar6.Visible = true;
+
+
             // Bắt đầu chạy game
             game_timer.Start();
 
@@ -55,6 +75,7 @@ namespace Pixel_Drift
 
         private void KiemTraVaCham()
         {
+            // ====== XE 1 ======
             //Kiểm tra xem xe 1 có ăn buff tăng tốc không
             if (ptb_player1.Bounds.IntersectsWith(ptb_increasingroad1.Bounds))
             {
@@ -73,13 +94,33 @@ namespace Pixel_Drift
                 ResetBuffPositionLeft(ptb_decreasingroad1);
             }
 
+            //Kiểm tra xem xe 1 có va chạm không
+            if (ptb_player1.Bounds.IntersectsWith(ptb_AICar1.Bounds))
+            {
+                LeftRoadSpeed -= 4;
+
+                //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
+                ResetBuffPositionLeft(ptb_AICar1);
+            }
+
+            //Kiểm tra xem xe 1 có va chạm không
+            if (ptb_player1.Bounds.IntersectsWith(ptb_AICar5.Bounds))
+            {
+                LeftRoadSpeed -= 4;
+
+                //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
+                ResetBuffPositionLeft(ptb_AICar5);
+            }
+
+
+            // ====== XE 2 ======
             //Kiểm tra xem xe 2 có ăn buff tăng tốc không
             if (ptb_player2.Bounds.IntersectsWith(ptb_increasingroad2.Bounds))
             {
                 RightRoadSpeed += 3;
 
                 //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
-                ResetBuffPositionLeft(ptb_increasingroad2);
+                ResetBuffPositionRight(ptb_increasingroad2);
             }
 
             //Kiểm tra xem xe 1 có ăn buff giảm tốc không
@@ -88,7 +129,25 @@ namespace Pixel_Drift
                 RightRoadSpeed -= 3;
 
                 //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
-                ResetBuffPositionLeft(ptb_decreasingroad2);
+                ResetBuffPositionRight(ptb_decreasingroad2);
+            }
+
+            //Kiểm tra xem xe 1 có va chạm không
+            if (ptb_player2.Bounds.IntersectsWith(ptb_AICar6.Bounds))
+            {
+                RightRoadSpeed -= 4;
+
+                //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
+                ResetBuffPositionRight(ptb_AICar6);
+            }
+
+            //Kiểm tra xem xe 2 có va chạm không
+            if (ptb_player2.Bounds.IntersectsWith(ptb_AICar3.Bounds))
+            {
+                RightRoadSpeed -= 4;
+
+                //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
+                ResetBuffPositionRight(ptb_AICar3);
             }
         }
 
@@ -98,6 +157,11 @@ namespace Pixel_Drift
             MoveRoad2();
             MoveBuffRoad1();
             MoveBuffRoad2();
+
+            MoveAICar1();
+            MoveAICar3();
+            MoveAICar5();
+            MoveAICar6();
 
             // Di chuyển xe 1 (người chơi này)
             if (Player1_left)
@@ -132,7 +196,13 @@ namespace Pixel_Drift
             ptb_player2.Left = Math.Min(ptb_player2.Left, p2_maxX);
 
             KiemTraVaCham();
+
+            int minSpeed = 4;
+
+            LeftRoadSpeed = Math.Max(LeftRoadSpeed, minSpeed);
+            RightRoadSpeed = Math.Max(RightRoadSpeed, minSpeed);
         }
+
 
         // Hiển thị buff ở làn bên trái
         private void ResetBuffPositionLeft(PictureBox buff)
@@ -232,21 +302,69 @@ namespace Pixel_Drift
                 ResetBuffPositionRight(ptb_decreasingroad2);
         }
 
-
-        private void ptb_increasingroad1_Click(object sender, EventArgs e)
+        // ===== DANH SÁCH ẢNH XE =====
+        private List<Image> carImages = new List<Image>()
+{
+        Properties.Resources.BuickerB,
+        Properties.Resources.GalardB,
+        Properties.Resources.JeepB,
+        Properties.Resources.RamB,
+        Properties.Resources.SuperB
+};
+        // ====== LÀN TRÁI ======
+        private void MoveAICar1()
         {
+            ptb_AICar1.Top += LeftRoadSpeed;
+            if (ptb_AICar1.Top > this.Height)
+            {
+                int randomY = Rand.Next(-300, -80); // xuất hiện gần hơn
+                int randomX = Rand.Next(20, 120);
+                ptb_AICar1.Location = new Point(randomX, randomY);
+                ptb_AICar1.Image = carImages[Rand.Next(carImages.Count)];
 
+            }
         }
 
-        private void ptb_decreasingroad1_Click(object sender, EventArgs e)
+        private void MoveAICar5()
         {
+            ptb_AICar5.Top += LeftRoadSpeed;
+            if (ptb_AICar5.Top > this.Height)
+            {
+                int randomY = Rand.Next(-300, -80);
+                int randomX = Rand.Next(140, 240);
+                ptb_AICar5.Location = new Point(randomX, randomY);
+                ptb_AICar5.Image = carImages[Rand.Next(carImages.Count)];
 
+            }
         }
 
-        private void ptb_increasingroad2_Click(object sender, EventArgs e)
+        // ====== LÀN PHẢI ======
+        private void MoveAICar3()
         {
+            ptb_AICar3.Top += RightRoadSpeed;
+            if (ptb_AICar3.Top > this.Height)
+            {
+                int randomY = Rand.Next(-300, -80);
+                int randomX = Rand.Next(300, 400);
+                ptb_AICar3.Location = new Point(randomX, randomY);
+                ptb_AICar3.Image = carImages[Rand.Next(carImages.Count)];
 
+            }
         }
+
+        private void MoveAICar6()
+        {
+            ptb_AICar6.Top += RightRoadSpeed;
+            if (ptb_AICar6.Top > this.Height)
+            {
+                int randomY = Rand.Next(-300, -80);
+                int randomX = Rand.Next(400, 480);
+                ptb_AICar6.Location = new Point(randomX, randomY);
+                ptb_AICar6.Image = carImages[Rand.Next(carImages.Count)];
+
+            }
+        }
+
 
         private void Game_Window_KeyDown(object sender, KeyEventArgs e)
         {
@@ -296,9 +414,5 @@ namespace Pixel_Drift
             }
         }
 
-        private void ptb_decreasingroad2_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

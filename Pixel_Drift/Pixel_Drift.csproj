@@ -230,5 +230,32 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BuickerB1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CarPackPrev1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GalardB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\JeepB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RamB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SuperB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\usercar1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\usercar2.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
