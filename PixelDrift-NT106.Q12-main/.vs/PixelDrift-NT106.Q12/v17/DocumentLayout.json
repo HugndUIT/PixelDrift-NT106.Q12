@@ -1,0 +1,95 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|d:\\tai_lieu\\uit_document\\laptrinhmangcanbang\\btvn\\giaotiepclientserver\\pixeldrift-nt106.q12-main\\pixel_drift\\form_game_play.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|solutionrelative:pixel_drift\\form_game_play.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\pixel_drift\\form_game_play.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|solutionrelative:pixel_drift\\form_game_play.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\pixel_drift\\properties\\resources.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}",
+      "RelativeMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|solutionrelative:pixel_drift\\properties\\resources.resx||{81828910-B8B3-4D2B-99A3-067027C180C1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\pixel_drift\\form_game_play.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{CE222255-8BC8-4A94-87AD-4EA347A65F97}|Pixel_Drift\\Pixel_Drift.csproj|solutionrelative:pixel_drift\\form_game_play.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:854812530:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{f37f5141-198e-4181-9582-7b026ee8f915}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:486902199:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form_Game_Play.Designer.cs",
+              "DocumentMoniker": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\Pixel_Drift\\Form_Game_Play.Designer.cs",
+              "RelativeDocumentMoniker": "Pixel_Drift\\Form_Game_Play.Designer.cs",
+              "ToolTip": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\Pixel_Drift\\Form_Game_Play.Designer.cs",
+              "RelativeToolTip": "Pixel_Drift\\Form_Game_Play.Designer.cs",
+              "ViewState": "AgIAAKUAAAAAAAAAAAAAAJMAAABmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-22T00:22:56.452Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form_Game_Play.cs",
+              "DocumentMoniker": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\Pixel_Drift\\Form_Game_Play.cs",
+              "RelativeDocumentMoniker": "Pixel_Drift\\Form_Game_Play.cs",
+              "ToolTip": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\Pixel_Drift\\Form_Game_Play.cs",
+              "RelativeToolTip": "Pixel_Drift\\Form_Game_Play.cs",
+              "ViewState": "AgIAAAsBAAAAAAAAAAAqwBQBAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-22T00:19:06.912Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Resources.resx",
+              "DocumentMoniker": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\Pixel_Drift\\Properties\\Resources.resx",
+              "RelativeDocumentMoniker": "Pixel_Drift\\Properties\\Resources.resx",
+              "ToolTip": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\Pixel_Drift\\Properties\\Resources.resx",
+              "RelativeToolTip": "Pixel_Drift\\Properties\\Resources.resx",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-10-22T00:04:21.155Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Form_Game_Play.cs [Design]",
+              "DocumentMoniker": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\Pixel_Drift\\Form_Game_Play.cs",
+              "RelativeDocumentMoniker": "Pixel_Drift\\Form_Game_Play.cs",
+              "ToolTip": "D:\\Tai_lieu\\UIT_Document\\LapTrinhMangCanBang\\BTVN\\GiaoTiepClientServer\\PixelDrift-NT106.Q12-main\\Pixel_Drift\\Form_Game_Play.cs [Design]",
+              "RelativeToolTip": "Pixel_Drift\\Form_Game_Play.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-22T00:04:14.783Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
