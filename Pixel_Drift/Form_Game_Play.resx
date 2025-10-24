@@ -120,4 +120,25 @@
   <metadata name="game_timer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="ptb_player1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAYAAAALiLqjAAAABGdBTUEAALGPC/xhBQAAAQNJREFUWEft
+        1eEJwjAQBeAu0yG6TldxHMdwDvGnY1QCXry8XC531wqFJvCopvC+JkE7TfXYdkYd222ecx7LYsp7XXM0
+        JFRuRdRyaS4VSXMtpFnuAThiBqQ5DbkYgN+lIHIewFIuIRcBPOWInAPYky7wvRGOCqTr/fnqhgbOpxBS
+        AUeUc6QJ4JK9kYBi/+mz58Bp32lr8ByKJ/CWI4J9eRW0tEg5R3gXlQ/gKgDlCIDlB/x9BQNwARGE/xeZ
+        AA9C5SoAN8KBjhqwpPdWE4G0JRbEUs5+cCVAyJ7ws6gAuuIhWkPFA2jGDEQQfrhNIIpguQRUSCRaOQ33
+        00urwFIc1ZM5U4wPPlcrMTBaui4AAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="ptb_player2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAwCAYAAAALiLqjAAAABGdBTUEAALGPC/xhBQAAAQZJREFUWEft
+        1UEKwjAQBdBewaV4AW/h2p1H8V56JfEolYBTJz+Tycy0QiEJfKop/NckaKepHPPKqGM+Xg9LzveTKbfn
+        ZYmGhMqtiFouzaUiaa6GVMs9AEfMgDSnIZ0B+F0KIvsBLOUS0gngKUdkH8CaNIHvjXBUIF0fr3czNHA+
+        hZAC2KKcI1UAl+yNBGT7T589B077TluD55A9gbccEexbVkFLi5RzhHdR+QB6AShbACw/4O8rGIALiCD8
+        v8gEeBAqVwG4EQ50lIAlrbeaCKQtsSCWcvaDywFC1oSfRQHQFQ/RGioeQDVmIILww60CUQTLJaBAItHK
+        abifXloFluIonsyZbHwAIxrn2ZfLkzkAAAAASUVORK5CYII=
+</value>
+  </data>
 </root>
