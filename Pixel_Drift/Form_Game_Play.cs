@@ -58,16 +58,16 @@ namespace Pixel_Drift
             //Kiểm tra xem xe 1 có ăn buff tăng tốc không
             if (ptb_player1.Bounds.IntersectsWith(ptb_increasingroad1.Bounds))
             {
-                LeftRoadSpeed += 2;
+                LeftRoadSpeed += 3;
 
                 //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
                 ResetBuffPositionLeft(ptb_increasingroad1);
             }
 
-            //Kiểm tra xem xe 1 có ăn buff tăng tốc không
+            //Kiểm tra xem xe 1 có ăn buff giảm tốc không
             if (ptb_player1.Bounds.IntersectsWith(ptb_decreasingroad1.Bounds))
             {
-                LeftRoadSpeed -= 2;
+                LeftRoadSpeed -= 3;
 
                 //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
                 ResetBuffPositionLeft(ptb_decreasingroad1);
@@ -76,16 +76,16 @@ namespace Pixel_Drift
             //Kiểm tra xem xe 2 có ăn buff tăng tốc không
             if (ptb_player2.Bounds.IntersectsWith(ptb_increasingroad2.Bounds))
             {
-                RightRoadSpeed += 2;
+                RightRoadSpeed += 3;
 
                 //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
                 ResetBuffPositionLeft(ptb_increasingroad2);
             }
 
-            //Kiểm tra xem xe 1 có ăn buff tăng tốc không
+            //Kiểm tra xem xe 1 có ăn buff giảm tốc không
             if (ptb_player2.Bounds.IntersectsWith(ptb_decreasingroad2.Bounds))
             {
-                RightRoadSpeed -= 2;
+                RightRoadSpeed -= 3;
 
                 //Sau khi ăn buff xong thì sẽ cho buff reset về spawn ngẫu nhiên để tránh bị kẹt buff
                 ResetBuffPositionLeft(ptb_decreasingroad2);
@@ -126,8 +126,8 @@ namespace Pixel_Drift
             ptb_player1.Left = Math.Min(ptb_player1.Left, p1_maxX);
 
             //Thêm giới hạn di chuyển cho xe 2
-            int p2_minX = 40; // 500 là lề trái của đường 2
-            int p2_maxX = 415 - ptb_player2.Width; // 890 là lề phải của đường 2
+            int p2_minX = 40;
+            int p2_maxX = 415 - ptb_player2.Width;
             ptb_player2.Left = Math.Max(ptb_player2.Left, p2_minX);
             ptb_player2.Left = Math.Min(ptb_player2.Left, p2_maxX);
 
