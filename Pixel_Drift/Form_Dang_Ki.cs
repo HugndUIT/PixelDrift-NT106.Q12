@@ -52,50 +52,49 @@ namespace Pixel_Drift
             string username = tb_tendangnhap.Text.Trim();
             string password = tb_matkhau.Text.Trim();
             string confirmpass = tb_xacnhanmk.Text.Trim();
-            string emailsdt = tb_emailsdt.Text.Trim();
-
+            string email = tb_emailsdt.Text.Trim();
+        
             // Kiểm tra dữ liệu đầu vào
-            if (username == "" || password == "" || emailsdt == "")
+            if (username == "" || password == "" || email == "")
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            bool isEmail = Regex.IsMatch(emailsdt, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
-            bool isPhone = Regex.IsMatch(emailsdt, @"^(0[0-9]{9})$");
-            if (!isEmail && !isPhone)
+        
+            bool isEmail = Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
+            if (!isEmail)
             {
-                MessageBox.Show("Email hoặc số điện thoại không hợp lệ!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Email không hợp lệ!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+        
             if (!KiemTraDoManhMatKhau(password))
             {
                 MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!",
                     "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+        
             if (password != confirmpass)
             {
                 MessageBox.Show("Mật khẩu không khớp!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
+        
             // Mã hóa mật khẩu
             string hashedPassword = MaHoa(password);
-
+        
             try
             {
-                string response = await SendRegisterRequest(username, emailsdt, hashedPassword);
-
+                string response = await SendRegisterRequest(username, email, hashedPassword);
+        
                 // Phân tích phản hồi JSON
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
-
+        
                 if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
                     DialogResult result = MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+        
                     // Sau khi bấm OK, chuyển qua form đăng nhập (nằm ở namespace khác)
                     if (result == DialogResult.OK)
                     {
@@ -105,7 +104,7 @@ namespace Pixel_Drift
                         this.Close(); // đóng form đăng ký
                     }
                 }
-
+        
                 else
                 {
                     string msg = dict.ContainsKey("message") ? dict["message"] : "Đăng ký thất bại!";
