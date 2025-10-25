@@ -65,7 +65,7 @@ namespace Pixel_Drift
             this.lbl_Email.Name = "lbl_Email";
             this.lbl_Email.Size = new System.Drawing.Size(435, 32);
             this.lbl_Email.TabIndex = 4;
-            this.lbl_Email.Text = "Email/Sđt: ";
+            this.lbl_Email.Text = "Email: ";
             // 
             // lbl_TenDangNhap
             // 
