@@ -59,7 +59,7 @@ namespace Pixel_Drift
             this.lb_user.Name = "lb_user";
             this.lb_user.Size = new System.Drawing.Size(209, 22);
             this.lb_user.TabIndex = 1;
-            this.lb_user.Text = "Email hoặc số điện thoại";
+            this.lb_user.Text = "Email";
             // 
             // lb_pass
             // 
