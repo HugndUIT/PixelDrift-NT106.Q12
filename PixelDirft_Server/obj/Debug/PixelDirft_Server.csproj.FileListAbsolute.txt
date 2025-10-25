@@ -1,0 +1,85 @@
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\bin\Debug\PixelDirft_Server.exe.config
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\bin\Debug\PixelDirft_Server.exe
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\bin\Debug\PixelDirft_Server.pdb
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.AssemblyReference.cache
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.Properties.Resources.resources
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.GenerateResource.cache
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.CoreCompileInputs.cache
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.exe
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.pdb
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.exe.config
+C:\Users\admin\Documents\VisualStudio\PixelDirft_Server\obj\Debug\PixelDirft_Server.ServerForm.resources
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\PixelDirft_Server.exe.config
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\PixelDirft_Server.exe
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\PixelDirft_Server.pdb
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.AssemblyReference.cache
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.ServerForm.resources
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.Properties.Resources.resources
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.GenerateResource.cache
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.CoreCompileInputs.cache
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.exe
+D:\Tai_lieu\UIT_Document\LapTrinhMangCanBang\Socket Programming\Duy_Hung_branch\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.pdb
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\PixelDirft_Server.exe.config
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\PixelDirft_Server.exe
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\PixelDirft_Server.pdb
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.AssemblyReference.cache
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.exe.config
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.ServerForm.resources
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.Properties.Resources.resources
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.GenerateResource.cache
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.exe
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDirft_Server.pdb
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.IdentityModel.Logging.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.IdentityModel.Tokens.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\MimeMapping.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Newtonsoft.Json.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Core.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Functions.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Gotrue.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Postgrest.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Realtime.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Storage.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Buffers.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Memory.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Reactive.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Text.Json.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Threading.Channels.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.ValueTuple.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Websocket.Client.dll
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.IdentityModel.Abstractions.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.IdentityModel.JsonWebTokens.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.IdentityModel.Logging.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Microsoft.IdentityModel.Tokens.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\MimeMapping.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Newtonsoft.Json.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Core.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Functions.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Gotrue.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Postgrest.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Realtime.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Supabase.Storage.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Buffers.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.IdentityModel.Tokens.Jwt.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Memory.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Reactive.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Text.Encodings.Web.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Text.Json.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Threading.Channels.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\System.ValueTuple.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\bin\Debug\Websocket.Client.xml
+C:\Users\LENOVO\Source\Repos\ServerPixel\PixelDrift-NT106.Q12-duy_hung\PixelDrift-NT106.Q12-duy_hung\PixelDirft_Server\obj\Debug\PixelDir.1E165EA7.Up2Date
