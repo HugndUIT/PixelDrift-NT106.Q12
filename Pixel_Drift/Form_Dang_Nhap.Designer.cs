@@ -54,10 +54,10 @@ namespace Pixel_Drift
             // 
             this.lb_user.AutoSize = true;
             this.lb_user.Font = new System.Drawing.Font("Times New Roman", 11F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.lb_user.Location = new System.Drawing.Point(4, 71);
+            this.lb_user.Location = new System.Drawing.Point(11, 71);
             this.lb_user.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lb_user.Name = "lb_user";
-            this.lb_user.Size = new System.Drawing.Size(209, 22);
+            this.lb_user.Size = new System.Drawing.Size(61, 22);
             this.lb_user.TabIndex = 1;
             this.lb_user.Text = "Email";
             // 
