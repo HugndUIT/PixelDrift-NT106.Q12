@@ -134,7 +134,7 @@ namespace PixelDirft_Server
                                 response = HandleRegister(data);
                                 break;
 
-                            case "get_info": // 👈 Thêm dòng này
+                            case "get_info":
                                 response = HandleGetInfo(data);
                                 break;
 
@@ -148,7 +148,7 @@ namespace PixelDirft_Server
                     }
                     catch (JsonException)
                     {
-                        Log("❌ Dữ liệu từ client không phải JSON hợp lệ!");
+                        Log("Dữ liệu từ client không phải JSON hợp lệ!");
                     }
                 }
             }
