@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Pixel_Drift
@@ -37,88 +37,103 @@ namespace Pixel_Drift
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.btn_vaogame = new System.Windows.Forms.Button();
+            this.btn_quenmatkhau = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // lb_dangnhap
+            // lb_pass
             // 
-            lb_dangnhap.AutoSize = true;
-            lb_dangnhap.Font = new Font("Times New Roman", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lb_dangnhap.Location = new Point(150, 23);
-            lb_dangnhap.Margin = new Padding(2, 0, 2, 0);
-            lb_dangnhap.Name = "lb_dangnhap";
-            lb_dangnhap.Size = new Size(103, 22);
-            lb_dangnhap.TabIndex = 0;
-            lb_dangnhap.Text = "Đăng Nhập";
+            this.lb_pass.AutoSize = true;
+            this.lb_pass.Font = new System.Drawing.Font("Times New Roman", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_pass.ForeColor = System.Drawing.Color.Black;
+            this.lb_pass.Location = new System.Drawing.Point(126, 163);
+            this.lb_pass.Name = "lb_pass";
+            this.lb_pass.Size = new System.Drawing.Size(108, 28);
+            this.lb_pass.TabIndex = 2;
+            this.lb_pass.Text = "Mật khẩu";
             // 
             // lb_user
             // 
             this.lb_user.AutoSize = true;
             this.lb_user.Font = new System.Drawing.Font("Times New Roman", 11F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.lb_user.Location = new System.Drawing.Point(11, 71);
-            this.lb_user.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_user.ForeColor = System.Drawing.Color.Black;
+            this.lb_user.Location = new System.Drawing.Point(5, 95);
             this.lb_user.Name = "lb_user";
-            this.lb_user.Size = new System.Drawing.Size(61, 22);
+            this.lb_user.Size = new System.Drawing.Size(238, 25);
             this.lb_user.TabIndex = 1;
-            this.lb_user.Text = "Email";
+            this.lb_user.Text = "Email hoặc số điện thoại";
             // 
-            // lb_pass
+            // lb_dangnhap
             // 
-            lb_pass.AutoSize = true;
-            lb_pass.Font = new Font("Times New Roman", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            lb_pass.Location = new Point(108, 122);
-            lb_pass.Margin = new Padding(2, 0, 2, 0);
-            lb_pass.Name = "lb_pass";
-            lb_pass.Size = new Size(76, 19);
-            lb_pass.TabIndex = 2;
-            lb_pass.Text = "Mật Khẩu";
+            this.lb_dangnhap.AutoSize = true;
+            this.lb_dangnhap.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_dangnhap.ForeColor = System.Drawing.Color.Red;
+            this.lb_dangnhap.Location = new System.Drawing.Point(193, 31);
+            this.lb_dangnhap.Name = "lb_dangnhap";
+            this.lb_dangnhap.Size = new System.Drawing.Size(151, 32);
+            this.lb_dangnhap.TabIndex = 0;
+            this.lb_dangnhap.Text = "Đăng Nhập";
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(190, 67);
-            textBox1.Margin = new Padding(2);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(154, 23);
-            textBox1.TabIndex = 3;
+            this.textBox1.Location = new System.Drawing.Point(244, 89);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(276, 26);
+            this.textBox1.TabIndex = 3;
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(190, 122);
-            textBox2.Margin = new Padding(2);
-            textBox2.Name = "textBox2";
-            textBox2.PasswordChar = '*';
-            textBox2.Size = new Size(154, 23);
-            textBox2.TabIndex = 4;
+            this.textBox2.Location = new System.Drawing.Point(244, 163);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.PasswordChar = '*';
+            this.textBox2.Size = new System.Drawing.Size(276, 26);
+            this.textBox2.TabIndex = 4;
             // 
             // btn_vaogame
             // 
-            btn_vaogame.Font = new Font("Times New Roman", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btn_vaogame.Location = new Point(150, 177);
-            btn_vaogame.Margin = new Padding(2);
-            btn_vaogame.Name = "btn_vaogame";
-            btn_vaogame.Size = new Size(111, 31);
-            btn_vaogame.TabIndex = 5;
-            btn_vaogame.Text = "Đăng Nhập";
-            btn_vaogame.UseVisualStyleBackColor = true;
-            btn_vaogame.Click += btn_vaogame_Click;
+            this.btn_vaogame.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_vaogame.ForeColor = System.Drawing.Color.Black;
+            this.btn_vaogame.Location = new System.Drawing.Point(199, 223);
+            this.btn_vaogame.Name = "btn_vaogame";
+            this.btn_vaogame.Size = new System.Drawing.Size(143, 41);
+            this.btn_vaogame.TabIndex = 5;
+            this.btn_vaogame.Text = "Đăng Nhập";
+            this.btn_vaogame.UseVisualStyleBackColor = true;
+            this.btn_vaogame.Click += new System.EventHandler(this.btn_vaogame_Click);
+            // 
+            // btn_quenmatkhau
+            // 
+            this.btn_quenmatkhau.BackColor = System.Drawing.Color.Transparent;
+            this.btn_quenmatkhau.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btn_quenmatkhau.FlatAppearance.BorderSize = 0;
+            this.btn_quenmatkhau.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_quenmatkhau.ForeColor = System.Drawing.Color.Blue;
+            this.btn_quenmatkhau.Location = new System.Drawing.Point(169, 288);
+            this.btn_quenmatkhau.Name = "btn_quenmatkhau";
+            this.btn_quenmatkhau.Size = new System.Drawing.Size(195, 45);
+            this.btn_quenmatkhau.TabIndex = 0;
+            this.btn_quenmatkhau.Text = "Quên / Đổi mật khẩu ";
+            this.btn_quenmatkhau.UseVisualStyleBackColor = false;
+            this.btn_quenmatkhau.Click += new System.EventHandler(this.btn_quenmatkhau_Click);
             // 
             // Form_Dang_Nhap
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(255, 255, 192);
-            ClientSize = new Size(428, 255);
-            Controls.Add(btn_vaogame);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
-            Controls.Add(lb_pass);
-            Controls.Add(lb_user);
-            Controls.Add(lb_dangnhap);
-            ForeColor = Color.DarkGoldenrod;
-            Margin = new Padding(2);
-            Name = "Form_Dang_Nhap";
-            Text = "Pixel Drift";
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.ClientSize = new System.Drawing.Size(550, 356);
+            this.Controls.Add(this.btn_quenmatkhau);
+            this.Controls.Add(this.btn_vaogame);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.lb_pass);
+            this.Controls.Add(this.lb_user);
+            this.Controls.Add(this.lb_dangnhap);
+            this.ForeColor = System.Drawing.Color.DarkGoldenrod;
+            this.Name = "Form_Dang_Nhap";
+            this.Text = "Pixel Drift";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
@@ -129,5 +144,6 @@ namespace Pixel_Drift
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button btn_vaogame;
+        private Button btn_quenmatkhau;
     }
 }
