@@ -12,7 +12,7 @@ namespace Pixel_Drift
 {
     public partial class Form_Dang_Nhap : Form
     {
-        private string serverIP = "192.168.1.6";   // IP máy chủ
+        private string serverIP = "192.168.100.198";   // IP máy chủ
         private int serverPort = 1111;              // Cổng TCP
 
         public Form_Dang_Nhap()
@@ -124,6 +124,14 @@ namespace Pixel_Drift
             {
                 MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btn_quenmatkhau_Click(object sender, EventArgs e)
+        {
+            
+            Form_QuenMatKhau form = new Form_QuenMatKhau();
+            form.ShowDialog();
+            this.Hide();
         }
     }
 }
