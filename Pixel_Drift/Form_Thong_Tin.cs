@@ -16,7 +16,7 @@ namespace Pixel_Drift
 {
     public partial class Form_Thong_Tin : Form
     {
-        private string serverIP = "192.168.1.6";
+        private string serverIP = "172.16.16.34";
         private int serverPort = 1111;
         private string currentUsername;
 
