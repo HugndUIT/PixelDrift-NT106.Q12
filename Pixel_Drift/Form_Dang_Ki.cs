@@ -14,7 +14,7 @@ namespace Pixel_Drift
     public partial class Form_Dang_Ki : Form
     {
         // Địa chỉ IP và cổng của server TCP 
-        private const string SERVER_IP = "172.16.16.34";
+        private const string SERVER_IP = "192.168.43.174";
         private const int SERVER_PORT = 1111;  // trùng với server
 
         public Form_Dang_Ki()

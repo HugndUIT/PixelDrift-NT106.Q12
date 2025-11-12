@@ -158,6 +158,18 @@
     <Compile Include="Form_Dang_Nhap.Designer.cs">
       <DependentUpon>Form_Dang_Nhap.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form_DoiMatKhau.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_DoiMatKhau.Designer.cs">
+      <DependentUpon>Form_DoiMatKhau.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_QuenMatKhau.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_QuenMatKhau.Designer.cs">
+      <DependentUpon>Form_QuenMatKhau.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_Scoreboard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -191,8 +203,14 @@
     <EmbeddedResource Include="Form_Dang_Nhap.resx">
       <DependentUpon>Form_Dang_Nhap.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form_DoiMatKhau.resx">
+      <DependentUpon>Form_DoiMatKhau.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form_Game_Play.resx">
       <DependentUpon>Form_Game_Play.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_QuenMatKhau.resx">
+      <DependentUpon>Form_QuenMatKhau.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_Scoreboard.resx">
       <DependentUpon>Form_Scoreboard.cs</DependentUpon>

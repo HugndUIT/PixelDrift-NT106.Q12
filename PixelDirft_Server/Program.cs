@@ -16,7 +16,7 @@ namespace PixelDirft_Server
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ServerForm());
+            Application.Run(new frm_Server());
         }
     }
 }
