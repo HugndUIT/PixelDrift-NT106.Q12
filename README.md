@@ -29,3 +29,4 @@ Giao diện ứng dụng:
 - Form đăng nhập: bao gồm Email/số điện thoại dể người dùng nhập vào để đăng nhập vô game, sau đó nhập vào ô mật khẩu.  
 - Form hiển thị thông tin: hiển thị thông tin như id, tên đăng nhập, email/số điện thoại.  
 - Form mở đầu: mở đầu game, cho phép người dùng đăng nhập hoặc đăng kí nếu chưa có tài khoản.  
+   
