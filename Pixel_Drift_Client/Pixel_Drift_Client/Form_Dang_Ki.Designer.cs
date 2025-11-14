@@ -40,6 +40,8 @@ namespace Pixel_Drift
             this.tb_matkhau = new System.Windows.Forms.TextBox();
             this.tb_tendangnhap = new System.Windows.Forms.TextBox();
             this.btn_xacnhan = new System.Windows.Forms.Button();
+            this.tb_BirthDay = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -59,18 +61,19 @@ namespace Pixel_Drift
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label2.Location = new System.Drawing.Point(12, 57);
+            this.label2.Location = new System.Drawing.Point(12, 64);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 23);
             this.label2.TabIndex = 1;
             this.label2.Text = "Email *";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label3.Location = new System.Drawing.Point(12, 103);
+            this.label3.Location = new System.Drawing.Point(12, 174);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(150, 23);
             this.label3.TabIndex = 2;
@@ -81,7 +84,7 @@ namespace Pixel_Drift
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label4.Location = new System.Drawing.Point(12, 149);
+            this.label4.Location = new System.Drawing.Point(14, 229);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(106, 23);
             this.label4.TabIndex = 3;
@@ -92,7 +95,7 @@ namespace Pixel_Drift
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.OrangeRed;
-            this.label5.Location = new System.Drawing.Point(12, 195);
+            this.label5.Location = new System.Drawing.Point(14, 284);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(189, 23);
             this.label5.TabIndex = 4;
@@ -100,14 +103,14 @@ namespace Pixel_Drift
             // 
             // tb_emailsdt
             // 
-            this.tb_emailsdt.Location = new System.Drawing.Point(12, 77);
+            this.tb_emailsdt.Location = new System.Drawing.Point(16, 90);
             this.tb_emailsdt.Name = "tb_emailsdt";
             this.tb_emailsdt.Size = new System.Drawing.Size(308, 26);
             this.tb_emailsdt.TabIndex = 5;
             // 
             // tb_xacnhanmk
             // 
-            this.tb_xacnhanmk.Location = new System.Drawing.Point(12, 215);
+            this.tb_xacnhanmk.Location = new System.Drawing.Point(18, 310);
             this.tb_xacnhanmk.Name = "tb_xacnhanmk";
             this.tb_xacnhanmk.PasswordChar = '*';
             this.tb_xacnhanmk.Size = new System.Drawing.Size(308, 26);
@@ -115,7 +118,7 @@ namespace Pixel_Drift
             // 
             // tb_matkhau
             // 
-            this.tb_matkhau.Location = new System.Drawing.Point(12, 169);
+            this.tb_matkhau.Location = new System.Drawing.Point(18, 255);
             this.tb_matkhau.Name = "tb_matkhau";
             this.tb_matkhau.PasswordChar = '*';
             this.tb_matkhau.Size = new System.Drawing.Size(308, 26);
@@ -123,7 +126,7 @@ namespace Pixel_Drift
             // 
             // tb_tendangnhap
             // 
-            this.tb_tendangnhap.Location = new System.Drawing.Point(12, 123);
+            this.tb_tendangnhap.Location = new System.Drawing.Point(18, 200);
             this.tb_tendangnhap.Name = "tb_tendangnhap";
             this.tb_tendangnhap.Size = new System.Drawing.Size(308, 26);
             this.tb_tendangnhap.TabIndex = 6;
@@ -132,7 +135,7 @@ namespace Pixel_Drift
             // 
             this.btn_xacnhan.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_xacnhan.ForeColor = System.Drawing.Color.DarkOrange;
-            this.btn_xacnhan.Location = new System.Drawing.Point(94, 257);
+            this.btn_xacnhan.Location = new System.Drawing.Point(94, 370);
             this.btn_xacnhan.Name = "btn_xacnhan";
             this.btn_xacnhan.Size = new System.Drawing.Size(143, 43);
             this.btn_xacnhan.TabIndex = 9;
@@ -140,15 +143,35 @@ namespace Pixel_Drift
             this.btn_xacnhan.UseVisualStyleBackColor = true;
             this.btn_xacnhan.Click += new System.EventHandler(this.btn_xacnhan_Click);
             // 
+            // tb_BirthDay
+            // 
+            this.tb_BirthDay.Location = new System.Drawing.Point(16, 145);
+            this.tb_BirthDay.Name = "tb_BirthDay";
+            this.tb_BirthDay.Size = new System.Drawing.Size(308, 26);
+            this.tb_BirthDay.TabIndex = 8;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Times New Roman", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.OrangeRed;
+            this.label6.Location = new System.Drawing.Point(14, 119);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(93, 23);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Ngày sinh";
+            // 
             // Form_Dang_Ki
             // 
             this.BackColor = System.Drawing.Color.PaleGoldenrod;
-            this.ClientSize = new System.Drawing.Size(337, 312);
+            this.ClientSize = new System.Drawing.Size(337, 425);
             this.Controls.Add(this.btn_xacnhan);
+            this.Controls.Add(this.tb_BirthDay);
             this.Controls.Add(this.tb_xacnhanmk);
             this.Controls.Add(this.tb_matkhau);
             this.Controls.Add(this.tb_tendangnhap);
             this.Controls.Add(this.tb_emailsdt);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -174,5 +197,7 @@ namespace Pixel_Drift
         private System.Windows.Forms.TextBox tb_matkhau;
         private System.Windows.Forms.TextBox tb_tendangnhap;
         private System.Windows.Forms.Button btn_xacnhan;
+        private System.Windows.Forms.TextBox tb_BirthDay;
+        private System.Windows.Forms.Label label6;
     }
 }

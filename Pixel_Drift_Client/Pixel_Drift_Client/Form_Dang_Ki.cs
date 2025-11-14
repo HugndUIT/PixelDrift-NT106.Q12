@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using  Pixel_Drift;
+using System.Globalization;
 
 namespace Pixel_Drift
 {
@@ -53,6 +54,7 @@ namespace Pixel_Drift
             string password = tb_matkhau.Text.Trim();
             string confirmpass = tb_xacnhanmk.Text.Trim();
             string email = tb_emailsdt.Text.Trim();
+            string birthday = tb_BirthDay.Text.Trim();
         
             // Kiểm tra dữ liệu đầu vào
             if (username == "" || password == "" || email == "")
@@ -60,8 +62,15 @@ namespace Pixel_Drift
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-        
-            bool isEmail = Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
+
+            birthday = DinhDangNgay(birthday);
+            if(birthday == null)
+            {
+                MessageBox.Show("Nhập sai định dạng ngày sinh nhật");
+                return;
+            }
+
+                bool isEmail = Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
             if (!isEmail)
             {
                 MessageBox.Show("Email không hợp lệ!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -86,7 +95,7 @@ namespace Pixel_Drift
         
             try
             {
-                string response = await SendRegisterRequest(username, email, hashedPassword);
+                string response = await SendRegisterRequest(username, email, hashedPassword,birthday);
         
                 // Phân tích phản hồi JSON
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
@@ -125,8 +134,16 @@ namespace Pixel_Drift
             }
         }
 
+        //Định dạng ngày sinh nhật
+        private string DinhDangNgay(string day)
+        {
+            if (DateTime.TryParse(day, CultureInfo.CurrentCulture,DateTimeStyles.None,out DateTime parsedDay))
+                return parsedDay.ToString("yyyy-MM-dd");
+            return null;
+        }
+
         // Gửi yêu cầu đăng ký qua TCP (định dạng JSON)
-        private async Task<string> SendRegisterRequest(string username, string email, string hashedPassword)
+        private async Task<string> SendRegisterRequest(string username, string email, string hashedPassword, string birthday)
         {
             return await Task.Run(() =>
             {
@@ -141,7 +158,8 @@ namespace Pixel_Drift
                         action = "register",
                         username = username,
                         email = email,
-                        password = hashedPassword
+                        password = hashedPassword,
+                        birthday = birthday
                     };
 
                     string json = JsonSerializer.Serialize(data);
@@ -156,6 +174,11 @@ namespace Pixel_Drift
                     return response;
                 }
             });
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
