@@ -12,7 +12,7 @@ namespace Pixel_Drift
 {
     public partial class Form_Dang_Nhap : Form
     {
-        private string serverIP = "192.168.43.174";   // IP máy chủ
+        private string serverIP = "127.0.0.1";   // IP máy chủ
         private int serverPort = 1111;              // Cổng TCP
 
         public Form_Dang_Nhap()
