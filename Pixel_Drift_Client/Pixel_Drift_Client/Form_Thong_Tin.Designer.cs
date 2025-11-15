@@ -108,6 +108,7 @@ namespace Pixel_Drift
             this.Name = "Form_Thong_Tin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Thông tin ";
+            this.Load += new System.EventHandler(this.Form_Thong_Tin_Load);
             this.ResumeLayout(false);
 
         }
