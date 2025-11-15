@@ -23,6 +23,8 @@ namespace Pixel_Drift_Server
 
         Dictionary<TcpClient, string> Client_List = new Dictionary<TcpClient, string>();
 
+        Random ServerRand = new Random();
+
         private async void ServerForm_Load(object sender, EventArgs e)
         {
             try
@@ -133,7 +135,7 @@ namespace Pixel_Drift_Server
                                 response = HandleTime(data);
                                 break;
 
-                            case "positon_object":
+                            case "position_object":
                                 response = HandlePosition(data);
                                 break;
 
@@ -389,7 +391,44 @@ namespace Pixel_Drift_Server
         // Xử lý vị trí vật thể
         private string HandlePosition(Dictionary<string, string> data)
         {
-            return "";
+            if (!data.ContainsKey("object_name"))
+                return JsonSerializer.Serialize(new { status = "error", message = "Thiếu tham số 'object_name'." });
+
+            string objectName = data["object_name"];
+
+            // 1. Tạo vị trí Y ngẫu nhiên (trên màn hình, ngoài tầm nhìn)
+            int randomY = ServerRand.Next(-600, -150);
+            int randomX = 0;
+
+            // 2. Tạo vị trí X ngẫu nhiên dựa trên vật thể (hoặc làn đường)
+            if (objectName == "ptb_AICar1" || objectName == "ptb_AICar5")
+            {
+                randomX = ServerRand.Next(40, 420);
+            }
+            else if (objectName == "ptb_AICar3" || objectName == "ptb_AICar6")
+            {
+                randomX = ServerRand.Next(40, 415);
+            }
+            else if (objectName == "ptb_increasingroad1" || objectName == "ptb_decreasingroad1")
+            {
+                randomX = ServerRand.Next(40, 420);
+            }
+            else
+            {
+                randomX = ServerRand.Next(40, 415);
+            }
+
+            // 3. Chuẩn bị gói phản hồi
+            var responseData = new
+            {
+                status = "success",
+                action = "update_position",
+                name = objectName,
+                x = randomX,
+                y = randomY
+            };
+
+            return JsonSerializer.Serialize(responseData);
         }
 
         // Xử lý scoreboard

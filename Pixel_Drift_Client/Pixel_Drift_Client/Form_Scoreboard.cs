@@ -85,7 +85,6 @@ namespace Pixel_Drift
             {
                 MessageBox.Show("Lỗi khi tải bảng xếp hạng: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void btn_Close_Click(object sender, EventArgs e)

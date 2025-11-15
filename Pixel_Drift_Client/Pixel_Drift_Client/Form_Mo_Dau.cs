@@ -29,11 +29,6 @@ namespace Pixel_Drift
             this.Close();
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btn_dang_nhap_Click(object sender, EventArgs e)
         {
             Form_Dang_Nhap formdangnhap = new Form_Dang_Nhap();

@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Game_Window));
             this.btn_startgame = new System.Windows.Forms.Button();
             this.game_timer = new System.Windows.Forms.Timer(this.components);
-            this.ptb_roadtrack1 = new System.Windows.Forms.PictureBox();
             this.ptb_roadtrack1dup = new System.Windows.Forms.PictureBox();
             this.ptb_increasingroad1 = new System.Windows.Forms.PictureBox();
             this.ptb_decreasingroad1 = new System.Windows.Forms.PictureBox();
@@ -40,6 +39,7 @@
             this.ptb_AICar5 = new System.Windows.Forms.PictureBox();
             this.ptb_player1 = new System.Windows.Forms.PictureBox();
             this.ptb_AICar1 = new System.Windows.Forms.PictureBox();
+            this.ptb_roadtrack1 = new System.Windows.Forms.PictureBox();
             this.ptb_AICar6 = new System.Windows.Forms.PictureBox();
             this.ptb_AICar3 = new System.Windows.Forms.PictureBox();
             this.ptb_roadtrack2dup = new System.Windows.Forms.PictureBox();
@@ -49,7 +49,6 @@
             this.ptb_player2 = new System.Windows.Forms.PictureBox();
             this.ptb_roadtrack2 = new System.Windows.Forms.PictureBox();
             this.btn_Scoreboard = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack1dup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_increasingroad1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_decreasingroad1)).BeginInit();
@@ -57,6 +56,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ptb_AICar5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_player1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_AICar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_AICar6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_AICar3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack2dup)).BeginInit();
@@ -83,18 +83,6 @@
             // 
             this.game_timer.Interval = 20;
             this.game_timer.Tick += new System.EventHandler(this.game_timer_Tick);
-            // 
-            // ptb_roadtrack1
-            // 
-            this.ptb_roadtrack1.Image = global::Pixel_Drift.Properties.Resources.road;
-            this.ptb_roadtrack1.Location = new System.Drawing.Point(-3, 0);
-            this.ptb_roadtrack1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ptb_roadtrack1.Name = "ptb_roadtrack1";
-            this.ptb_roadtrack1.Size = new System.Drawing.Size(617, 734);
-            this.ptb_roadtrack1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.ptb_roadtrack1.TabIndex = 0;
-            this.ptb_roadtrack1.TabStop = false;
-            this.ptb_roadtrack1.Click += new System.EventHandler(this.ptb_roadtrack1_Click);
             // 
             // ptb_roadtrack1dup
             // 
@@ -178,6 +166,17 @@
             this.ptb_AICar1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_AICar1.TabIndex = 7;
             this.ptb_AICar1.TabStop = false;
+            // 
+            // ptb_roadtrack1
+            // 
+            this.ptb_roadtrack1.Image = global::Pixel_Drift.Properties.Resources.road;
+            this.ptb_roadtrack1.Location = new System.Drawing.Point(0, -2);
+            this.ptb_roadtrack1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ptb_roadtrack1.Name = "ptb_roadtrack1";
+            this.ptb_roadtrack1.Size = new System.Drawing.Size(617, 734);
+            this.ptb_roadtrack1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.ptb_roadtrack1.TabIndex = 10;
+            this.ptb_roadtrack1.TabStop = false;
             // 
             // ptb_AICar6
             // 
@@ -300,10 +299,10 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Game_Window";
             this.Text = "Game_Window";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Game_Window_FormClosing);
             this.Load += new System.EventHandler(this.Game_Window_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_Window_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Game_Window_KeyUp);
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack1dup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_increasingroad1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_decreasingroad1)).EndInit();
@@ -311,6 +310,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ptb_AICar5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_player1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_AICar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_AICar6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_AICar3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack2dup)).EndInit();
@@ -326,7 +326,6 @@
         #endregion
         private System.Windows.Forms.Button btn_startgame;
         private System.Windows.Forms.Timer game_timer;
-        private System.Windows.Forms.PictureBox ptb_roadtrack1;
         private System.Windows.Forms.PictureBox ptb_roadtrack1dup;
         private System.Windows.Forms.PictureBox ptb_increasingroad1;
         private System.Windows.Forms.PictureBox ptb_decreasingroad1;
@@ -343,5 +342,6 @@
         private System.Windows.Forms.PictureBox ptb_AICar1;
         private System.Windows.Forms.PictureBox ptb_roadtrack2;
         private System.Windows.Forms.Button btn_Scoreboard;
+        private System.Windows.Forms.PictureBox ptb_roadtrack1;
     }
 }

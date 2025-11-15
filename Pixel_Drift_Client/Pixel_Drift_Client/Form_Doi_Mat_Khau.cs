@@ -9,9 +9,7 @@ namespace Pixel_Drift
 {
     public partial class Form_Doi_Mat_Khau : Form
     {
-        private string serverIP = "192.168.43.174"; // IP máy chủ
-        private int serverPort = 1111;              // Cổng TCP
-        private string userEmail;                   // Email được truyền từ form Quên mật khẩu
+        private string userEmail;                  
 
         public Form_Doi_Mat_Khau(string email)
         {
@@ -25,7 +23,7 @@ namespace Pixel_Drift
 
             using (TcpClient client = new TcpClient())
             {
-                client.Connect(serverIP, serverPort);
+                client.Connect("127.0.0.1", 1111);
                 NetworkStream ns = client.GetStream();
 
                 byte[] sendBytes = Encoding.UTF8.GetBytes(json);
@@ -76,15 +74,11 @@ namespace Pixel_Drift
                 {
                     MessageBox.Show(dict["message"], "Thành công",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Ẩn form đổi mật khẩu
                     this.Hide();
 
-                    // Mở lại form đăng nhập
                     Form_Dang_Nhap formDangNhap = new Form_Dang_Nhap();
                     formDangNhap.ShowDialog();
 
-                    // Sau khi form đăng nhập đóng thì đóng luôn form đổi mật khẩu
                     this.Close();
                 }
 
@@ -109,7 +103,5 @@ namespace Pixel_Drift
             this.Hide();
             Form_Dang_Nhap formdangnhap = new Form_Dang_Nhap();
         }
-
-      
     }
 }

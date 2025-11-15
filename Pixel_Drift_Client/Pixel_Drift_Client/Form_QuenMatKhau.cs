@@ -9,9 +9,6 @@ namespace Pixel_Drift
 {
     public partial class Form_QuenMatKhau : Form
     {
-        private string serverIP = "192.168.43.174";   // IP máy chủ (trùng với form đăng nhập)
-        private int serverPort = 1111;              // Cổng TCP
-
         public Form_QuenMatKhau()
         {
             InitializeComponent();
@@ -23,7 +20,7 @@ namespace Pixel_Drift
 
             using (TcpClient client = new TcpClient())
             {
-                client.Connect(serverIP, serverPort);
+                client.Connect("127.0.0.1", 1111);
                 NetworkStream ns = client.GetStream();
 
                 byte[] sendBytes = Encoding.UTF8.GetBytes(json);
@@ -63,8 +60,7 @@ namespace Pixel_Drift
                 {
                     MessageBox.Show(dict["message"], "Thành công",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Mở form đổi mật khẩu và truyền email đang nhập
+                    
                     Form_Doi_Mat_Khau formDoi = new Form_Doi_Mat_Khau(txt_email.Text.Trim());
                     formDoi.Show();
                     this.Hide();

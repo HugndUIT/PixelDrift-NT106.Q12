@@ -12,9 +12,6 @@ namespace Pixel_Drift
 {
     public partial class Form_Dang_Nhap : Form
     {
-        private string serverIP = "127.0.0.1";   // IP máy chủ
-        private int serverPort = 1111;              // Cổng TCP
-
         public Form_Dang_Nhap()
         {
             InitializeComponent();
@@ -46,16 +43,14 @@ namespace Pixel_Drift
 
             try
             {
-                // 1. KẾT NỐI TỚI SERVER
-                // serverIP và serverPort là biến private của Form bạn
-                if (!ClientManager.Connect(serverIP, serverPort))
+                if (!ClientManager.Connect("127.0.0.1", 1111))
                 {
                     MessageBox.Show("Không thể kết nối tới server. Hãy kiểm tra IP và cổng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // 2. MÃ HÓA VÀ GỬI YÊU CẦU LOGIN
                 string hashedPassword = MaHoa(password);
+
                 var request = new
                 {
                     action = "login",
@@ -63,9 +58,8 @@ namespace Pixel_Drift
                     password = hashedPassword
                 };
 
-                // 3. SỬ DỤNG HÀM MỚI (Không còn 'using' nữa)
                 string response = ClientManager.SendRequest(request);
-                Console.WriteLine("Server response: " + response); // debug
+                Console.WriteLine("Server response: " + response); 
 
                 // Phân tích phản hồi JSON
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
@@ -75,7 +69,6 @@ namespace Pixel_Drift
                     MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.Hide();
-                    // Truyền username qua, Form sau có thể dùng ClientManager để lấy thông tin
                     Form_Thong_Tin formThongTin = new Form_Thong_Tin(username);
                     formThongTin.ShowDialog();
                     this.Close();
@@ -84,8 +77,6 @@ namespace Pixel_Drift
                 {
                     string msg = dict.ContainsKey("message") ? dict["message"] : "Sai tài khoản hoặc mật khẩu!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    // Nếu login sai, đóng kết nối
                     ClientManager.CloseConnection();
                 }
             }
@@ -93,7 +84,7 @@ namespace Pixel_Drift
             {
                 MessageBox.Show("Dữ liệu từ server không hợp lệ (không phải JSON).", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            catch (SocketException) // Bắt lỗi này ở ClientManager.Connect
+            catch (SocketException) 
             {
                 MessageBox.Show("Không thể kết nối tới server. Hãy kiểm tra IP và cổng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

@@ -14,10 +14,6 @@ namespace Pixel_Drift
 {
     public partial class Form_Dang_Ki : Form
     {
-        // Địa chỉ IP và cổng của server TCP 
-        private const string SERVER_IP = "127.0.0.1";
-        private const int SERVER_PORT = 1111;  // trùng với server
-
         public Form_Dang_Ki()
         {
             InitializeComponent();
@@ -104,13 +100,12 @@ namespace Pixel_Drift
                 {
                     DialogResult result = MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         
-                    // Sau khi bấm OK, chuyển qua form đăng nhập (nằm ở namespace khác)
                     if (result == DialogResult.OK)
                     {
-                        this.Hide(); // ẩn form đăng ký
+                        this.Hide(); 
                         Pixel_Drift.Form_Dang_Nhap formDangNhap = new Pixel_Drift.Form_Dang_Nhap();
-                        formDangNhap.ShowDialog(); // hiển thị form đăng nhập
-                        this.Close(); // đóng form đăng ký
+                        formDangNhap.ShowDialog(); 
+                        this.Close(); 
                     }
                 }
         
@@ -149,7 +144,7 @@ namespace Pixel_Drift
             {
                 using (TcpClient client = new TcpClient())
                 {
-                    client.Connect(SERVER_IP, SERVER_PORT);
+                    client.Connect("127.0.0.1", 1111);
                     NetworkStream stream = client.GetStream();
 
                     // Tạo JSON request
