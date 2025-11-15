@@ -74,6 +74,7 @@ namespace Pixel_Drift
 
         }
 
+        //Phan kiem tra va cham cua xe
         private void KiemTraVaCham()
         {
             // ====== XE 1 ======
