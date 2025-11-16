@@ -16,7 +16,7 @@ namespace Pixel_Drift
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form_Mo_Dau());
+            Application.Run(new Game_Window());
         }
     }
 }

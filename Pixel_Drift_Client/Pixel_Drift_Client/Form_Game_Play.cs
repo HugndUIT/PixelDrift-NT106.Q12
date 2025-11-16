@@ -7,330 +7,298 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using System.IO;
 
 namespace Pixel_Drift
 {
     public partial class Game_Window : Form
     {
+        private TcpClient client;
+        private NetworkStream stream;
+        private StreamReader reader;
+        private int myPlayerNumber = 0;
+        private string myUsername = "Player";
+
         public Game_Window()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
         }
-
-        static int LeftRoadSpeed;
-        static int RightRoadSpeed;
-
-        //Tạo biến chỉ trạng thái di chuyển của người chơi
-        bool Player1_left, Player1_right;
-
-        bool Player2_left, Player2_right;
-
-        //Tốc độ di chuyển ngang của xe
-        int PlayerSpeed = 12;
-
-        Random Rand = new Random();
-
-        private List<Image> carImages = new List<Image>();
 
         private void Game_Window_Load(object sender, EventArgs e)
         {
-            // Ẩn toàn bộ xe khi chưa bắt đầu
-            ptb_AICar1.Visible = false;
-            ptb_AICar3.Visible = false;
-            ptb_AICar5.Visible = false;
-            ptb_AICar6.Visible = false;
-
-            ClientManager.Connect("127.0.0.1", 1111);
-        }
-
-        private void btn_startgame_Click(object sender, EventArgs e)
-        {
-            // Tốc độ ban đầu bằng nhau
-            LeftRoadSpeed = 10;
-            RightRoadSpeed = 10;
-
-            // Yêu cầu vị trí ban đầu từ Server
-            RequestNewPosition("ptb_increasingroad1");
-            RequestNewPosition("ptb_decreasingroad1");
-            RequestNewPosition("ptb_increasingroad2");
-            RequestNewPosition("ptb_decreasingroad2");
-            RequestNewPosition("ptb_AICar1");
-            RequestNewPosition("ptb_AICar5");
-            RequestNewPosition("ptb_AICar3");
-            RequestNewPosition("ptb_AICar6");
-
-            // Hiển thị xe lại
-            ptb_AICar1.Visible = true;
-            ptb_AICar3.Visible = true;
-            ptb_AICar5.Visible = true;
-            ptb_AICar6.Visible = true;
-
-
-            // Bắt đầu chạy game
-            game_timer.Start();
-
-            btn_startgame.Enabled = false;
-            btn_Scoreboard.Enabled = false;
-
-        }
-
-        //Phan kiem tra va cham cua xe
-        private void KiemTraVaCham()
-        {
-            // ====== XE 1 ======
-            //Kiểm tra xem xe 1 có ăn buff tăng tốc không
-            if (ptb_player1.Bounds.IntersectsWith(ptb_increasingroad1.Bounds))
-            {
-                LeftRoadSpeed += 3;
-                RequestNewPosition("ptb_increasingroad1");
-            }
-
-            //Kiểm tra xem xe 1 có ăn buff giảm tốc không
-            if (ptb_player1.Bounds.IntersectsWith(ptb_decreasingroad1.Bounds))
-            {
-                LeftRoadSpeed -= 3;
-                RequestNewPosition("ptb_decreasingroad1");
-            }
-
-            //Kiểm tra xem xe 1 có va chạm không
-            if (ptb_player1.Bounds.IntersectsWith(ptb_AICar1.Bounds))
-            {
-                LeftRoadSpeed -= 4;
-                RequestNewPosition("ptb_AICar1");
-            }
-
-            //Kiểm tra xem xe 1 có va chạm không
-            if (ptb_player1.Bounds.IntersectsWith(ptb_AICar5.Bounds))
-            {
-                LeftRoadSpeed -= 4;
-                RequestNewPosition("ptb_AICar5");
-            }
-
-
-            // ====== XE 2 ======
-            //Kiểm tra xem xe 2 có ăn buff tăng tốc không
-            if (ptb_player2.Bounds.IntersectsWith(ptb_increasingroad2.Bounds))
-            {
-                RightRoadSpeed += 3;
-                RequestNewPosition("ptb_increasingroad2");
-            }
-
-            //Kiểm tra xem xe 1 có ăn buff giảm tốc không
-            if (ptb_player2.Bounds.IntersectsWith(ptb_decreasingroad2.Bounds))
-            {
-                RightRoadSpeed -= 3;
-                RequestNewPosition("ptb_decreasingroad2");
-            }
-
-            //Kiểm tra xem xe 1 có va chạm không
-            if (ptb_player2.Bounds.IntersectsWith(ptb_AICar6.Bounds))
-            {
-                RightRoadSpeed -= 4;
-                RequestNewPosition("ptb_AICar6");
-            }
-
-            //Kiểm tra xem xe 2 có va chạm không
-            if (ptb_player2.Bounds.IntersectsWith(ptb_AICar3.Bounds))
-            {
-                RightRoadSpeed -= 4;
-                RequestNewPosition("ptb_AICar3");
-            }
-        }
-
-        private void game_timer_Tick(object sender, EventArgs e)
-        {
-            MoveRoad1();
-            MoveRoad2();
-            MoveBuffRoad1();
-            MoveBuffRoad2();
-
-            MoveAICar1();
-            MoveAICar3();
-            MoveAICar5();
-            MoveAICar6();
-
-            // Di chuyển xe 1 (người chơi này)
-            if (Player1_left)
-            {
-                ptb_player1.Left -= PlayerSpeed;
-            }
-            if (Player1_right)
-            {
-                ptb_player1.Left += PlayerSpeed;
-            }
-
-            // Di chuyển xe 2 (người chơi này)
-            if (Player2_left)
-            {
-                ptb_player2.Left -= PlayerSpeed;
-            }
-            if (Player2_right)
-            {
-                ptb_player2.Left += PlayerSpeed;
-            }
-
-            // Thêm giới hạn di chuyển cho xe 1
-            int p1_minX = 40;
-            int p1_maxX = 420 - ptb_player1.Width;
-            ptb_player1.Left = Math.Max(ptb_player1.Left, p1_minX);
-            ptb_player1.Left = Math.Min(ptb_player1.Left, p1_maxX);
-
-            // Thêm giới hạn di chuyển cho xe 2
-            int p2_minX = 40;
-            int p2_maxX = 415 - ptb_player2.Width;
-            ptb_player2.Left = Math.Max(ptb_player2.Left, p2_minX);
-            ptb_player2.Left = Math.Min(ptb_player2.Left, p2_maxX);
-
-            KiemTraVaCham();
-
-            int minSpeed = 4;
-
-            LeftRoadSpeed = Math.Max(LeftRoadSpeed, minSpeed);
-            RightRoadSpeed = Math.Max(RightRoadSpeed, minSpeed);
-        }
-
-        private void RequestNewPosition(string objectName)
-        {
-            var request = new Dictionary<string, string>
-            {
-                { "action", "position_object" },
-                { "object_name", objectName }
-            };
-
-            string response = ClientManager.SendRequest(request);
-            HandlePositionResponse(response);
-        }
-
-        // Hàm xử lý phản hồi từ Server
-        private void HandlePositionResponse(string response)
-        {
-            if (string.IsNullOrEmpty(response)) return;
-
+            // Thiết lập giao diện phòng chờ
+            ResetToLobby();
+            // Kết nối và lắng nghe
             try
             {
-                var data = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(response);
+                client = new TcpClient();
+                client.Connect("127.0.0.1", 1111);
+                stream = client.GetStream();
+                reader = new StreamReader(stream, Encoding.UTF8);
 
-                if (data != null && data.ContainsKey("status") && data["status"].GetString() == "success" && data.ContainsKey("action") && data["action"].GetString() == "update_position")
+                Task.Run(() => ListenForServerMessages());
+
+                var joinRequest = new { action = "join_lobby", username = myUsername };
+                Send(JsonSerializer.Serialize(joinRequest));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể kết nối đến server: {ex.Message}");
+                this.Close();
+            }
+        }
+
+        // Gửi tin nhắn (Tự thêm \n)
+        private void Send(string message)
+        {
+            if (stream == null || !stream.CanWrite) return;
+            try
+            {
+                byte[] buffer = Encoding.UTF8.GetBytes(message + "\n");
+                stream.Write(buffer, 0, buffer.Length);
+                stream.Flush();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi gửi: {ex.Message}");
+            }
+        }
+
+        // Luồng lắng nghe (Dùng StreamReader)
+        private async Task ListenForServerMessages()
+        {
+            string message;
+            try
+            {
+                while ((message = await reader.ReadLineAsync()) != null)
                 {
-                    string name = data["name"].GetString();
-                    int x = data["x"].GetInt32();
-                    int y = data["y"].GetInt32();
+                    this.Invoke(new Action(() => ProcessServerMessage(message)));
+                }
+            }
+            catch (Exception)
+            {
+                if (this.IsHandleCreated)
+                    this.Invoke(new Action(() => {
+                        MessageBox.Show("Mất kết nối server.");
+                        ResetToLobby();
+                    }));
+            }
+        }
 
-                    Control[] controls = this.Controls.Find(name, true);
-                    if (controls.Length > 0 && controls[0] is PictureBox ptb)
-                    {
-                        ptb.Location = new Point(x, y);
+        private void ProcessServerMessage(string message)
+        {
+            try
+            {
+                var data = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(message);
+                if (!data.ContainsKey("action")) return;
 
-                        if (name.Contains("AICar") && carImages.Count > 0)
+                string action = data["action"].GetString();
+                switch (action)
+                {
+                    case "assign_player":
+                        myPlayerNumber = data["player_number"].GetInt32();
+                        this.Text = $"Pixel Drift - PLAYER {myPlayerNumber} ({(myPlayerNumber == 1 ? "Xe Đỏ" : "Xe Xanh")})";
+                        break;
+
+                    case "update_ready_status":
+                        lbl_P1_Status.Text = $"Player 1 ({data["player1_name"].GetString()}): {(data["player1_ready"].GetBoolean() ? "Sẵn sàng" : "Chưa sẵn sàng")}";
+                        lbl_P2_Status.Text = $"Player 2 ({data["player2_name"].GetString()}): {(data["player2_ready"].GetBoolean() ? "Sẵn sàng" : "Chưa sẵn sàng")}";
+                        break;
+
+                    case "countdown":
+                        lbl_Countdown.Visible = true;
+                        lbl_Countdown.Text = data["time"].GetInt32().ToString();
+                        break;
+
+                    case "start_game":
+                        StartGame();
+                        break;
+
+                    case "update_time":
+                        lbl_GameTimer.Text = "Time: " + data["time"].GetInt32().ToString();
+                        break;
+
+                    case "game_over":
+                        MessageBox.Show("Hết giờ!", "Trò chơi kết thúc");
+                        ResetToLobby();
+                        break;
+
+                    case "player_disconnected":
+                        MessageBox.Show($"Người chơi {data["name"].GetString()} đã ngắt kết nối.");
+                        ResetToLobby();
+                        break;
+
+                    case "lobby_full":
+                        MessageBox.Show("Phòng đã đầy.");
+                        break;
+
+                    case "update_game_state":
+                        if (data.ContainsKey("ptb_player1"))
                         {
-                            ptb.Image = carImages[Rand.Next(carImages.Count)];
+                            JsonElement el = data["ptb_player1"];
+                            ptb_player1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
                         }
-                    }
+                        if (data.ContainsKey("ptb_player2"))
+                        {
+                            JsonElement el = data["ptb_player2"];
+                            ptb_player2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+
+                        if (data.ContainsKey("ptb_roadtrack1"))
+                        {
+                            JsonElement el = data["ptb_roadtrack1"];
+                            ptb_roadtrack1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_roadtrack1dup"))
+                        {
+                            JsonElement el = data["ptb_roadtrack1dup"];
+                            ptb_roadtrack1dup.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_roadtrack2"))
+                        {
+                            JsonElement el = data["ptb_roadtrack2"];
+                            ptb_roadtrack2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_roadtrack2dup"))
+                        {
+                            JsonElement el = data["ptb_roadtrack2dup"];
+                            ptb_roadtrack2dup.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+
+                        if (data.ContainsKey("ptb_AICar1"))
+                        {
+                            JsonElement el = data["ptb_AICar1"];
+                            ptb_AICar1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_AICar3"))
+                        {
+                            JsonElement el = data["ptb_AICar3"];
+                            ptb_AICar3.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_AICar5"))
+                        {
+                            JsonElement el = data["ptb_AICar5"];
+                            ptb_AICar5.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_AICar6"))
+                        {
+                            JsonElement el = data["ptb_AICar6"];
+                            ptb_AICar6.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+
+                        if (data.ContainsKey("ptb_increasingroad1"))
+                        {
+                            JsonElement el = data["ptb_increasingroad1"];
+                            ptb_increasingroad1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_decreasingroad1"))
+                        {
+                            JsonElement el = data["ptb_decreasingroad1"];
+                            ptb_decreasingroad1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_increasingroad2"))
+                        {
+                            JsonElement el = data["ptb_increasingroad2"];
+                            ptb_increasingroad2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        if (data.ContainsKey("ptb_decreasingroad2"))
+                        {
+                            JsonElement el = data["ptb_decreasingroad2"];
+                            ptb_decreasingroad2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                        }
+                        break;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi xử lý phản hồi vị trí: {ex.Message}");
+                Console.WriteLine($"Lỗi xử lý tin nhắn: {ex.Message} (Data: {message})");
             }
         }
 
-        // Đường bên trái chạy
-        private void MoveRoad1()
+        // Ẩn/hiện các đối tượng game
+        private void ToggleGameObjects(bool show)
         {
-            ptb_roadtrack1.Top += LeftRoadSpeed;
-            ptb_roadtrack1dup.Top += LeftRoadSpeed;
+            ptb_roadtrack1.Visible = show;
+            ptb_roadtrack1dup.Visible = show;
+            ptb_roadtrack2.Visible = show;
+            ptb_roadtrack2dup.Visible = show;
+            ptb_player1.Visible = show;
+            ptb_player2.Visible = show;
 
-            if (ptb_roadtrack1.Top >= this.Height)
-            {
-                ptb_roadtrack1.Top = ptb_roadtrack1dup.Top - ptb_roadtrack1.Height;
-            }
-            if (ptb_roadtrack1dup.Top >= this.Height)
-            {
-                ptb_roadtrack1dup.Top = ptb_roadtrack1.Top - ptb_roadtrack1dup.Height;
-            }
+            ptb_AICar1.Visible = show;
+            ptb_AICar3.Visible = show;
+            ptb_AICar5.Visible = show;
+            ptb_AICar6.Visible = show;
+            ptb_increasingroad1.Visible = show;
+            ptb_decreasingroad1.Visible = show;
+            ptb_increasingroad2.Visible = show;
+            ptb_decreasingroad2.Visible = show;
         }
 
-        // Đường bên phải chạy
-        private void MoveRoad2()
+        // Bắt đầu game
+        private void StartGame()
         {
-            ptb_roadtrack2.Top += RightRoadSpeed;
-            ptb_roadtrack2dup.Top += RightRoadSpeed;
+            btn_Ready.Visible = false;
+            lbl_P1_Status.Visible = false;
+            lbl_P2_Status.Visible = false;
+            lbl_Countdown.Visible = false;
 
-            if (ptb_roadtrack2.Top >= this.Height)
-            {
-                ptb_roadtrack2.Top = ptb_roadtrack2dup.Top - ptb_roadtrack2.Height;
-            }
-            if (ptb_roadtrack2dup.Top >= this.Height)
-            {
-                ptb_roadtrack2dup.Top = ptb_roadtrack2.Top - ptb_roadtrack2dup.Height;
-            }
+            ToggleGameObjects(true); 
+            lbl_GameTimer.Visible = true;
+            lbl_GameTimer.Text = "Time: 60";
+
+            btn_Scoreboard.Enabled = false;
+
+            // Player
+            ptb_player1.BringToFront();
+            ptb_player2.BringToFront();
+
+            // Xe AI
+            ptb_AICar1.BringToFront();
+            ptb_AICar3.BringToFront();
+            ptb_AICar5.BringToFront();
+            ptb_AICar6.BringToFront();
+
+            // Item
+            ptb_increasingroad1.BringToFront();
+            ptb_decreasingroad1.BringToFront();
+            ptb_increasingroad2.BringToFront();
+            ptb_decreasingroad2.BringToFront();
+
+            this.Focus();
         }
 
-        // ====== LÀN TRÁI - AI CARS ======
-        private void MoveAICar1()
+        // Quay về phòng chờ
+        private void ResetToLobby()
         {
-            ptb_AICar1.Top += LeftRoadSpeed;
-            if (ptb_AICar1.Top > this.Height)
-            {
-                RequestNewPosition("ptb_AICar1");
-            }
+            game_timer.Stop();
+
+            btn_Ready.Visible = true;
+            btn_Ready.Enabled = true;
+            btn_Ready.Text = "Sẵn sàng";
+            lbl_P1_Status.Visible = true;
+            lbl_P2_Status.Visible = true;
+            btn_Scoreboard.Enabled = true;
+
+            ToggleGameObjects(false); 
+            lbl_Countdown.Visible = false;
+            lbl_GameTimer.Visible = false;
+
+            btn_Ready.Focus();
         }
 
-        private void MoveAICar5()
+        private void btn_Ready_Click(object sender, EventArgs e)
         {
-            ptb_AICar5.Top += LeftRoadSpeed;
-            if (ptb_AICar5.Top > this.Height)
-            {
-                RequestNewPosition("ptb_AICar5");
-            }
+            var readyRequest = new { action = "set_ready", ready_status = "true" };
+            Send(JsonSerializer.Serialize(readyRequest));
+            btn_Ready.Enabled = false;
+            btn_Ready.Text = "Đang chờ...";
         }
 
-        // ====== LÀN PHẢI - AI CARS ======
-        private void MoveAICar3()
-        {
-            ptb_AICar3.Top += RightRoadSpeed;
-            if (ptb_AICar3.Top > this.Height)
-            {
-                RequestNewPosition("ptb_AICar3");
-            }
-        }
-
-        private void MoveAICar6()
-        {
-            ptb_AICar6.Top += RightRoadSpeed;
-            if (ptb_AICar6.Top > this.Height)
-            {
-                RequestNewPosition("ptb_AICar6");
-            }
-        }
-
-        // Buff ở làn đường bên trái chạy
-        private void MoveBuffRoad1()
-        {
-            ptb_increasingroad1.Top += LeftRoadSpeed;
-            ptb_decreasingroad1.Top += LeftRoadSpeed;
-
-            if (ptb_increasingroad1.Top > this.Height)
-                RequestNewPosition("ptb_increasingroad1");
-
-            if (ptb_decreasingroad1.Top > this.Height)
-                RequestNewPosition("ptb_decreasingroad1");
-        }
-
-        // Buff ở làn đường bên phải chạy
-        private void MoveBuffRoad2()
-        {
-            ptb_increasingroad2.Top += RightRoadSpeed;
-            ptb_decreasingroad2.Top += RightRoadSpeed;
-
-            if (ptb_increasingroad2.Top > this.Height)
-                RequestNewPosition("ptb_increasingroad2");
-
-            if (ptb_decreasingroad2.Top > this.Height)
-                RequestNewPosition("ptb_decreasingroad2");
-        }
+        private void game_timer_Tick(object sender, EventArgs e) {}
 
         private void btn_Scoreboard_Click(object sender, EventArgs e)
         {
@@ -340,55 +308,39 @@ namespace Pixel_Drift
 
         private void Game_Window_KeyDown(object sender, KeyEventArgs e)
         {
-            //Kiểm soát di chuyển của player1
-            if (e.KeyCode == Keys.Left)
-            {
-                Player1_left = true;
-            }
-            if (e.KeyCode == Keys.Right)
-            {
-                Player1_right = true;
-            }
+            string direction = null;
+            string state = "down";
 
-            //Kiểm soát di chuyển của player2
-            if (e.KeyCode == Keys.A)
-            {
-                Player2_left = true;
-            }
-            if (e.KeyCode == Keys.D)
-            {
-                Player2_right = true;
-            }
+            if (e.KeyCode == Keys.Left) { direction = "left"; }
+            else if (e.KeyCode == Keys.Right) { direction = "right"; }
 
-
+            if (direction != null)
+            {
+                var moveRequest = new { action = "move", player = myPlayerNumber, direction, state };
+                Send(JsonSerializer.Serialize(moveRequest));
+            }
         }
 
         private void Game_Window_KeyUp(object sender, KeyEventArgs e)
         {
-            //Kiểm soát di chuyển của player1
-            if (e.KeyCode == Keys.Left)
-            {
-                Player1_left = false;
-            }
-            if (e.KeyCode == Keys.Right)
-            {
-                Player1_right = false;
-            }
+            string direction = null;
+            string state = "up";
 
-            //Kiểm soát di chuyển của player2
-            if (e.KeyCode == Keys.A)
+            if (e.KeyCode == Keys.Left) { direction = "left"; }
+            else if (e.KeyCode == Keys.Right) { direction = "right"; }
+
+            if (direction != null)
             {
-                Player2_left = false;
-            }
-            if (e.KeyCode == Keys.D)
-            {
-                Player2_right = false;
+                var moveRequest = new { action = "move", player = myPlayerNumber, direction, state };
+                Send(JsonSerializer.Serialize(moveRequest));
             }
         }
 
         private void Game_Window_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ClientManager.CloseConnection();
+            reader?.Close();
+            stream?.Close();
+            client?.Close();
         }
     }
 }
