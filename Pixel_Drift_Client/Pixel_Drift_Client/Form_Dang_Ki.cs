@@ -7,8 +7,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using  Pixel_Drift;
+using Pixel_Drift;
 using System.Globalization;
+using System.IO;
 
 namespace Pixel_Drift
 {
@@ -51,7 +52,7 @@ namespace Pixel_Drift
             string confirmpass = tb_xacnhanmk.Text.Trim();
             string email = tb_emailsdt.Text.Trim();
             string birthday = tb_BirthDay.Text.Trim();
-        
+
             // Kiểm tra dữ liệu đầu vào
             if (username == "" || password == "" || email == "")
             {
@@ -60,55 +61,55 @@ namespace Pixel_Drift
             }
 
             birthday = DinhDangNgay(birthday);
-            if(birthday == null)
+            if (birthday == null)
             {
                 MessageBox.Show("Nhập sai định dạng ngày sinh nhật");
                 return;
             }
 
-                bool isEmail = Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
+            bool isEmail = Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail\.com$");
             if (!isEmail)
             {
                 MessageBox.Show("Email không hợp lệ!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-        
+
             if (!KiemTraDoManhMatKhau(password))
             {
                 MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!",
                     "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-        
+
             if (password != confirmpass)
             {
                 MessageBox.Show("Mật khẩu không khớp!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-        
+
             // Mã hóa mật khẩu
             string hashedPassword = MaHoa(password);
-        
+
             try
             {
-                string response = await SendRegisterRequest(username, email, hashedPassword,birthday);
-        
+                string response = await SendRegisterRequest(username, email, hashedPassword, birthday);
+
                 // Phân tích phản hồi JSON
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
-        
-                if (dict.ContainsKey("status") && dict["status"] == "success")
+
+                if (dict.ContainsKey("Status") && dict["Status"] == "success")
                 {
                     DialogResult result = MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        
+
                     if (result == DialogResult.OK)
                     {
-                        this.Hide(); 
+                        this.Hide();
                         Pixel_Drift.Form_Dang_Nhap formDangNhap = new Pixel_Drift.Form_Dang_Nhap();
-                        formDangNhap.ShowDialog(); 
-                        this.Close(); 
+                        formDangNhap.ShowDialog();
+                        this.Close();
                     }
                 }
-        
+
                 else
                 {
                     string msg = dict.ContainsKey("message") ? dict["message"] : "Đăng ký thất bại!";
@@ -132,41 +133,46 @@ namespace Pixel_Drift
         //Định dạng ngày sinh nhật
         private string DinhDangNgay(string day)
         {
-            if (DateTime.TryParse(day, CultureInfo.CurrentCulture,DateTimeStyles.None,out DateTime parsedDay))
+            if (DateTime.TryParse(day, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime parsedDay))
                 return parsedDay.ToString("yyyy-MM-dd");
             return null;
         }
 
-        // Gửi yêu cầu đăng ký qua TCP (định dạng JSON)
+
         private async Task<string> SendRegisterRequest(string username, string email, string hashedPassword, string birthday)
         {
+            // Dùng Task.Run để không làm treo giao diện
             return await Task.Run(() =>
             {
+                // Mở kết nối
                 using (TcpClient client = new TcpClient())
                 {
+
                     client.Connect("127.0.0.1", 1111);
-                    NetworkStream stream = client.GetStream();
 
-                    // Tạo JSON request
-                    var data = new
+
+                    using (NetworkStream stream = client.GetStream())
+                    using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
+                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                     {
-                        action = "register",
-                        username = username,
-                        email = email,
-                        password = hashedPassword,
-                        birthday = birthday
-                    };
 
-                    string json = JsonSerializer.Serialize(data);
-                    byte[] sendBytes = Encoding.UTF8.GetBytes(json);
-                    stream.Write(sendBytes, 0, sendBytes.Length);
+                        var data = new
+                        {
+                            action = "register",
+                            email = email,
+                            username = username,
+                            password = hashedPassword,
+                            birthday = birthday
+                        };
 
-                    // Nhận phản hồi từ server
-                    byte[] buffer = new byte[4096];
-                    int len = stream.Read(buffer, 0, buffer.Length);
-                    string response = Encoding.UTF8.GetString(buffer, 0, len);
+                        string json = JsonSerializer.Serialize(data);
 
-                    return response;
+                        writer.WriteLine(json);
+
+                        string response = reader.ReadLine();
+
+                        return response;
+                    }
                 }
             });
         }

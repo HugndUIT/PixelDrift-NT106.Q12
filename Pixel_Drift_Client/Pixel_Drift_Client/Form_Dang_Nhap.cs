@@ -64,7 +64,7 @@ namespace Pixel_Drift
                 // Phân tích phản hồi JSON
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
-                if (dict.ContainsKey("status") && dict["status"] == "success")
+                if (dict.ContainsKey("Status") && dict["Status"] == "success")
                 {
                     MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 

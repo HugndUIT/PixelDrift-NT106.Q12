@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
+using System.Net.Sockets; 
 using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
+
 
 namespace Pixel_Drift
 {
     public partial class Form_Doi_Mat_Khau : Form
     {
-        private string userEmail;                  
+        private string userEmail;
 
         public Form_Doi_Mat_Khau(string email)
         {
@@ -17,33 +18,14 @@ namespace Pixel_Drift
             userEmail = email;
         }
 
-        private string SendRequest(object data)
-        {
-            string json = JsonSerializer.Serialize(data);
-
-            using (TcpClient client = new TcpClient())
-            {
-                client.Connect("127.0.0.1", 1111);
-                NetworkStream ns = client.GetStream();
-
-                byte[] sendBytes = Encoding.UTF8.GetBytes(json);
-                ns.Write(sendBytes, 0, sendBytes.Length);
-
-                byte[] buffer = new byte[4096];
-                int len = ns.Read(buffer, 0, buffer.Length);
-                string response = Encoding.UTF8.GetString(buffer, 0, len);
-
-                return response;
-            }
-        }
 
         private void btn_doimk_Click(object sender, EventArgs e)
         {
-            string token = txt_mkcu.Text.Trim();
+            string token = txt_mkcu.Text.Trim(); 
             string newPass = txt_mkmoi.Text.Trim();
             string confirm = txt_xacnhanmk.Text.Trim();
 
-            if (token == "" || newPass == "" || confirm == "")
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(newPass) || string.IsNullOrEmpty(confirm))
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Cảnh báo",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -57,40 +39,55 @@ namespace Pixel_Drift
                 return;
             }
 
+            if (!ClientManager.IsConnected)
+            {
+                MessageBox.Show("Mất kết nối đến server! Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
             try
             {
                 var request = new
                 {
                     action = "change_password",
                     email = userEmail,
-                    token = token,
+                    token = token, 
                     new_password = newPass
                 };
 
-                string response = SendRequest(request);
-                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
+                string response = ClientManager.SendRequest(request);
 
-                if (dict.ContainsKey("status") && dict["status"] == "success")
+                if (response == null)
                 {
-                    MessageBox.Show(dict["message"], "Thành công",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Hide();
-
-                    Form_Dang_Nhap formDangNhap = new Form_Dang_Nhap();
-                    formDangNhap.ShowDialog();
-
-                    this.Close();
+                    throw new SocketException(); 
                 }
 
+                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
+
+                if (dict.ContainsKey("Status") && dict["Status"] == "success")
+                {
+                    MessageBox.Show(dict["Message"], "Thành công",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    this.Hide();
+                    Form_Dang_Nhap formDangNhap = new Form_Dang_Nhap();
+                    formDangNhap.ShowDialog();
+                    this.Close();
+                }
                 else
                 {
-                    string msg = dict.ContainsKey("message") ? dict["message"] : "Đổi mật khẩu thất bại!";
+                    string msg = dict.ContainsKey("Message") ? dict["Message"] : "Đổi mật khẩu thất bại!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (SocketException)
             {
-                MessageBox.Show("Không thể kết nối đến server!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Không thể kết nối hoặc mất kết nối đến server!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (JsonException)
+            {
+                MessageBox.Show("Phản hồi từ server không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
@@ -102,6 +99,9 @@ namespace Pixel_Drift
         {
             this.Hide();
             Form_Dang_Nhap formdangnhap = new Form_Dang_Nhap();
+            // Đã sửa: Phải ShowDialog()
+            formdangnhap.ShowDialog();
+            this.Close();
         }
     }
 }
