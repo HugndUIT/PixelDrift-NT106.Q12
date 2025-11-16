@@ -36,7 +36,7 @@ namespace Pixel_Drift
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
 
-                if (dict.ContainsKey("status") && dict["status"].ToString() == "success")
+                if (dict.ContainsKey("Status") && dict["Status"].ToString() == "success")
                 {
                     // Dùng (JsonElement) để lấy object "data"
                     var userData = (JsonElement)dict["data"];
