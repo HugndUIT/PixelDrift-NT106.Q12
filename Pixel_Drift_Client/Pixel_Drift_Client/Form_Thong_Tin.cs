@@ -39,12 +39,11 @@ namespace Pixel_Drift
                 if (dict.ContainsKey("Status") && dict["Status"].ToString() == "success")
                 {
                     // Dùng (JsonElement) để lấy object "data"
-                    var userData = (JsonElement)dict["data"];
+                    var userData = (JsonElement)dict["Data"];
 
-                    // Cập nhật UI an toàn, không cần Invoke
-                    lbl_TenDangNhap.Text = "Username: " + userData.GetProperty("username").GetString();
-                    lbl_Email.Text = "Email: " + userData.GetProperty("email").GetString();
-                    lbl_Birthday.Text = "Birthday: " + userData.GetProperty("birthday").GetString();
+                    lbl_TenDangNhap.Text = "Username: " + userData.GetProperty("Username").GetString();
+                    lbl_Email.Text = "Email: " + userData.GetProperty("Email").GetString();
+                    lbl_Birthday.Text = "Birthday: " + userData.GetProperty("Birthday").GetString();
                 }
                 else
                 {
