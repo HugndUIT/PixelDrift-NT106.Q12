@@ -39,7 +39,6 @@ namespace Pixel_Drift
                 return;
             }
 
-            // === KIỂM TRA KẾT NỐI TRƯỚC KHI GỬI ===
             if (!ClientManager.IsConnected)
             {
                 MessageBox.Show("Mất kết nối đến server! Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -61,14 +60,14 @@ namespace Pixel_Drift
 
                 if (response == null)
                 {
-                    throw new SocketException(); // Ném lỗi để catch bên dưới xử lý
+                    throw new SocketException(); 
                 }
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
-                if (dict.ContainsKey("status") && dict["status"] == "success")
+                if (dict.ContainsKey("Status") && dict["Status"] == "success")
                 {
-                    MessageBox.Show(dict["message"], "Thành công",
+                    MessageBox.Show(dict["Message"], "Thành công",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.Hide();
@@ -78,7 +77,7 @@ namespace Pixel_Drift
                 }
                 else
                 {
-                    string msg = dict.ContainsKey("message") ? dict["message"] : "Đổi mật khẩu thất bại!";
+                    string msg = dict.ContainsKey("Message") ? dict["Message"] : "Đổi mật khẩu thất bại!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
