@@ -39,10 +39,10 @@ namespace Pixel_Drift_Server
         private bool P1_Left, P1_Right, P2_Left, P2_Right; 
 
         private const int Game_Height = 800; 
-        private const int P1_Min_X = -10; 
-        private const int P1_Max_X = 530; 
-        private const int P2_Min_X = -10; 
-        private const int P2_Max_X = 530; 
+        private const int P1_Min_X = 0; 
+        private const int P1_Max_X = 470; 
+        private const int P2_Min_X = 0; 
+        private const int P2_Max_X = 470; 
 
         private Random Server_Rand = new Random();
 
@@ -244,9 +244,9 @@ namespace Pixel_Drift_Server
                 Object_Sizes.Clear();
 
                 Game_Objects["ptb_player1"] = new Point(202, 470);
-                Object_Sizes["ptb_player1"] = new Size(72, 117);
+                Object_Sizes["ptb_player1"] = new Size(80, 140);
                 Game_Objects["ptb_player2"] = new Point(202, 470);
-                Object_Sizes["ptb_player2"] = new Size(72, 117);
+                Object_Sizes["ptb_player2"] = new Size(80, 140);
 
                 Game_Objects["ptb_roadtrack1"] = new Point(0, -2);
                 Object_Sizes["ptb_roadtrack1"] = new Size(617, 734);
@@ -258,13 +258,13 @@ namespace Pixel_Drift_Server
                 Object_Sizes["ptb_roadtrack2dup"] = new Size(458, 596);
 
                 Game_Objects["ptb_AICar1"] = Reposition_Object("ptb_AICar1", P1_Min_X, P1_Max_X);
-                Object_Sizes["ptb_AICar1"] = new Size(50, 100);
+                Object_Sizes["ptb_AICar1"] = new Size(80, 140);
                 Game_Objects["ptb_AICar3"] = Reposition_Object("ptb_AICar3", P2_Min_X, P2_Max_X);
-                Object_Sizes["ptb_AICar3"] = new Size(74, 128);
+                Object_Sizes["ptb_AICar3"] = new Size(80, 140);
                 Game_Objects["ptb_AICar5"] = Reposition_Object("ptb_AICar5", P1_Min_X, P1_Max_X);
-                Object_Sizes["ptb_AICar5"] = new Size(50, 100);
+                Object_Sizes["ptb_AICar5"] = new Size(80, 140);
                 Game_Objects["ptb_AICar6"] = Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X);
-                Object_Sizes["ptb_AICar6"] = new Size(74, 128);
+                Object_Sizes["ptb_AICar6"] = new Size(80, 140);
 
                 Game_Objects["ptb_increasingroad1"] = Reposition_Object("ptb_increasingroad1", P1_Min_X, P1_Max_X);
                 Object_Sizes["ptb_increasingroad1"] = new Size(30, 30);
