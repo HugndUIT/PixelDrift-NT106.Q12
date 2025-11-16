@@ -121,6 +121,12 @@ namespace Pixel_Drift
                         lbl_GameTimer.Text = "Time: " + data["time"].GetInt32().ToString();
                         break;
 
+                    case "update_score":
+                        if (lbl_Score1 != null)
+                            lbl_Score1.Text = "Score: " + data["p1_score"].GetInt64().ToString();
+                        if (lbl_Score2 != null)
+                            lbl_Score2.Text = "Score: " + data["p2_score"].GetInt64().ToString();
+                        break;
                     case "game_over":
                         MessageBox.Show("Hết giờ!", "Trò chơi kết thúc");
                         ResetToLobby();
@@ -250,6 +256,17 @@ namespace Pixel_Drift
             lbl_GameTimer.Visible = true;
             lbl_GameTimer.Text = "Time: 60";
 
+            if (lbl_Score1 != null)
+            {
+                lbl_Score1.Visible = true;
+                lbl_Score1.Text = "Score: 0";
+            }
+            if (lbl_Score2 != null)
+            {
+                lbl_Score2.Visible = true;
+                lbl_Score2.Text = "Score: 0";
+            }
+
             btn_Scoreboard.Enabled = false;
 
             // Player
@@ -286,6 +303,8 @@ namespace Pixel_Drift
             ToggleGameObjects(false); 
             lbl_Countdown.Visible = false;
             lbl_GameTimer.Visible = false;
+            if (lbl_Score1 != null) lbl_Score1.Visible = false;
+            if (lbl_Score2 != null) lbl_Score2.Visible = false;
 
             btn_Ready.Focus();
         }

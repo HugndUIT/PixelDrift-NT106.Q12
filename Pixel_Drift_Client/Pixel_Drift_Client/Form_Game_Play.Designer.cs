@@ -53,6 +53,8 @@
             this.lbl_P2_Status = new System.Windows.Forms.Label();
             this.lbl_Countdown = new System.Windows.Forms.Label();
             this.lbl_GameTimer = new System.Windows.Forms.Label();
+            this.lbl_Score1 = new System.Windows.Forms.Label();
+            this.lbl_Score2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack1dup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_increasingroad1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_decreasingroad1)).BeginInit();
@@ -79,10 +81,9 @@
             // ptb_roadtrack1dup
             // 
             this.ptb_roadtrack1dup.Image = global::Pixel_Drift.Properties.Resources.road;
-            this.ptb_roadtrack1dup.Location = new System.Drawing.Point(0, 596);
-            this.ptb_roadtrack1dup.Margin = new System.Windows.Forms.Padding(2);
+            this.ptb_roadtrack1dup.Location = new System.Drawing.Point(0, 917);
             this.ptb_roadtrack1dup.Name = "ptb_roadtrack1dup";
-            this.ptb_roadtrack1dup.Size = new System.Drawing.Size(463, 596);
+            this.ptb_roadtrack1dup.Size = new System.Drawing.Size(694, 917);
             this.ptb_roadtrack1dup.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_roadtrack1dup.TabIndex = 1;
             this.ptb_roadtrack1dup.TabStop = false;
@@ -90,10 +91,9 @@
             // ptb_increasingroad1
             // 
             this.ptb_increasingroad1.Image = global::Pixel_Drift.Properties.Resources.speedup;
-            this.ptb_increasingroad1.Location = new System.Drawing.Point(90, -57);
-            this.ptb_increasingroad1.Margin = new System.Windows.Forms.Padding(2);
+            this.ptb_increasingroad1.Location = new System.Drawing.Point(135, -88);
             this.ptb_increasingroad1.Name = "ptb_increasingroad1";
-            this.ptb_increasingroad1.Size = new System.Drawing.Size(50, 54);
+            this.ptb_increasingroad1.Size = new System.Drawing.Size(75, 83);
             this.ptb_increasingroad1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ptb_increasingroad1.TabIndex = 6;
             this.ptb_increasingroad1.TabStop = false;
@@ -101,10 +101,9 @@
             // ptb_decreasingroad1
             // 
             this.ptb_decreasingroad1.Image = global::Pixel_Drift.Properties.Resources.slowdown;
-            this.ptb_decreasingroad1.Location = new System.Drawing.Point(290, -57);
-            this.ptb_decreasingroad1.Margin = new System.Windows.Forms.Padding(2);
+            this.ptb_decreasingroad1.Location = new System.Drawing.Point(435, -88);
             this.ptb_decreasingroad1.Name = "ptb_decreasingroad1";
-            this.ptb_decreasingroad1.Size = new System.Drawing.Size(50, 54);
+            this.ptb_decreasingroad1.Size = new System.Drawing.Size(75, 83);
             this.ptb_decreasingroad1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ptb_decreasingroad1.TabIndex = 5;
             this.ptb_decreasingroad1.TabStop = false;
@@ -119,19 +118,19 @@
             this.panel1.Controls.Add(this.ptb_increasingroad1);
             this.panel1.Controls.Add(this.ptb_roadtrack1dup);
             this.panel1.Controls.Add(this.ptb_roadtrack1);
-            this.panel1.Location = new System.Drawing.Point(9, 10);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2);
+            this.panel1.Location = new System.Drawing.Point(14, 15);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(463, 596);
+            this.panel1.Size = new System.Drawing.Size(694, 917);
             this.panel1.TabIndex = 0;
             // 
             // ptb_player1
             // 
             this.ptb_player1.BackColor = System.Drawing.Color.Transparent;
             this.ptb_player1.Image = ((System.Drawing.Image)(resources.GetObject("ptb_player1.Image")));
-            this.ptb_player1.Location = new System.Drawing.Point(202, 470);
+            this.ptb_player1.Location = new System.Drawing.Point(303, 723);
+            this.ptb_player1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ptb_player1.Name = "ptb_player1";
-            this.ptb_player1.Size = new System.Drawing.Size(72, 117);
+            this.ptb_player1.Size = new System.Drawing.Size(108, 180);
             this.ptb_player1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ptb_player1.TabIndex = 9;
             this.ptb_player1.TabStop = false;
@@ -139,9 +138,10 @@
             // ptb_AICar5
             // 
             this.ptb_AICar5.Image = global::Pixel_Drift.Properties.Resources.RamB;
-            this.ptb_AICar5.Location = new System.Drawing.Point(46, 193);
+            this.ptb_AICar5.Location = new System.Drawing.Point(69, 297);
+            this.ptb_AICar5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ptb_AICar5.Name = "ptb_AICar5";
-            this.ptb_AICar5.Size = new System.Drawing.Size(74, 138);
+            this.ptb_AICar5.Size = new System.Drawing.Size(111, 212);
             this.ptb_AICar5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_AICar5.TabIndex = 9;
             this.ptb_AICar5.TabStop = false;
@@ -149,9 +149,10 @@
             // ptb_AICar1
             // 
             this.ptb_AICar1.Image = global::Pixel_Drift.Properties.Resources.BuickerB;
-            this.ptb_AICar1.Location = new System.Drawing.Point(320, 185);
+            this.ptb_AICar1.Location = new System.Drawing.Point(480, 285);
+            this.ptb_AICar1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ptb_AICar1.Name = "ptb_AICar1";
-            this.ptb_AICar1.Size = new System.Drawing.Size(62, 115);
+            this.ptb_AICar1.Size = new System.Drawing.Size(93, 177);
             this.ptb_AICar1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_AICar1.TabIndex = 7;
             this.ptb_AICar1.TabStop = false;
@@ -159,10 +160,9 @@
             // ptb_roadtrack1
             // 
             this.ptb_roadtrack1.Image = global::Pixel_Drift.Properties.Resources.road;
-            this.ptb_roadtrack1.Location = new System.Drawing.Point(0, -2);
-            this.ptb_roadtrack1.Margin = new System.Windows.Forms.Padding(2);
+            this.ptb_roadtrack1.Location = new System.Drawing.Point(0, -3);
             this.ptb_roadtrack1.Name = "ptb_roadtrack1";
-            this.ptb_roadtrack1.Size = new System.Drawing.Size(463, 596);
+            this.ptb_roadtrack1.Size = new System.Drawing.Size(694, 917);
             this.ptb_roadtrack1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_roadtrack1.TabIndex = 10;
             this.ptb_roadtrack1.TabStop = false;
@@ -170,9 +170,10 @@
             // ptb_AICar6
             // 
             this.ptb_AICar6.Image = global::Pixel_Drift.Properties.Resources.GalardB;
-            this.ptb_AICar6.Location = new System.Drawing.Point(155, 176);
+            this.ptb_AICar6.Location = new System.Drawing.Point(232, 271);
+            this.ptb_AICar6.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ptb_AICar6.Name = "ptb_AICar6";
-            this.ptb_AICar6.Size = new System.Drawing.Size(71, 124);
+            this.ptb_AICar6.Size = new System.Drawing.Size(106, 191);
             this.ptb_AICar6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_AICar6.TabIndex = 11;
             this.ptb_AICar6.TabStop = false;
@@ -180,9 +181,10 @@
             // ptb_AICar3
             // 
             this.ptb_AICar3.Image = global::Pixel_Drift.Properties.Resources.JeepB;
-            this.ptb_AICar3.Location = new System.Drawing.Point(9, 268);
+            this.ptb_AICar3.Location = new System.Drawing.Point(14, 412);
+            this.ptb_AICar3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ptb_AICar3.Name = "ptb_AICar3";
-            this.ptb_AICar3.Size = new System.Drawing.Size(74, 128);
+            this.ptb_AICar3.Size = new System.Drawing.Size(111, 197);
             this.ptb_AICar3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_AICar3.TabIndex = 9;
             this.ptb_AICar3.TabStop = false;
@@ -190,10 +192,9 @@
             // ptb_roadtrack2dup
             // 
             this.ptb_roadtrack2dup.Image = global::Pixel_Drift.Properties.Resources.road;
-            this.ptb_roadtrack2dup.Location = new System.Drawing.Point(0, 596);
-            this.ptb_roadtrack2dup.Margin = new System.Windows.Forms.Padding(2);
+            this.ptb_roadtrack2dup.Location = new System.Drawing.Point(0, 917);
             this.ptb_roadtrack2dup.Name = "ptb_roadtrack2dup";
-            this.ptb_roadtrack2dup.Size = new System.Drawing.Size(458, 596);
+            this.ptb_roadtrack2dup.Size = new System.Drawing.Size(687, 917);
             this.ptb_roadtrack2dup.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_roadtrack2dup.TabIndex = 1;
             this.ptb_roadtrack2dup.TabStop = false;
@@ -202,10 +203,9 @@
             // 
             this.ptb_increasingroad2.BackColor = System.Drawing.SystemColors.ControlText;
             this.ptb_increasingroad2.Image = global::Pixel_Drift.Properties.Resources.speedup;
-            this.ptb_increasingroad2.Location = new System.Drawing.Point(98, -57);
-            this.ptb_increasingroad2.Margin = new System.Windows.Forms.Padding(2);
+            this.ptb_increasingroad2.Location = new System.Drawing.Point(147, -88);
             this.ptb_increasingroad2.Name = "ptb_increasingroad2";
-            this.ptb_increasingroad2.Size = new System.Drawing.Size(50, 54);
+            this.ptb_increasingroad2.Size = new System.Drawing.Size(75, 83);
             this.ptb_increasingroad2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ptb_increasingroad2.TabIndex = 8;
             this.ptb_increasingroad2.TabStop = false;
@@ -214,10 +214,9 @@
             // 
             this.ptb_decreasingroad2.BackColor = System.Drawing.SystemColors.ControlText;
             this.ptb_decreasingroad2.Image = global::Pixel_Drift.Properties.Resources.slowdown;
-            this.ptb_decreasingroad2.Location = new System.Drawing.Point(300, -57);
-            this.ptb_decreasingroad2.Margin = new System.Windows.Forms.Padding(2);
+            this.ptb_decreasingroad2.Location = new System.Drawing.Point(450, -88);
             this.ptb_decreasingroad2.Name = "ptb_decreasingroad2";
-            this.ptb_decreasingroad2.Size = new System.Drawing.Size(50, 54);
+            this.ptb_decreasingroad2.Size = new System.Drawing.Size(75, 83);
             this.ptb_decreasingroad2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ptb_decreasingroad2.TabIndex = 7;
             this.ptb_decreasingroad2.TabStop = false;
@@ -232,19 +231,19 @@
             this.panel2.Controls.Add(this.ptb_increasingroad2);
             this.panel2.Controls.Add(this.ptb_roadtrack2dup);
             this.panel2.Controls.Add(this.ptb_roadtrack2);
-            this.panel2.Location = new System.Drawing.Point(495, 10);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2);
+            this.panel2.Location = new System.Drawing.Point(742, 15);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(458, 596);
+            this.panel2.Size = new System.Drawing.Size(687, 917);
             this.panel2.TabIndex = 1;
             // 
             // ptb_player2
             // 
             this.ptb_player2.BackColor = System.Drawing.Color.Transparent;
             this.ptb_player2.Image = ((System.Drawing.Image)(resources.GetObject("ptb_player2.Image")));
-            this.ptb_player2.Location = new System.Drawing.Point(201, 470);
+            this.ptb_player2.Location = new System.Drawing.Point(302, 723);
+            this.ptb_player2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ptb_player2.Name = "ptb_player2";
-            this.ptb_player2.Size = new System.Drawing.Size(72, 117);
+            this.ptb_player2.Size = new System.Drawing.Size(108, 180);
             this.ptb_player2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ptb_player2.TabIndex = 10;
             this.ptb_player2.TabStop = false;
@@ -253,10 +252,9 @@
             // 
             this.ptb_roadtrack2.BackColor = System.Drawing.SystemColors.ControlText;
             this.ptb_roadtrack2.Image = global::Pixel_Drift.Properties.Resources.road;
-            this.ptb_roadtrack2.Location = new System.Drawing.Point(0, 2);
-            this.ptb_roadtrack2.Margin = new System.Windows.Forms.Padding(2);
+            this.ptb_roadtrack2.Location = new System.Drawing.Point(0, 3);
             this.ptb_roadtrack2.Name = "ptb_roadtrack2";
-            this.ptb_roadtrack2.Size = new System.Drawing.Size(458, 596);
+            this.ptb_roadtrack2.Size = new System.Drawing.Size(687, 917);
             this.ptb_roadtrack2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_roadtrack2.TabIndex = 1;
             this.ptb_roadtrack2.TabStop = false;
@@ -264,10 +262,9 @@
             // btn_Scoreboard
             // 
             this.btn_Scoreboard.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Scoreboard.Location = new System.Drawing.Point(106, 674);
-            this.btn_Scoreboard.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_Scoreboard.Location = new System.Drawing.Point(159, 1037);
             this.btn_Scoreboard.Name = "btn_Scoreboard";
-            this.btn_Scoreboard.Size = new System.Drawing.Size(191, 78);
+            this.btn_Scoreboard.Size = new System.Drawing.Size(286, 120);
             this.btn_Scoreboard.TabIndex = 4;
             this.btn_Scoreboard.Text = "🏆 SCORE BOARD 🏆";
             this.btn_Scoreboard.UseVisualStyleBackColor = true;
@@ -276,10 +273,9 @@
             // btn_Ready
             // 
             this.btn_Ready.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btn_Ready.Location = new System.Drawing.Point(368, 642);
-            this.btn_Ready.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_Ready.Location = new System.Drawing.Point(552, 988);
             this.btn_Ready.Name = "btn_Ready";
-            this.btn_Ready.Size = new System.Drawing.Size(241, 109);
+            this.btn_Ready.Size = new System.Drawing.Size(362, 168);
             this.btn_Ready.TabIndex = 5;
             this.btn_Ready.Text = "Ready";
             this.btn_Ready.UseVisualStyleBackColor = true;
@@ -289,9 +285,10 @@
             // 
             this.lbl_P1_Status.AutoSize = true;
             this.lbl_P1_Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_P1_Status.Location = new System.Drawing.Point(39, 622);
+            this.lbl_P1_Status.Location = new System.Drawing.Point(58, 957);
+            this.lbl_P1_Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_P1_Status.Name = "lbl_P1_Status";
-            this.lbl_P1_Status.Size = new System.Drawing.Size(206, 25);
+            this.lbl_P1_Status.Size = new System.Drawing.Size(315, 36);
             this.lbl_P1_Status.TabIndex = 6;
             this.lbl_P1_Status.Text = "Đang chờ người chơi 1";
             // 
@@ -299,9 +296,10 @@
             // 
             this.lbl_P2_Status.AutoSize = true;
             this.lbl_P2_Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_P2_Status.Location = new System.Drawing.Point(725, 622);
+            this.lbl_P2_Status.Location = new System.Drawing.Point(1088, 957);
+            this.lbl_P2_Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_P2_Status.Name = "lbl_P2_Status";
-            this.lbl_P2_Status.Size = new System.Drawing.Size(206, 25);
+            this.lbl_P2_Status.Size = new System.Drawing.Size(315, 36);
             this.lbl_P2_Status.TabIndex = 7;
             this.lbl_P2_Status.Text = "Đang chờ người chơi 2";
             // 
@@ -309,9 +307,10 @@
             // 
             this.lbl_Countdown.AutoSize = true;
             this.lbl_Countdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Countdown.Location = new System.Drawing.Point(467, 615);
+            this.lbl_Countdown.Location = new System.Drawing.Point(700, 953);
+            this.lbl_Countdown.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_Countdown.Name = "lbl_Countdown";
-            this.lbl_Countdown.Size = new System.Drawing.Size(23, 25);
+            this.lbl_Countdown.Size = new System.Drawing.Size(32, 36);
             this.lbl_Countdown.TabIndex = 8;
             this.lbl_Countdown.Text = "5";
             this.lbl_Countdown.Visible = false;
@@ -320,19 +319,44 @@
             // 
             this.lbl_GameTimer.AutoSize = true;
             this.lbl_GameTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_GameTimer.Location = new System.Drawing.Point(681, 674);
+            this.lbl_GameTimer.Location = new System.Drawing.Point(1022, 1037);
+            this.lbl_GameTimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_GameTimer.Name = "lbl_GameTimer";
-            this.lbl_GameTimer.Size = new System.Drawing.Size(34, 25);
+            this.lbl_GameTimer.Size = new System.Drawing.Size(49, 36);
             this.lbl_GameTimer.TabIndex = 9;
             this.lbl_GameTimer.Text = "60";
             this.lbl_GameTimer.Visible = false;
             // 
+            // lbl_Score1
+            // 
+            this.lbl_Score1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Score1.Location = new System.Drawing.Point(229, 998);
+            this.lbl_Score1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbl_Score1.Name = "lbl_Score1";
+            this.lbl_Score1.Size = new System.Drawing.Size(206, 36);
+            this.lbl_Score1.TabIndex = 8;
+            this.lbl_Score1.Text = "Score:";
+            this.lbl_Score1.Visible = false;
+            // 
+            // lbl_Score2
+            // 
+            this.lbl_Score2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Score2.Location = new System.Drawing.Point(995, 993);
+            this.lbl_Score2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbl_Score2.Name = "lbl_Score2";
+            this.lbl_Score2.Size = new System.Drawing.Size(206, 36);
+            this.lbl_Score2.TabIndex = 8;
+            this.lbl_Score2.Text = "Score:";
+            this.lbl_Score2.Visible = false;
+            // 
             // Game_Window
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(973, 763);
+            this.ClientSize = new System.Drawing.Size(1460, 1050);
             this.Controls.Add(this.lbl_GameTimer);
+            this.Controls.Add(this.lbl_Score1);
+            this.Controls.Add(this.lbl_Score2);
             this.Controls.Add(this.lbl_Countdown);
             this.Controls.Add(this.lbl_P2_Status);
             this.Controls.Add(this.lbl_P1_Status);
@@ -341,7 +365,6 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Game_Window";
             this.Text = "Game_Window";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Game_Window_FormClosing);
@@ -393,5 +416,7 @@
         private System.Windows.Forms.Label lbl_P2_Status;
         private System.Windows.Forms.Label lbl_Countdown;
         private System.Windows.Forms.Label lbl_GameTimer;
+        private System.Windows.Forms.Label lbl_Score1;
+        private System.Windows.Forms.Label lbl_Score2;
     }
 }

@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO;
+using System.Drawing.Text;
 
 namespace Pixel_Drift_Server
 {
@@ -35,7 +36,9 @@ namespace Pixel_Drift_Server
         // Lưu trữ kích thước (Size) của các đối tượng trong game
         private Dictionary<string, Size> Object_Sizes = new Dictionary<string, Size>();
         private int P1_Speed = 10; 
-        private int P2_Speed = 10; 
+        private int P2_Speed = 10;
+        private long P1_Score = 0;
+        private long P2_Score = 0;
         private bool P1_Left, P1_Right, P2_Left, P2_Right; 
 
         private const int Game_Height = 800; 
@@ -209,6 +212,29 @@ namespace Pixel_Drift_Server
             if (Game_Time_Remaining > 0)
             {
                 Broadcast(JsonSerializer.Serialize(new { action = "update_time", time = Game_Time_Remaining }));
+                try
+                {
+                    lock (Player_Lock)
+                    {
+                        // Cộng điểm dựa trên tốc độ hiện tại
+                        P1_Score += P1_Speed;
+                        P2_Score += P2_Speed;
+                    }
+
+                    // Gửi điểm số mới cho clients
+                    var scoreUpdate = new
+                    {
+                        action = "update_score",
+                        p1_score = P1_Score,
+                        p2_score = P2_Score
+                    };
+                    Broadcast(JsonSerializer.Serialize(scoreUpdate));
+                }
+                catch (Exception ex)
+                {
+                    Log($"Lỗi khi cập nhật điểm: {ex.Message}");
+                }
+
                 Game_Time_Remaining--;
             }
             else
@@ -236,8 +262,11 @@ namespace Pixel_Drift_Server
         {
             lock (Player_Lock)
             {
+                P1_Score = 0;
+                P2_Score = 0;
                 P1_Speed = 10;
                 P2_Speed = 10;
+                
                 P1_Left = P1_Right = P2_Left = P2_Right = false;
 
                 Game_Objects.Clear();
