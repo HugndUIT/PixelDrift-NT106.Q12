@@ -11,48 +11,51 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO;
+using System.Drawing.Text;
 
 namespace Pixel_Drift_Server
 {
     public partial class ServerForm : Form
     {
-        private TcpListener TCP_Server; 
-        private Player_Slot Player_1 = new Player_Slot(); 
-        private Player_Slot Player_2 = new Player_Slot(); 
-        private readonly object Player_Lock = new object(); 
+        private TcpListener TCP_Server;
+        private Player_Slot Player_1 = new Player_Slot();
+        private Player_Slot Player_2 = new Player_Slot();
+        private readonly object Player_Lock = new object();
 
-        private System.Threading.Timer Countdown_Timer; 
-        private int Countdown_Value = 5; 
-        private System.Threading.Timer Game_Timer; 
-        private int Game_Time_Remaining = 60; 
+        private System.Threading.Timer Countdown_Timer;
+        private int Countdown_Value = 5;
+        private System.Threading.Timer Game_Timer;
+        private int Game_Time_Remaining = 60;
 
-        private System.Threading.Timer Server_Game_Loop; 
+        private System.Threading.Timer Server_Game_Loop;
         private const int Tick_Rate = 18;
-        private const int Player_Move_Speed = 9; 
+        private const int Player_Move_Speed = 9;
 
         // Lưu trữ vị trí (Point) của tất cả các đối tượng trong game
         private Dictionary<string, Point> Game_Objects = new Dictionary<string, Point>();
         // Lưu trữ kích thước (Size) của các đối tượng trong game
         private Dictionary<string, Size> Object_Sizes = new Dictionary<string, Size>();
-        private int P1_Speed = 10; 
-        private int P2_Speed = 10; 
-        private bool P1_Left, P1_Right, P2_Left, P2_Right; 
+        private int P1_Speed = 10;
+        private int P2_Speed = 10;
+        private long P1_Score = 0;
+        private long P2_Score = 0;
+        private bool P1_Left, P1_Right, P2_Left, P2_Right;
 
-        private const int Game_Height = 800; 
-        private const int P1_Min_X = 0; 
-        private const int P1_Max_X = 470; 
-        private const int P2_Min_X = 0; 
-        private const int P2_Max_X = 470; 
+        private const int Game_Height = 800;
+        private const int P1_Min_X = -10;
+        private const int P1_Max_X = 530;
+        private const int P2_Min_X = -10;
+        private const int P2_Max_X = 530;
 
         private Random Server_Rand = new Random();
 
         // Lớp chứa thông tin chi tiết về một slot người chơi
         public class Player_Slot
         {
-            public TcpClient Client { get; set; } 
-            public NetworkStream Stream { get; set; } 
-            public string Username { get; set; } 
-            public bool Is_Ready { get; set; } = false; 
+            public TcpClient Client { get; set; }
+            public NetworkStream Stream { get; set; }
+            public string Username { get; set; }
+            public bool Is_Ready { get; set; } = false;
         }
 
         public ServerForm()
@@ -209,6 +212,29 @@ namespace Pixel_Drift_Server
             if (Game_Time_Remaining > 0)
             {
                 Broadcast(JsonSerializer.Serialize(new { action = "update_time", time = Game_Time_Remaining }));
+                try
+                {
+                    lock (Player_Lock)
+                    {
+                        // Cộng điểm dựa trên tốc độ hiện tại
+                        P1_Score += P1_Speed;
+                        P2_Score += P2_Speed;
+                    }
+
+                    // Gửi điểm số mới cho clients
+                    var scoreUpdate = new
+                    {
+                        action = "update_score",
+                        p1_score = P1_Score,
+                        p2_score = P2_Score
+                    };
+                    Broadcast(JsonSerializer.Serialize(scoreUpdate));
+                }
+                catch (Exception ex)
+                {
+                    Log($"Lỗi khi cập nhật điểm: {ex.Message}");
+                }
+
                 Game_Time_Remaining--;
             }
             else
@@ -236,17 +262,20 @@ namespace Pixel_Drift_Server
         {
             lock (Player_Lock)
             {
+                P1_Score = 0;
+                P2_Score = 0;
                 P1_Speed = 10;
                 P2_Speed = 10;
+
                 P1_Left = P1_Right = P2_Left = P2_Right = false;
 
                 Game_Objects.Clear();
                 Object_Sizes.Clear();
 
                 Game_Objects["ptb_player1"] = new Point(202, 470);
-                Object_Sizes["ptb_player1"] = new Size(80, 140);
+                Object_Sizes["ptb_player1"] = new Size(72, 117);
                 Game_Objects["ptb_player2"] = new Point(202, 470);
-                Object_Sizes["ptb_player2"] = new Size(80, 140);
+                Object_Sizes["ptb_player2"] = new Size(72, 117);
 
                 Game_Objects["ptb_roadtrack1"] = new Point(0, -2);
                 Object_Sizes["ptb_roadtrack1"] = new Size(617, 734);
@@ -258,13 +287,13 @@ namespace Pixel_Drift_Server
                 Object_Sizes["ptb_roadtrack2dup"] = new Size(458, 596);
 
                 Game_Objects["ptb_AICar1"] = Reposition_Object("ptb_AICar1", P1_Min_X, P1_Max_X);
-                Object_Sizes["ptb_AICar1"] = new Size(80, 140);
+                Object_Sizes["ptb_AICar1"] = new Size(50, 100);
                 Game_Objects["ptb_AICar3"] = Reposition_Object("ptb_AICar3", P2_Min_X, P2_Max_X);
-                Object_Sizes["ptb_AICar3"] = new Size(80, 140);
+                Object_Sizes["ptb_AICar3"] = new Size(74, 128);
                 Game_Objects["ptb_AICar5"] = Reposition_Object("ptb_AICar5", P1_Min_X, P1_Max_X);
-                Object_Sizes["ptb_AICar5"] = new Size(80, 140);
+                Object_Sizes["ptb_AICar5"] = new Size(50, 100);
                 Game_Objects["ptb_AICar6"] = Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X);
-                Object_Sizes["ptb_AICar6"] = new Size(80, 140);
+                Object_Sizes["ptb_AICar6"] = new Size(74, 128);
 
                 Game_Objects["ptb_increasingroad1"] = Reposition_Object("ptb_increasingroad1", P1_Min_X, P1_Max_X);
                 Object_Sizes["ptb_increasingroad1"] = new Size(30, 30);
@@ -333,7 +362,7 @@ namespace Pixel_Drift_Server
                     if (Check_Collision("ptb_player2", "ptb_AICar6")) { P2_Speed -= 4; Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X); }
 
                     int Min_Speed = 4;
-                    P1_Speed = Math.Max(P1_Speed, Min_Speed); 
+                    P1_Speed = Math.Max(P1_Speed, Min_Speed);
                     P2_Speed = Math.Max(P2_Speed, Min_Speed);
 
                     var Game_State = new Dictionary<string, object>
@@ -383,7 +412,7 @@ namespace Pixel_Drift_Server
         // Kiểm tra va chạm giữa hai đối tượng game
         private bool Check_Collision(string Player, string Obj)
         {
-            if (!Game_Objects.ContainsKey(Player) || !Game_Objects.ContainsKey(Obj)) return false; 
+            if (!Game_Objects.ContainsKey(Player) || !Game_Objects.ContainsKey(Obj)) return false;
 
             Rectangle Rect_Player = new Rectangle(Game_Objects[Player], Object_Sizes[Player]);
             Rectangle Rect_Obj = new Rectangle(Game_Objects[Obj], Object_Sizes[Obj]);
@@ -687,7 +716,7 @@ namespace Pixel_Drift_Server
 
                     if (Old_Password != Token)
                     {
-                        
+
                         if (Ma_Hoa(Old_Password) != Token && Old_Password != Token)
                             return JsonSerializer.Serialize(new { Status = "error", Message = "Mã xác thực không đúng!" });
                     }

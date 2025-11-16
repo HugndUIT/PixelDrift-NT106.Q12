@@ -121,6 +121,12 @@ namespace Pixel_Drift
                         lbl_GameTimer.Text = "Time: " + data["time"].GetInt32().ToString();
                         break;
 
+                    case "update_score":
+                        if (lbl_Score1 != null)
+                            lbl_Score1.Text = "Score: " + data["p1_score"].GetInt64().ToString();
+                        if (lbl_Score2 != null)
+                            lbl_Score2.Text = "Score: " + data["p2_score"].GetInt64().ToString();
+                        break;
                     case "game_over":
                         MessageBox.Show("Hết giờ!", "Trò chơi kết thúc");
                         ResetToLobby();
@@ -246,9 +252,20 @@ namespace Pixel_Drift
             lbl_P2_Status.Visible = false;
             lbl_Countdown.Visible = false;
 
-            ToggleGameObjects(true); 
+            ToggleGameObjects(true);
             lbl_GameTimer.Visible = true;
             lbl_GameTimer.Text = "Time: 60";
+
+            if (lbl_Score1 != null)
+            {
+                lbl_Score1.Visible = true;
+                lbl_Score1.Text = "Score: 0";
+            }
+            if (lbl_Score2 != null)
+            {
+                lbl_Score2.Visible = true;
+                lbl_Score2.Text = "Score: 0";
+            }
 
             btn_Scoreboard.Enabled = false;
 
@@ -283,9 +300,11 @@ namespace Pixel_Drift
             lbl_P2_Status.Visible = true;
             btn_Scoreboard.Enabled = true;
 
-            ToggleGameObjects(false); 
+            ToggleGameObjects(false);
             lbl_Countdown.Visible = false;
             lbl_GameTimer.Visible = false;
+            if (lbl_Score1 != null) lbl_Score1.Visible = false;
+            if (lbl_Score2 != null) lbl_Score2.Visible = false;
 
             btn_Ready.Focus();
         }
@@ -298,7 +317,7 @@ namespace Pixel_Drift
             btn_Ready.Text = "Đang chờ...";
         }
 
-        private void game_timer_Tick(object sender, EventArgs e) {}
+        private void game_timer_Tick(object sender, EventArgs e) { }
 
         private void btn_Scoreboard_Click(object sender, EventArgs e)
         {
