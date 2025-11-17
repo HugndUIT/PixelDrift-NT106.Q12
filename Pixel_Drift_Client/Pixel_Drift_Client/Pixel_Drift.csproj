@@ -285,5 +285,20 @@
   <ItemGroup>
     <None Include="Resources\usercar2.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\421-4212275_transparent-default-avatar-png-avatar-img-png-download-1703079392.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gemini_Generated_Image_2gg76z2gg76z2gg7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gemini_Generated_Image_5sxbbs5sxbbs5sxb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2025-11-17 155655.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gemini_Generated_Image_lee8x9lee8x9lee8.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

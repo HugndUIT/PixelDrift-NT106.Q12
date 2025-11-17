@@ -63,6 +63,16 @@ namespace Pixel_Drift.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap _421_4212275_transparent_default_avatar_png_avatar_img_png_download_1703079392 {
+            get {
+                object obj = ResourceManager.GetObject("421-4212275_transparent-default-avatar-png-avatar-img-png-download-1703079392", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap BuickerB {
             get {
                 object obj = ResourceManager.GetObject("BuickerB", resourceCulture);
@@ -103,6 +113,36 @@ namespace Pixel_Drift.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Gemini_Generated_Image_2gg76z2gg76z2gg7 {
+            get {
+                object obj = ResourceManager.GetObject("Gemini_Generated_Image_2gg76z2gg76z2gg7", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Gemini_Generated_Image_5sxbbs5sxbbs5sxb {
+            get {
+                object obj = ResourceManager.GetObject("Gemini_Generated_Image_5sxbbs5sxbbs5sxb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Gemini_Generated_Image_lee8x9lee8x9lee8 {
+            get {
+                object obj = ResourceManager.GetObject("Gemini_Generated_Image_lee8x9lee8x9lee8", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap JeepB {
             get {
                 object obj = ResourceManager.GetObject("JeepB", resourceCulture);
@@ -126,6 +166,16 @@ namespace Pixel_Drift.Properties {
         public static System.Drawing.Bitmap road {
             get {
                 object obj = ResourceManager.GetObject("road", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Screenshot_2025_11_17_155655 {
+            get {
+                object obj = ResourceManager.GetObject("Screenshot 2025-11-17 155655", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
