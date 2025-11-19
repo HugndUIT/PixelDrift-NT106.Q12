@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Supabase.Postgrest.Models;
-using Supabase.Postgrest.Attributes;
 
 namespace Pixel_Drift
 {
-    [Table("taikhoannguoidung")]
-    public class TaiKhoanNguoiDung: BaseModel
+    public class TaiKhoanNguoiDung
     {
         public long UserID { get; set; }
         public string Username { get; set; }

@@ -10,6 +10,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Media;
+using WMPLib;
 
 namespace Pixel_Drift
 {
@@ -20,6 +22,13 @@ namespace Pixel_Drift
         private StreamReader reader;
         private int myPlayerNumber = 0;
         private string myUsername = "Player";
+        // File Âm thanh
+        private WindowsMediaPlayer Music;
+        private SoundPlayer CountDown_5Sec;
+        private SoundPlayer Buff;
+        private SoundPlayer Debuff;
+        private SoundPlayer Car_Hit;
+        //
 
         public Game_Window()
         {
@@ -29,6 +38,21 @@ namespace Pixel_Drift
 
         private void Game_Window_Load(object sender, EventArgs e)
         {
+            // Gán file âm thanh
+            Music = new WindowsMediaPlayer();
+            Music.settings.setMode("loop", true);
+            Music.settings.volume = 30;
+            CountDown_5Sec = new SoundPlayer("dem_nguoc.wav");
+            Buff = new SoundPlayer("buff.wav");
+            Debuff = new SoundPlayer("debuff.wav");
+            Car_Hit = new SoundPlayer("car_crash.wav");
+
+            // Load vô bộ nhớ để không bị delay
+            CountDown_5Sec.LoadAsync();
+            Buff.LoadAsync();
+            Debuff.LoadAsync();
+            Car_Hit.LoadAsync();
+
             // Thiết lập giao diện phòng chờ
             ResetToLobby();
             // Kết nối và lắng nghe
@@ -50,6 +74,20 @@ namespace Pixel_Drift
                 this.Close();
             }
         }
+        private void PlayMusicLoop(string musicFile)
+        {
+            try
+            {
+                string musicPath = Path.Combine(Application.StartupPath, musicFile);
+                if (File.Exists(musicPath))
+                {
+                    Music.URL = musicPath;
+                    Music.controls.play();
+                }
+            }
+            catch { }
+        }
+
 
         // Gửi tin nhắn (Tự thêm \n)
         private void Send(string message)
@@ -111,6 +149,11 @@ namespace Pixel_Drift
                     case "countdown":
                         lbl_Countdown.Visible = true;
                         lbl_Countdown.Text = data["time"].GetInt32().ToString();
+                        if (data["time"].GetInt32() == 5)
+                        {
+                            Music.controls.stop();
+                            CountDown_5Sec?.Play();
+                        }
                         break;
 
                     case "start_game":
@@ -210,6 +253,17 @@ namespace Pixel_Drift
                             ptb_decreasingroad2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
                         }
                         break;
+                    case "play_sound":
+                        string soundType = data["sound"].GetString();
+                        DateTime now = DateTime.Now;
+
+                        if (soundType == "buff")
+                            Buff?.Play();
+                        else if (soundType == "debuff")
+                            Debuff?.Play();
+                        else if (soundType == "hit_car")
+                            Car_Hit?.Play();
+                        break;
                 }
             }
             catch (Exception ex)
@@ -246,11 +300,14 @@ namespace Pixel_Drift
             lbl_P2_Status.Visible = false;
             lbl_Countdown.Visible = false;
 
-            ToggleGameObjects(true); 
+            ToggleGameObjects(true);
             lbl_GameTimer.Visible = true;
             lbl_GameTimer.Text = "Time: 60";
 
             btn_Scoreboard.Enabled = false;
+
+            CountDown_5Sec?.Stop();
+            PlayMusicLoop("nhac_thi_dau.wav");
 
             // Player
             ptb_player1.BringToFront();
@@ -274,6 +331,8 @@ namespace Pixel_Drift
         // Quay về phòng chờ
         private void ResetToLobby()
         {
+            CountDown_5Sec?.Stop();
+            PlayMusicLoop("cho_doi.wav");
             game_timer.Stop();
 
             btn_Ready.Visible = true;
@@ -283,7 +342,7 @@ namespace Pixel_Drift
             lbl_P2_Status.Visible = true;
             btn_Scoreboard.Enabled = true;
 
-            ToggleGameObjects(false); 
+            ToggleGameObjects(false);
             lbl_Countdown.Visible = false;
             lbl_GameTimer.Visible = false;
 
@@ -298,7 +357,7 @@ namespace Pixel_Drift
             btn_Ready.Text = "Đang chờ...";
         }
 
-        private void game_timer_Tick(object sender, EventArgs e) {}
+        private void game_timer_Tick(object sender, EventArgs e) { }
 
         private void btn_Scoreboard_Click(object sender, EventArgs e)
         {
@@ -338,6 +397,14 @@ namespace Pixel_Drift
 
         private void Game_Window_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // Tắt hết các file nhạc
+            Music?.controls.stop();
+            Music?.close();
+            CountDown_5Sec?.Stop();
+            Car_Hit?.Stop();
+            Buff?.Stop();
+            Debuff?.Stop();
+
             reader?.Close();
             stream?.Close();
             client?.Close();

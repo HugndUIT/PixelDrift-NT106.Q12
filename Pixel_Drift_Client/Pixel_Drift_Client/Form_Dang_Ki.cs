@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Pixel_Drift;
 using System.Globalization;
 using System.IO;
+using System.Media;
 
 namespace Pixel_Drift
 {
