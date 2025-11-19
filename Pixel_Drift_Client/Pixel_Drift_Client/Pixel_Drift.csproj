@@ -412,6 +412,7 @@
     <None Include="Resources\usercar2.png" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <COMReference Include="MediaPlayer">
       <Guid>{22D6F304-B0F6-11D0-94AB-0080C74C7E95}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -439,6 +440,21 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+=======
+    <None Include="Resources\421-4212275_transparent-default-avatar-png-avatar-img-png-download-1703079392.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gemini_Generated_Image_2gg76z2gg76z2gg7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gemini_Generated_Image_5sxbbs5sxbbs5sxb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Screenshot 2025-11-17 155655.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gemini_Generated_Image_lee8x9lee8x9lee8.png" />
+>>>>>>> b23a4d86219071396f223f6f49f8760991f11c14
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

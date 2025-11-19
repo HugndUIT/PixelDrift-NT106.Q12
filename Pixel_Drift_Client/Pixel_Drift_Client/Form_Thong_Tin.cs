@@ -41,9 +41,9 @@ namespace Pixel_Drift
                     // Dùng (JsonElement) để lấy object "data"
                     var userData = (JsonElement)dict["Data"];
 
-                    lbl_TenDangNhap.Text = "Username: " + userData.GetProperty("Username").GetString();
-                    lbl_Email.Text = "Email: " + userData.GetProperty("Email").GetString();
-                    lbl_Birthday.Text = "Birthday: " + userData.GetProperty("Birthday").GetString();
+                    lbl_TenDangNhap.Text =  userData.GetProperty("Username").GetString();
+                    lbl_Email.Text =   userData.GetProperty("Email").GetString();
+                    lbl_Birthday.Text =   userData.GetProperty("Birthday").GetString();
                 }
                 else
                 {
