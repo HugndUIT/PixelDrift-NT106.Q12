@@ -171,6 +171,7 @@ namespace Pixel_Drift
                             lbl_Score2.Text = "Score: " + data["p2_score"].GetInt64().ToString();
                         break;
                     case "game_over":
+                        Music?.controls.stop();
                         MessageBox.Show("Hết giờ!", "Trò chơi kết thúc");
                         ResetToLobby();
                         break;

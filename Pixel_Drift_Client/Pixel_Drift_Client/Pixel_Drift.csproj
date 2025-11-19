@@ -412,7 +412,6 @@
     <None Include="Resources\usercar2.png" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <COMReference Include="MediaPlayer">
       <Guid>{22D6F304-B0F6-11D0-94AB-0080C74C7E95}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -440,7 +439,6 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-=======
     <None Include="Resources\421-4212275_transparent-default-avatar-png-avatar-img-png-download-1703079392.png" />
   </ItemGroup>
   <ItemGroup>
@@ -454,7 +452,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Gemini_Generated_Image_lee8x9lee8x9lee8.png" />
->>>>>>> b23a4d86219071396f223f6f49f8760991f11c14
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="buff.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="car_crash.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="cho_doi.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="debuff.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="dem_nguoc.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="nhac_thi_dau.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
