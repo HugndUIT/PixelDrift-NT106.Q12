@@ -42,10 +42,10 @@ namespace Pixel_Drift_Server
         private bool P1_Left, P1_Right, P2_Left, P2_Right;
 
         private const int Game_Height = 800;
-        private const int P1_Min_X = -10;
-        private const int P1_Max_X = 530;
-        private const int P2_Min_X = -10;
-        private const int P2_Max_X = 530;
+        private const int P1_Min_X = -5;
+        private const int P1_Max_X = 475;
+        private const int P2_Min_X = -5;
+        private const int P2_Max_X = 475;
 
         private Random Server_Rand = new Random();
 
@@ -272,50 +272,123 @@ namespace Pixel_Drift_Server
                 Game_Objects.Clear();
                 Object_Sizes.Clear();
 
-                Game_Objects["ptb_player1"] = new Point(202, 470);
+                // --- CẤU HÌNH KÍCH THƯỚC ĐƯỜNG ĐUA ---
+                int Road_Width = 500;
+                int Safe_Margin = 50; 
+
+                int Min_X = Safe_Margin;
+                int Max_X = Road_Width - Safe_Margin;
+
+                // --- KHỞI TẠO PLAYER ---
                 Object_Sizes["ptb_player1"] = new Size(72, 117);
-                Game_Objects["ptb_player2"] = new Point(202, 470);
+                Game_Objects["ptb_player1"] = new Point(202, 470); 
+
                 Object_Sizes["ptb_player2"] = new Size(72, 117);
+                Game_Objects["ptb_player2"] = new Point(202, 470);
 
+                // --- KHỞI TẠO ĐƯỜNG ĐUA (ROAD) ---
+                Object_Sizes["ptb_roadtrack1"] = new Size(611, 734); 
                 Game_Objects["ptb_roadtrack1"] = new Point(0, -2);
-                Object_Sizes["ptb_roadtrack1"] = new Size(617, 734);
+
+                Object_Sizes["ptb_roadtrack1dup"] = new Size(611, 734);
                 Game_Objects["ptb_roadtrack1dup"] = new Point(0, 734);
-                Object_Sizes["ptb_roadtrack1dup"] = new Size(617, 734);
-                Game_Objects["ptb_roadtrack2"] = new Point(0, 2);
-                Object_Sizes["ptb_roadtrack2"] = new Size(458, 596);
-                Game_Objects["ptb_roadtrack2dup"] = new Point(0, 596);
-                Object_Sizes["ptb_roadtrack2dup"] = new Size(458, 596);
 
-                Game_Objects["ptb_AICar1"] = Reposition_Object("ptb_AICar1", P1_Min_X, P1_Max_X);
-                Object_Sizes["ptb_AICar1"] = new Size(50, 100);
-                Game_Objects["ptb_AICar3"] = Reposition_Object("ptb_AICar3", P2_Min_X, P2_Max_X);
+                Object_Sizes["ptb_roadtrack2"] = new Size(611, 734); 
+                Game_Objects["ptb_roadtrack2"] = new Point(0, 2); 
+
+                Object_Sizes["ptb_roadtrack2dup"] = new Size(611, 734);
+                Game_Objects["ptb_roadtrack2dup"] = new Point(0, 734); 
+
+                // --- KHỞI TẠO AI CAR & ITEM (QUAN TRỌNG: SIZE TRƯỚC - VỊ TRÍ SAU) ---
+
+                // AI Car 1
+                Object_Sizes["ptb_AICar1"] = new Size(50, 100); // Khai báo size trước
+                Game_Objects["ptb_AICar1"] = Reposition_Object("ptb_AICar1", Min_X, Max_X); 
+
+                // AI Car 3
                 Object_Sizes["ptb_AICar3"] = new Size(74, 128);
-                Game_Objects["ptb_AICar5"] = Reposition_Object("ptb_AICar5", P1_Min_X, P1_Max_X);
-                Object_Sizes["ptb_AICar5"] = new Size(50, 100);
-                Game_Objects["ptb_AICar6"] = Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X);
-                Object_Sizes["ptb_AICar6"] = new Size(74, 128);
+                Game_Objects["ptb_AICar3"] = Reposition_Object("ptb_AICar3", Min_X, Max_X);
 
-                Game_Objects["ptb_increasingroad1"] = Reposition_Object("ptb_increasingroad1", P1_Min_X, P1_Max_X);
-                Object_Sizes["ptb_increasingroad1"] = new Size(30, 30);
-                Game_Objects["ptb_decreasingroad1"] = Reposition_Object("ptb_decreasingroad1", P1_Min_X, P1_Max_X);
-                Object_Sizes["ptb_decreasingroad1"] = new Size(30, 30);
-                Game_Objects["ptb_increasingroad2"] = Reposition_Object("ptb_increasingroad2", P2_Min_X, P2_Max_X);
-                Object_Sizes["ptb_increasingroad2"] = new Size(30, 30);
-                Game_Objects["ptb_decreasingroad2"] = Reposition_Object("ptb_decreasingroad2", P2_Min_X, P2_Max_X);
-                Object_Sizes["ptb_decreasingroad2"] = new Size(30, 30);
+                // AI Car 5
+                Object_Sizes["ptb_AICar5"] = new Size(50, 100);
+                Game_Objects["ptb_AICar5"] = Reposition_Object("ptb_AICar5", Min_X, Max_X);
+
+                // AI Car 6
+                Object_Sizes["ptb_AICar6"] = new Size(74, 128);
+                Game_Objects["ptb_AICar6"] = Reposition_Object("ptb_AICar6", Min_X, Max_X);
+
+                // Buffs / Debuffs
+                Object_Sizes["ptb_increasingroad1"] = new Size(15, 15);
+                Game_Objects["ptb_increasingroad1"] = Reposition_Object("ptb_increasingroad1", Min_X, Max_X);
+
+                Object_Sizes["ptb_decreasingroad1"] = new Size(15, 15);
+                Game_Objects["ptb_decreasingroad1"] = Reposition_Object("ptb_decreasingroad1", Min_X, Max_X);
+
+                Object_Sizes["ptb_increasingroad2"] = new Size(15, 15);
+                Game_Objects["ptb_increasingroad2"] = Reposition_Object("ptb_increasingroad2", Min_X, Max_X);
+
+                Object_Sizes["ptb_decreasingroad2"] = new Size(15, 15);
+                Game_Objects["ptb_decreasingroad2"] = Reposition_Object("ptb_decreasingroad2", Min_X, Max_X);
             }
         }
 
         // Thiết lập lại vị trí ngẫu nhiên cho một đối tượng (AI car hoặc power-up) ở ngoài màn hình
         private Point Reposition_Object(string Name, int Min_X, int Max_X)
         {
-            int Random_Y = Server_Rand.Next(-600, -150);
-            int Random_X = Server_Rand.Next(Min_X, Max_X);
+            Size Current_Size = Object_Sizes.ContainsKey(Name) ? Object_Sizes[Name] : new Size(30, 30);
+
+            int Safe_Max_X = Max_X - Current_Size.Width - 60;
+
+            if (Safe_Max_X <= Min_X) Safe_Max_X = Min_X + 1;
+
+            int Max_Retries = 20; 
+            int Attempt = 0;
+            Point New_Pos = new Point(0, 0);
+            bool Overlap;
+
+            do
+            {
+                Overlap = false;
+
+                int Random_X = Server_Rand.Next(Min_X, Safe_Max_X);
+
+                int Random_Y = Server_Rand.Next(-1000, -150);
+
+                New_Pos = new Point(Random_X, Random_Y);
+                Rectangle New_Rect = new Rectangle(New_Pos, Current_Size);
+
+                New_Rect.Inflate(30, 150);
+
+                foreach (var Key in Game_Objects.Keys)
+                {
+                    if (Key == Name || Key.Contains("roadtrack") || Key.Contains("player"))
+                        continue;
+
+                    if (Object_Sizes.ContainsKey(Key))
+                    {
+                        Rectangle Existing_Rect = new Rectangle(Game_Objects[Key], Object_Sizes[Key]);
+
+                        if (New_Rect.IntersectsWith(Existing_Rect))
+                        {
+                            Overlap = true;
+                            break;
+                        }
+                    }
+                }
+
+                Attempt++;
+
+            } while (Overlap && Attempt < Max_Retries);
+
+            if (Overlap)
+            {
+                New_Pos.Y -= 300; 
+            }
 
             if (Game_Objects.ContainsKey(Name))
-                Game_Objects[Name] = new Point(Random_X, Random_Y);
+                Game_Objects[Name] = New_Pos;
 
-            return new Point(Random_X, Random_Y);
+            return New_Pos;
         }
 
         // Vòng lặp chính của Game Server (Game Tick) - Xử lý logic di chuyển, va chạm và gửi trạng thái

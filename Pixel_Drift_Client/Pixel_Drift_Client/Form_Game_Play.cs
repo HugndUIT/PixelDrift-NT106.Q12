@@ -28,7 +28,6 @@ namespace Pixel_Drift
         private SoundPlayer Buff;
         private SoundPlayer Debuff;
         private SoundPlayer Car_Hit;
-        //
 
         public Game_Window()
         {
@@ -170,6 +169,7 @@ namespace Pixel_Drift
                         if (lbl_Score2 != null)
                             lbl_Score2.Text = "Score: " + data["p2_score"].GetInt64().ToString();
                         break;
+
                     case "game_over":
                         Music?.controls.stop();
                         MessageBox.Show("Hết giờ!", "Trò chơi kết thúc");
@@ -177,7 +177,12 @@ namespace Pixel_Drift
                         break;
 
                     case "player_disconnected":
-                        MessageBox.Show($"Người chơi {data["name"].GetString()} đã ngắt kết nối.");
+                        string name = "Người chơi khác";
+                        if (data.ContainsKey("Name") && data["Name"].ValueKind == JsonValueKind.String)
+                        {
+                            name = data["Name"].GetString();
+                        }
+                        MessageBox.Show($"{name} đã ngắt kết nối. Trở về sảnh chờ.");
                         ResetToLobby();
                         break;
 
@@ -260,6 +265,7 @@ namespace Pixel_Drift
                             ptb_decreasingroad2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
                         }
                         break;
+
                     case "play_sound":
                         string soundType = data["sound"].GetString();
                         DateTime now = DateTime.Now;
@@ -275,7 +281,7 @@ namespace Pixel_Drift
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi xử lý tin nhắn: {ex.Message} (Data: {message})");
+                ResetToLobby();
             }
         }
 
