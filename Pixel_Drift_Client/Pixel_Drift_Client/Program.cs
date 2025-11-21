@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq.SqlClient;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Pixel_Drift
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form_Mo_Dau());
+            Application.Run(new Game_Window());
         }
     }
 }

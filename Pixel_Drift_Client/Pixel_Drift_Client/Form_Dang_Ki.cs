@@ -178,12 +178,6 @@ namespace Pixel_Drift
             });
         }
 
-        private void btn_backdn_Click(object sender, EventArgs e)
-        {
-            Form_Dang_Nhap dn = new Form_Dang_Nhap();
-            dn.Show();
-            this.Hide();
-        }
         private void label2_Click(object sender, EventArgs e)
         {
 

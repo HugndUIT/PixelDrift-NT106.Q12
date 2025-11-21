@@ -42,12 +42,17 @@ namespace Pixel_Drift_Server
         private bool P1_Left, P1_Right, P2_Left, P2_Right;
 
         private const int Game_Height = 800;
-        private const int P1_Min_X = -5;
-        private const int P1_Max_X = 475;
-        private const int P2_Min_X = -5;
-        private const int P2_Max_X = 475;
+        private const int P1_Min_X = -10;
+        private const int P1_Max_X = 530;
+        private const int P2_Min_X = -10;
+        private const int P2_Max_X = 530;
 
         private Random Server_Rand = new Random();
+        // Quản lý ai đang đăng nhập theo email
+        private Dictionary<string, Player_Slot> ConnectedEmails = new Dictionary<string, Player_Slot>();
+        private readonly object ConnectedEmailsLock = new object();
+
+
 
         // Lớp chứa thông tin chi tiết về một slot người chơi
         public class Player_Slot
@@ -70,6 +75,8 @@ namespace Pixel_Drift_Server
             {
                 SQL_Helper.Initialize();
                 Log("SQLite đã sẵn sàng!");
+                SQL_Helper.ClearSampleData();
+                //SQL_Helper.AddSampleData();
             }
             catch (Exception Ex)
             {
@@ -272,76 +279,90 @@ namespace Pixel_Drift_Server
                 Game_Objects.Clear();
                 Object_Sizes.Clear();
 
+<<<<<<< Updated upstream
+                Game_Objects["ptb_player1"] = new Point(202, 470);
+                Object_Sizes["ptb_player1"] = new Size(72, 117);
+=======
                 // --- CẤU HÌNH KÍCH THƯỚC ĐƯỜNG ĐUA ---
                 int Road_Width = 500;
-                int Safe_Margin = 50; 
+                int Safe_Margin = 50;
 
                 int Min_X = Safe_Margin;
                 int Max_X = Road_Width - Safe_Margin;
 
                 // --- KHỞI TẠO PLAYER ---
                 Object_Sizes["ptb_player1"] = new Size(72, 117);
-                Game_Objects["ptb_player1"] = new Point(202, 470); 
+                Game_Objects["ptb_player1"] = new Point(202, 470);
 
                 Object_Sizes["ptb_player2"] = new Size(72, 117);
+>>>>>>> Stashed changes
                 Game_Objects["ptb_player2"] = new Point(202, 470);
+                Object_Sizes["ptb_player2"] = new Size(72, 117);
 
+<<<<<<< Updated upstream
+=======
                 // --- KHỞI TẠO ĐƯỜNG ĐUA (ROAD) ---
-                Object_Sizes["ptb_roadtrack1"] = new Size(611, 734); 
+                Object_Sizes["ptb_roadtrack1"] = new Size(611, 734);
+>>>>>>> Stashed changes
                 Game_Objects["ptb_roadtrack1"] = new Point(0, -2);
-
-                Object_Sizes["ptb_roadtrack1dup"] = new Size(611, 734);
+                Object_Sizes["ptb_roadtrack1"] = new Size(617, 734);
                 Game_Objects["ptb_roadtrack1dup"] = new Point(0, 734);
+                Object_Sizes["ptb_roadtrack1dup"] = new Size(617, 734);
+                Game_Objects["ptb_roadtrack2"] = new Point(0, 2);
+                Object_Sizes["ptb_roadtrack2"] = new Size(458, 596);
+                Game_Objects["ptb_roadtrack2dup"] = new Point(0, 596);
+                Object_Sizes["ptb_roadtrack2dup"] = new Size(458, 596);
 
-                Object_Sizes["ptb_roadtrack2"] = new Size(611, 734); 
-                Game_Objects["ptb_roadtrack2"] = new Point(0, 2); 
+<<<<<<< Updated upstream
+                Game_Objects["ptb_AICar1"] = Reposition_Object("ptb_AICar1", P1_Min_X, P1_Max_X);
+                Object_Sizes["ptb_AICar1"] = new Size(50, 100);
+                Game_Objects["ptb_AICar3"] = Reposition_Object("ptb_AICar3", P2_Min_X, P2_Max_X);
+=======
+                Object_Sizes["ptb_roadtrack2"] = new Size(611, 734);
+                Game_Objects["ptb_roadtrack2"] = new Point(0, 2);
 
                 Object_Sizes["ptb_roadtrack2dup"] = new Size(611, 734);
-                Game_Objects["ptb_roadtrack2dup"] = new Point(0, 734); 
+                Game_Objects["ptb_roadtrack2dup"] = new Point(0, 734);
 
                 // --- KHỞI TẠO AI CAR & ITEM (QUAN TRỌNG: SIZE TRƯỚC - VỊ TRÍ SAU) ---
 
                 // AI Car 1
                 Object_Sizes["ptb_AICar1"] = new Size(50, 100); // Khai báo size trước
-                Game_Objects["ptb_AICar1"] = Reposition_Object("ptb_AICar1", Min_X, Max_X); 
+                Game_Objects["ptb_AICar1"] = Reposition_Object("ptb_AICar1", Min_X, Max_X);
 
                 // AI Car 3
+>>>>>>> Stashed changes
                 Object_Sizes["ptb_AICar3"] = new Size(74, 128);
-                Game_Objects["ptb_AICar3"] = Reposition_Object("ptb_AICar3", Min_X, Max_X);
-
-                // AI Car 5
+                Game_Objects["ptb_AICar5"] = Reposition_Object("ptb_AICar5", P1_Min_X, P1_Max_X);
                 Object_Sizes["ptb_AICar5"] = new Size(50, 100);
-                Game_Objects["ptb_AICar5"] = Reposition_Object("ptb_AICar5", Min_X, Max_X);
-
-                // AI Car 6
+                Game_Objects["ptb_AICar6"] = Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X);
                 Object_Sizes["ptb_AICar6"] = new Size(74, 128);
-                Game_Objects["ptb_AICar6"] = Reposition_Object("ptb_AICar6", Min_X, Max_X);
 
-                // Buffs / Debuffs
-                Object_Sizes["ptb_increasingroad1"] = new Size(15, 15);
-                Game_Objects["ptb_increasingroad1"] = Reposition_Object("ptb_increasingroad1", Min_X, Max_X);
-
-                Object_Sizes["ptb_decreasingroad1"] = new Size(15, 15);
-                Game_Objects["ptb_decreasingroad1"] = Reposition_Object("ptb_decreasingroad1", Min_X, Max_X);
-
-                Object_Sizes["ptb_increasingroad2"] = new Size(15, 15);
-                Game_Objects["ptb_increasingroad2"] = Reposition_Object("ptb_increasingroad2", Min_X, Max_X);
-
-                Object_Sizes["ptb_decreasingroad2"] = new Size(15, 15);
-                Game_Objects["ptb_decreasingroad2"] = Reposition_Object("ptb_decreasingroad2", Min_X, Max_X);
+                Game_Objects["ptb_increasingroad1"] = Reposition_Object("ptb_increasingroad1", P1_Min_X, P1_Max_X);
+                Object_Sizes["ptb_increasingroad1"] = new Size(30, 30);
+                Game_Objects["ptb_decreasingroad1"] = Reposition_Object("ptb_decreasingroad1", P1_Min_X, P1_Max_X);
+                Object_Sizes["ptb_decreasingroad1"] = new Size(30, 30);
+                Game_Objects["ptb_increasingroad2"] = Reposition_Object("ptb_increasingroad2", P2_Min_X, P2_Max_X);
+                Object_Sizes["ptb_increasingroad2"] = new Size(30, 30);
+                Game_Objects["ptb_decreasingroad2"] = Reposition_Object("ptb_decreasingroad2", P2_Min_X, P2_Max_X);
+                Object_Sizes["ptb_decreasingroad2"] = new Size(30, 30);
             }
         }
 
         // Thiết lập lại vị trí ngẫu nhiên cho một đối tượng (AI car hoặc power-up) ở ngoài màn hình
         private Point Reposition_Object(string Name, int Min_X, int Max_X)
         {
+<<<<<<< Updated upstream
+            int Random_Y = Server_Rand.Next(-600, -150);
+            int Random_X = Server_Rand.Next(Min_X, Max_X);
+=======
             Size Current_Size = Object_Sizes.ContainsKey(Name) ? Object_Sizes[Name] : new Size(30, 30);
 
             int Safe_Max_X = Max_X - Current_Size.Width - 60;
 
             if (Safe_Max_X <= Min_X) Safe_Max_X = Min_X + 1;
 
-            int Max_Retries = 20; 
+            int Max_Retries = 20;
             int Attempt = 0;
             Point New_Pos = new Point(0, 0);
             bool Overlap;
@@ -382,13 +403,14 @@ namespace Pixel_Drift_Server
 
             if (Overlap)
             {
-                New_Pos.Y -= 300; 
+                New_Pos.Y -= 300;
             }
+>>>>>>> Stashed changes
 
             if (Game_Objects.ContainsKey(Name))
-                Game_Objects[Name] = New_Pos;
+                Game_Objects[Name] = new Point(Random_X, Random_Y);
 
-            return New_Pos;
+            return new Point(Random_X, Random_Y);
         }
 
         // Vòng lặp chính của Game Server (Game Tick) - Xử lý logic di chuyển, va chạm và gửi trạng thái
@@ -521,9 +543,16 @@ namespace Pixel_Drift_Server
                         {
                             // Logic đăng nhập, đăng ký và lấy thông tin tài khoản
                             case "login":
-                                var Login_Data = new Dictionary<string, string> { { "username", Data["username"].GetString() }, { "password", Data["password"].GetString() } };
-                                Response = Handle_Login(Login_Data);
-                                break;
+                                {
+                                    var Login_Data = new Dictionary<string, string>
+                            {
+                                { "username", Data["username"].GetString() },   // thực chất là email
+                                { "password", Data["password"].GetString() }
+                            };
+
+                                    Response = Handle_Login(Login_Data, Stream, Client);
+                                    break;
+                                }
 
                             case "register":
                                 var Reg_Data = new Dictionary<string, string> { { "email", Data["email"].GetString() }, { "username", Data["username"].GetString() }, { "password", Data["password"].GetString() }, { "birthday", Data["birthday"].GetString() } };
@@ -567,6 +596,13 @@ namespace Pixel_Drift_Server
                                         Log($"Player 2 ({Player_2.Username}) đã kết nối.");
                                     }
                                     else { Response = JsonSerializer.Serialize(new { action = "lobby_full" }); }
+                                    string Email = Data["email"].GetString();
+                                    Current_Player_Slot.Username = Email;
+
+                                    lock (ConnectedEmailsLock)
+                                    {
+                                        ConnectedEmails[Email] = Current_Player_Slot;
+                                    }
                                 }
                                 Broadcast_Ready_Status();
                                 break;
@@ -604,6 +640,41 @@ namespace Pixel_Drift_Server
                                 }
                                 break;
 
+                            // Logic Scoreboard
+                            case "get_scoreboard":
+                                int TopCount = Data.ContainsKey("top_count") ? Data["top_count"].GetInt32() : 50;
+                                string Scoreboard_Data = SQL_Helper.GetTopScores(TopCount);
+                                Response = JsonSerializer.Serialize(new
+                                {
+                                    action = "scoreboard_data",
+                                    data = Scoreboard_Data
+                                });
+                                break;
+
+                            case "search_player":
+                                string Search_Text = Data["search_text"].GetString();
+                                string Search_Result = SQL_Helper.SearchPlayer(Search_Text);
+                                Response = JsonSerializer.Serialize(new
+                                {
+                                    action = "search_result",
+                                    data = Search_Result
+                                });
+                                break;
+
+                            case "add_score":
+                                string PlayerName = Data["player_name"].GetString();
+                                int WinCount = Data["win_count"].GetInt32();
+                                int CrashCount = Data["crash_count"].GetInt32();
+                                double TotalScore = Data["total_score"].GetDouble();
+
+                                bool Success = SQL_Helper.AddScore(PlayerName, WinCount, CrashCount, TotalScore);
+                                Response = JsonSerializer.Serialize(new
+                                {
+                                    action = "add_score_result",
+                                    success = Success
+                                });
+                                break;
+
                             default:
                                 Response = JsonSerializer.Serialize(new { Status = "error", Message = "Unknown action" });
                                 break;
@@ -628,8 +699,16 @@ namespace Pixel_Drift_Server
                 lock (Player_Lock)
                 {
                     string Disconnected_Player_Name = "Unknown";
-                    if (Current_Player_Slot == Player_1) { Disconnected_Player_Name = Player_1.Username; Player_1 = new Player_Slot(); }
-                    else if (Current_Player_Slot == Player_2) { Disconnected_Player_Name = Player_2.Username; Player_2 = new Player_Slot(); }
+                    if (Current_Player_Slot == Player_1)
+                    {
+                        Disconnected_Player_Name = Player_1.Username;
+                        Player_1 = new Player_Slot();
+                    }
+                    else if (Current_Player_Slot == Player_2)
+                    {
+                        Disconnected_Player_Name = Player_2.Username;
+                        Player_2 = new Player_Slot();
+                    }
 
                     Countdown_Timer?.Dispose(); Countdown_Timer = null;
                     Game_Timer?.Dispose(); Game_Timer = null;
@@ -637,6 +716,14 @@ namespace Pixel_Drift_Server
 
                     Broadcast(JsonSerializer.Serialize(new { action = "player_disconnected", Name = Disconnected_Player_Name }));
                     Broadcast_Ready_Status();
+                    if (Current_Player_Slot != null && !string.IsNullOrEmpty(Current_Player_Slot.Username))
+                    {
+                        lock (ConnectedEmailsLock)
+                        {
+                            if (ConnectedEmails.ContainsKey(Current_Player_Slot.Username))
+                                ConnectedEmails.Remove(Current_Player_Slot.Username);
+                        }
+                    }
                 }
                 Reader.Close();
                 Client.Close();
@@ -644,28 +731,81 @@ namespace Pixel_Drift_Server
         }
 
         // Xử lý yêu cầu đăng nhập bằng cách kiểm tra trong SQLite
-        private string Handle_Login(Dictionary<string, string> Data)
+        private string Handle_Login(Dictionary<string, string> Data, NetworkStream requestStream, TcpClient requestClient)
         {
-            string Username = Data["username"];
-            string Password = Data["password"];
+            string Username = Data["username"];        // client gửi email bằng trường "username"
+            string Password = Data["password"];     // đã SHA256
+
             try
             {
-                using (var Cmd = new SQLiteCommand("SELECT COUNT(*) FROM Info_User WHERE Email=@u AND Password=@p", SQL_Helper.Connection))
+                string RealPassword = null;
+
+                // 1) Kiểm tra email tồn tại
+                using (var Cmd = new SQLiteCommand("SELECT Password FROM Info_User WHERE Email=@e", SQL_Helper.Connection))
                 {
-                    Cmd.Parameters.AddWithValue("@u", Username);
-                    Cmd.Parameters.AddWithValue("@p", Password);
-                    long Count = (long)Cmd.ExecuteScalar();
-                    if (Count > 0)
-                        return JsonSerializer.Serialize(new { Status = "success", Message = "Đăng nhập thành công!" });
-                    else
-                        return JsonSerializer.Serialize(new { Status = "error", Message = "Sai tài khoản hoặc mật khẩu!" });
+                    Cmd.Parameters.AddWithValue("@e", Username);
+                    object result = Cmd.ExecuteScalar();
+
+                    if (result == null)
+                        return JsonSerializer.Serialize(new { Status = "error", message = "Email không tồn tại!" });
+
+                    RealPassword = result.ToString();
                 }
+
+                // 2) Kiểm tra mật khẩu
+                if (RealPassword != Password)
+                    return JsonSerializer.Serialize(new { Status = "error", message = "Sai mật khẩu!" });
+
+
+                // 3) Kiểm tra đăng nhập trùng email
+                Player_Slot oldSlot = null;
+                bool isOnline = false;
+
+                lock (ConnectedEmailsLock)
+                {
+                    if (ConnectedEmails.ContainsKey(Username))
+                    {
+                        oldSlot = ConnectedEmails[Username];
+                        isOnline = true;
+                    }
+                }
+
+                // 4) Nếu đang online → kick cả 2
+                if (isOnline && oldSlot != null)
+                {
+                    string kickJson = JsonSerializer.Serialize(new
+                    {
+                        action = "kick",
+                        message = "Tài khoản đang được đăng nhập ở nơi khác, vui lòng đăng nhập lại."
+                    });
+
+                    // Gửi người cũ
+                    try { Send_Message(oldSlot.Stream, kickJson); } catch { }
+                    try { oldSlot.Client?.Close(); } catch { }
+
+                    // Gửi người mới
+                    try { Send_Message(requestStream, kickJson); } catch { }
+                    try { requestClient?.Close(); } catch { }
+
+                    // Xóa khỏi danh sách
+                    lock (ConnectedEmailsLock)
+                    {
+                        ConnectedEmails.Remove(Username);
+                    }
+
+                    return JsonSerializer.Serialize(new { Status = "error", message = "Tài khoản đã đăng nhập ở nơi khác!" });
+                }
+
+
+                // 5) Login thành công → lưu slot theo email (lúc Join_Lobby mới cập nhật Stream/Client)
+                return JsonSerializer.Serialize(new { Status = "success", email = Username });
             }
-            catch (Exception Ex)
+            catch (Exception ex)
             {
-                return JsonSerializer.Serialize(new { Status = "error", Message = "Lỗi SQLite: " + Ex.Message });
+                return JsonSerializer.Serialize(new { Status = "error", message = ex.Message });
             }
         }
+
 
         // Xử lý yêu cầu đăng ký người dùng mới vào cơ sở dữ liệu SQLite
         private string Handle_Register(Dictionary<string, string> Data)
