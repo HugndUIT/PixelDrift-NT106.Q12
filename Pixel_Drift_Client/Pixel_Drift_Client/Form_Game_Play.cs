@@ -28,6 +28,9 @@ namespace Pixel_Drift
         private SoundPlayer Buff;
         private SoundPlayer Debuff;
         private SoundPlayer Car_Hit;
+        private long player1Score = 0;
+        private long player2Score = 0;
+        private int crashCount = 0;
 
         public Game_Window()
         {
@@ -73,6 +76,7 @@ namespace Pixel_Drift
                 this.Close();
             }
         }
+
         private void PlayMusicLoop(string musicFile)
         {
             try
@@ -87,8 +91,6 @@ namespace Pixel_Drift
             catch { }
         }
 
-
-        // Gửi tin nhắn (Tự thêm \n)
         private void Send(string message)
         {
             if (stream == null || !stream.CanWrite) return;
@@ -164,15 +166,19 @@ namespace Pixel_Drift
                         break;
 
                     case "update_score":
+                        player1Score = data["p1_score"].GetInt64();
+                        player2Score = data["p2_score"].GetInt64();
+                        // ========== SỬA LỖI: DÙNG BIẾN ĐÃ GÁN ==========
                         if (lbl_Score1 != null)
-                            lbl_Score1.Text = "Score: " + data["p1_score"].GetInt64().ToString();
+                            lbl_Score1.Text = "Score: " + player1Score.ToString();
                         if (lbl_Score2 != null)
-                            lbl_Score2.Text = "Score: " + data["p2_score"].GetInt64().ToString();
+                            lbl_Score2.Text = "Score: " + player2Score.ToString();
                         break;
 
                     case "game_over":
                         Music?.controls.stop();
                         MessageBox.Show("Hết giờ!", "Trò chơi kết thúc");
+                        EndGame();
                         ResetToLobby();
                         break;
 
@@ -275,14 +281,101 @@ namespace Pixel_Drift
                         else if (soundType == "debuff")
                             Debuff?.Play();
                         else if (soundType == "hit_car")
+                        {
                             Car_Hit?.Play();
+                            crashCount++;
+                        }
+                        break;
+
+                    case "scoreboard_data":
+                        // Server trả về dữ liệu scoreboard
+                        string scoreData = data["data"].GetString();
+
+                        // Kiểm tra nếu form Scoreboard đang mở thì cập nhật dữ liệu
+                        if (Application.OpenForms.OfType<Form_ScoreBoard>().Any())
+                        {
+                            var scoreboard = Application.OpenForms.OfType<Form_ScoreBoard>().First();
+                            scoreboard.DisplayScoreBoard(scoreData);
+                        }
+                        break;
+
+                    case "search_result":
+                        // Server trả về kết quả tìm kiếm
+                        string searchData = data["data"].GetString();
+
+                        // Kiểm tra nếu form Scoreboard đang mở thì cập nhật kết quả tìm kiếm
+                        if (Application.OpenForms.OfType<Form_ScoreBoard>().Any())
+                        {
+                            var scoreboard = Application.OpenForms.OfType<Form_ScoreBoard>().First();
+                            scoreboard.DisplaySearchResults(searchData);
+                        }
+                        break;
+
+                    case "add_score_result":
+                        // Server trả về kết quả thêm điểm
+                        bool success = data["success"].GetBoolean();
                         break;
                 }
             }
             catch (Exception ex)
             {
-                ResetToLobby();
+                Console.WriteLine($"Lỗi xử lý tin nhắn: {ex.Message} (Data: {message})");
             }
+        }
+
+        private void EndGame()
+        {
+            try
+            {
+                // Lấy thông tin người chơi
+                string playerName = myUsername;
+                int winCount = 0;
+
+                // Xác định người thắng dựa trên điểm số
+                if (myPlayerNumber == 1 && player1Score > player2Score)
+                    winCount = 1;
+                else if (myPlayerNumber == 2 && player2Score > player1Score)
+                    winCount = 1;
+
+                // Tính tổng điểm dựa trên điểm số và số lần đâm xe
+                double totalScore = CalculateTotalScore(winCount, crashCount);
+
+                // Gửi điểm lên server
+                var scoreData = new
+                {
+                    action = "add_score",
+                    player_name = playerName,
+                    win_count = winCount,
+                    crash_count = crashCount,
+                    total_score = totalScore
+                };
+
+                Send(JsonSerializer.Serialize(scoreData));
+                Console.WriteLine($"Đã gửi điểm: {playerName} - Thắng: {winCount} - Đâm: {crashCount} - Tổng: {totalScore}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi gửi điểm: {ex.Message}");
+            }
+            finally
+            {
+                // Reset biến đếm cho game tiếp theo
+                crashCount = 0;
+                player1Score = 0;
+                player2Score = 0;
+            }
+        }
+
+        private double CalculateTotalScore(int winCount, int crashCount)
+        {
+            // Lấy điểm số của người chơi hiện tại
+            long currentPlayerScore = (myPlayerNumber == 1) ? player1Score : player2Score;
+
+            double baseScore = currentPlayerScore; // Điểm cơ bản từ game
+            double winBonus = winCount * 500; // Bonus thắng
+            double crashPenalty = crashCount * 50; // Phạt đâm xe
+
+            return baseScore + winBonus - crashPenalty;
         }
 
         // Ẩn/hiện các đối tượng game
@@ -308,6 +401,10 @@ namespace Pixel_Drift
         // Bắt đầu game
         private void StartGame()
         {
+            crashCount = 0;
+            player1Score = 0;
+            player2Score = 0;
+
             btn_Ready.Visible = false;
             lbl_P1_Status.Visible = false;
             lbl_P2_Status.Visible = false;
@@ -387,8 +484,8 @@ namespace Pixel_Drift
 
         private void btn_Scoreboard_Click(object sender, EventArgs e)
         {
-            Form_ScoreBoard scoreBoard = new Form_ScoreBoard();
-            scoreBoard.ShowDialog();
+            Form_ScoreBoard scoreboardForm = new Form_ScoreBoard(client);
+            scoreboardForm.ShowDialog();
         }
 
         private void Game_Window_KeyDown(object sender, KeyEventArgs e)

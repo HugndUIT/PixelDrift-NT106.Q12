@@ -101,12 +101,5 @@ namespace Pixel_Drift
             form.ShowDialog();
             this.Hide();
         }
-
-        private void btn_backdk_Click(object sender, EventArgs e)
-        {
-            Form_Dang_Ki dk = new Form_Dang_Ki();
-            dk.Show();
-            this.Hide();
-        }
     }
 }
