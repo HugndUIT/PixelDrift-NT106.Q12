@@ -1,4 +1,9 @@
-﻿using System.Net.Sockets;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Pixel_Drift_Server
 {
@@ -8,15 +13,6 @@ namespace Pixel_Drift_Server
         public NetworkStream Stream { get; set; }
         public string Username { get; set; }
         public bool Is_Ready { get; set; } = false;
-
-        public Game_Player() { }
-
-        public Game_Player(TcpClient client, string username)
-        {
-            this.Client = client;
-            this.Stream = client.GetStream();
-            this.Username = username;
-            this.Is_Ready = false;
-        }
+        public int Player_ID { get; set; }
     }
 }
