@@ -12,6 +12,7 @@ namespace Pixel_Drift
 {
     public partial class Form_Dang_Nhap : Form
     {
+        public static string Current_Username = "";
         public Form_Dang_Nhap()
         {
             InitializeComponent();
@@ -43,62 +44,95 @@ namespace Pixel_Drift
 
             try
             {
-                if (!ClientManager.Connect("127.0.0.1", 1111))
+                using (TcpClient client = new TcpClient())
                 {
-                    MessageBox.Show("Không thể kết nối tới server. Hãy kiểm tra IP và cổng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    // Timeout 5 giây
+                    var result = client.BeginConnect("127.0.0.1", 1111, null, null);
+                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
+
+                    if (!success)
+                    {
+                        MessageBox.Show("Server chưa sẵn sàng", "Mất kết nối server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    client.EndConnect(result);
+
+                    using (NetworkStream stream = client.GetStream())
+                    using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
+                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                    {
+                        string hashedPassword = MaHoa(password);
+
+                        var request = new
+                        {
+                            action = "login",
+                            username = username,
+                            password = hashedPassword
+                        };
+
+                        string json = JsonSerializer.Serialize(request);
+                        writer.WriteLine(json);
+
+                        // Đọc response với timeout
+                        stream.ReadTimeout = 5000; // 5 giây
+                        string response = reader.ReadLine();
+
+                        if (string.IsNullOrEmpty(response))
+                        {
+                            MessageBox.Show("Server không phản hồi!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
+
+                        if (dict.ContainsKey("Status") && dict["Status"] == "success")
+                        {
+                            MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Form_Dang_Nhap.Current_Username = username;
+                            this.Hide();
+                            Form_Thong_Tin formThongTin = new Form_Thong_Tin(username);
+                            formThongTin.ShowDialog();
+                            this.Close();
+                        }
+                        else if (dict.ContainsKey("Status") && dict["Status"] == "force_logout")
+                        {
+                            string msg = dict.ContainsKey("Message") ? dict["Message"] : "Tài khoản đang được đăng nhập ở nơi khác. Vui lòng thử lại sau";
+                            MessageBox.Show(msg, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        else
+                        {
+                            string msg = dict.ContainsKey("Message") ? dict["Message"] : "Sai tài khoản hoặc mật khẩu!";
+                            MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
                 }
-
-                string hashedPassword = MaHoa(password);
-
-                var request = new
-                {
-                    action = "login",
-                    username = username,
-                    password = hashedPassword
-                };
-
-                string response = ClientManager.SendRequest(request);
-                Console.WriteLine("Server response: " + response); 
-
-                // Phân tích phản hồi JSON
-                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
-
-                if (dict.ContainsKey("Status") && dict["Status"] == "success")
-                {
-                    MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    this.Hide();
-                    Form_Thong_Tin formThongTin = new Form_Thong_Tin(username);
-                    formThongTin.ShowDialog();
-                    this.Close();
-                }
-                else
-                {
-                    string msg = dict.ContainsKey("message") ? dict["message"] : "Sai tài khoản hoặc mật khẩu!";
-                    MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    ClientManager.CloseConnection();
-                }
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show("Server chưa sẵn sàng", "Mất kết nối server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (JsonException)
             {
-                MessageBox.Show("Dữ liệu từ server không hợp lệ (không phải JSON).", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (SocketException) 
-            {
-                MessageBox.Show("Không thể kết nối tới server. Hãy kiểm tra IP và cổng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Dữ liệu từ server không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btn_quenmatkhau_Click(object sender, EventArgs e)
         {
-            
             Form_QuenMatKhau form = new Form_QuenMatKhau();
             form.ShowDialog();
+            this.Hide();
+        }
+
+        private void btn_backdk_Click(object sender, EventArgs e)
+        {
+            Form_Dang_Ki dk = new Form_Dang_Ki();
+            dk.Show();
             this.Hide();
         }
     }

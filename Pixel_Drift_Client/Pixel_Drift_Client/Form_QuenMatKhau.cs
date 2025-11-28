@@ -57,7 +57,7 @@ namespace Pixel_Drift
 
                 if (dict.ContainsKey("Status") && dict["Status"] == "success")
                 {
-                    MessageBox.Show(dict["message"], "Thành công",
+                    MessageBox.Show(dict["Message"], "Thành công",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                  
