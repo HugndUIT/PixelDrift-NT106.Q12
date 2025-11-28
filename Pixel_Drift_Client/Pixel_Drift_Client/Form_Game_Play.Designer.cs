@@ -1,4 +1,6 @@
-﻿namespace Pixel_Drift
+﻿using System;
+
+namespace Pixel_Drift
 {
     partial class Game_Window
     {
@@ -391,6 +393,11 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void Game_timer_Tick(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

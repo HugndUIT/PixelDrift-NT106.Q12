@@ -113,7 +113,7 @@ namespace Pixel_Drift
 
                 else
                 {
-                    string msg = dict.ContainsKey("message") ? dict["message"] : "Đăng ký thất bại!";
+                    string msg = dict.ContainsKey("Message") ? dict["Message"] : "Đăng ký thất bại!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -178,9 +178,11 @@ namespace Pixel_Drift
             });
         }
 
-        private void label2_Click(object sender, EventArgs e)
+        private void btn_backdn_Click(object sender, EventArgs e)
         {
-
+            Form_Dang_Nhap dn = new Form_Dang_Nhap();
+            dn.Show();
+            this.Hide();
         }
     }
 }

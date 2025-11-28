@@ -56,9 +56,9 @@
             this.label2.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(12, 59);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(280, 22);
+            this.label2.Size = new System.Drawing.Size(249, 22);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Nhập chuỗi mã hóa đã gửi về mail";
+            this.label2.Text = "Nhập token được gửi về email";
             // 
             // lb_mkmoi
             // 
@@ -127,7 +127,7 @@
             this.btn_thoat.UseVisualStyleBackColor = false;
             this.btn_thoat.Click += new System.EventHandler(this.btn_thoat_Click);
             // 
-            // Form_DoiMatKhau
+            // Form_Doi_Mat_Khau
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -141,7 +141,7 @@
             this.Controls.Add(this.lb_mkmoi);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lb_doimatkhau);
-            this.Name = "Form_DoiMatKhau";
+            this.Name = "Form_Doi_Mat_Khau";
             this.Text = "Form_DoiMatKhau";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -291,12 +291,6 @@
     <Compile Include="Form_Doi_Mat_Khau.Designer.cs">
       <DependentUpon>Form_Doi_Mat_Khau.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form_Game_Room.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form_Game_Room.Designer.cs">
-      <DependentUpon>Form_Game_Room.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form_QuenMatKhau.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -346,9 +340,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_Game_Play.resx">
       <DependentUpon>Form_Game_Play.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form_Game_Room.resx">
-      <DependentUpon>Form_Game_Room.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form_QuenMatKhau.resx">
       <DependentUpon>Form_QuenMatKhau.cs</DependentUpon>

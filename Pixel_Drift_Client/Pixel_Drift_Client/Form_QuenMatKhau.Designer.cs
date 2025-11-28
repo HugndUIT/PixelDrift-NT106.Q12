@@ -70,7 +70,7 @@
             this.btn_guimahoa.Name = "btn_guimahoa";
             this.btn_guimahoa.Size = new System.Drawing.Size(200, 45);
             this.btn_guimahoa.TabIndex = 3;
-            this.btn_guimahoa.Text = "Gửi chuỗi mã hóa";
+            this.btn_guimahoa.Text = "Gửi mã xác thực";
             this.btn_guimahoa.UseVisualStyleBackColor = true;
             this.btn_guimahoa.Click += new System.EventHandler(this.btn_quenmatkhau_Click);
             // 

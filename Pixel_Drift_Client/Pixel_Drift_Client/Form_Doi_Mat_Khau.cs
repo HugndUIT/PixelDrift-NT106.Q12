@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
-
+using System.Security.Cryptography;
 
 namespace Pixel_Drift
 {
@@ -21,7 +21,7 @@ namespace Pixel_Drift
 
         private void btn_doimk_Click(object sender, EventArgs e)
         {
-            string token = txt_mkcu.Text.Trim(); 
+            string token = txt_mkcu.Text.Trim();
             string newPass = txt_mkmoi.Text.Trim();
             string confirm = txt_xacnhanmk.Text.Trim();
 
@@ -42,25 +42,27 @@ namespace Pixel_Drift
             if (!ClientManager.IsConnected)
             {
                 MessageBox.Show("Mất kết nối đến server! Vui lòng thử lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 return;
             }
 
             try
             {
+                // Mã hóa mật khẩu mới trước khi gửi 
+                string encryptedNewPassword = MaHoa(newPass);
+
                 var request = new
                 {
                     action = "change_password",
                     email = userEmail,
-                    token = token, 
-                    new_password = newPass
+                    token = token,
+                    new_password = encryptedNewPassword // Gửi mật khẩu đã mã hóa
                 };
 
                 string response = ClientManager.SendRequest(request);
 
                 if (response == null)
                 {
-                    throw new SocketException(); 
+                    throw new SocketException();
                 }
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
@@ -92,6 +94,19 @@ namespace Pixel_Drift
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Hàm mã hóa SHA-256
+        private string MaHoa(string password)
+        {
+            using (SHA256 sha = SHA256.Create())
+            {
+                byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                    builder.Append(b.ToString("x2"));
+                return builder.ToString();
             }
         }
 

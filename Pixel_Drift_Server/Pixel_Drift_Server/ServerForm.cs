@@ -11,8 +11,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Pixel_Drift_Server
 {
@@ -29,12 +29,20 @@ namespace Pixel_Drift_Server
         // Biến khóa phòng
         private readonly object Room_Lock = new object();
 
+        // Quản lý người dùng đã dăng nhập
+        private Dictionary<string, TcpClient> Active_Connections = new Dictionary<string, TcpClient>();
+        private readonly object Login_Lock = new object();
+        private readonly object Db_Lock = new object();
+
+        // Quản lý token reset pass
+        private Dictionary<string, string> PasswordResetTokens = new Dictionary<string, string>();
+        private readonly object PasswordResetLock = new object();
+
         public ServerForm()
         {
             InitializeComponent();
         }
 
-        // Xử lý sự kiện khi Form Server được load, dùng để khởi tạo cơ sở dữ liệu
         private void ServerForm_Load(object sender, EventArgs e)
         {
             try
@@ -48,16 +56,12 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Xử lý sự kiện click nút Start Server, khởi động luồng lắng nghe chính
         private void btn_Start_Server_Click(object sender, EventArgs e)
         {
-            Thread Server_Thread = new Thread(Start_Server);
-            Server_Thread.IsBackground = true;
-            Server_Thread.Start();
+            Task.Run(() => Start_Server());
             btn_Start_Server.Enabled = false;
         }
 
-        // Ghi log ra TextBox trên Form (đảm bảo Thread-safe)
         private void Log(string Message)
         {
             if (tb_hienthi.InvokeRequired)
@@ -70,7 +74,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Khởi động TCP Listener và chấp nhận kết nối client
         private void Start_Server()
         {
             try
@@ -82,27 +85,31 @@ namespace Pixel_Drift_Server
                 while (true)
                 {
                     TcpClient TCP_Client = TCP_Server.AcceptTcpClient();
-                    Thread Client_Thread = new Thread(() => Handle_Client(TCP_Client));
-                    Client_Thread.IsBackground = true;
-                    Client_Thread.Start();
+                    Log($"Client {TCP_Client.Client.RemoteEndPoint} đã kết nối!");
+                    Task.Run(() => Handle_Client(TCP_Client));
                 }
+            }   
+            catch (Exception Ex)
+            {
+                Log($"Lỗi máy chủ: {Ex.Message}");
+            }
+        }
+
+        private async void Send_Message(NetworkStream Stream, string Message)
+        {
+            if (Stream == null || !Stream.CanWrite) return;
+            try
+            {
+                byte[] Response_Bytes = Encoding.UTF8.GetBytes(Message + "\n");
+                await Stream.WriteAsync(Response_Bytes, 0, Response_Bytes.Length);
             }
             catch (Exception Ex)
             {
-                Log($"Server Error: {Ex.Message}");
+                Log($"Lỗi khi gửi tin nhắn: {Ex.Message}");
             }
         }
 
-        private void Send_Message(NetworkStream Stream, string Message)
-        {
-            if (Stream.CanWrite)
-            {
-                byte[] Bytes = Encoding.UTF8.GetBytes(Message + "\n");
-                Stream.Write(Bytes, 0, Bytes.Length);
-            }
-        }
-
-        // Hàm chính xử lý tất cả tin nhắn đến từ client
+        // Hàm xử lý client 
         private void Handle_Client(TcpClient Client)
         {
             NetworkStream Stream = Client.GetStream();
@@ -115,7 +122,9 @@ namespace Pixel_Drift_Server
                 {
                     if (string.IsNullOrEmpty(Message)) continue;
 
-                    Log($"[{Client.Client.RemoteEndPoint}] gửi: {Message}");
+                    // Ẩn tin nhắn di chuyển cho đỡ lag
+                    if (!Message.Contains("move"))
+                        Log($"[{Client.Client.RemoteEndPoint}] gửi: {Message}");
 
                     string Response = null;
                     try
@@ -133,7 +142,7 @@ namespace Pixel_Drift_Server
                                         { "username", Data["username"].GetString() },
                                         { "password", Data["password"].GetString() }
                                     };
-                                    Response = Handle_Login(Login_Data, Stream, Client);
+                                    Response = Handle_Login(Login_Data, Client);
                                     break;
                                 }
 
@@ -230,249 +239,301 @@ namespace Pixel_Drift_Server
                             Send_Message(Stream, Response);
                         }
                     }
-                    catch (JsonException Ex)
-                    {
-                        Log($" Lỗi JSON: {Ex.Message}. Data: {Message}");
+                    catch (JsonException Ex) 
+                    { 
+                        
                     }
-                    catch (Exception Ex)
-                    {
-                        Log($" Lỗi Handle_Client: {Ex.Message}. Data: {Message}");
-                    }
-                    finally
-                    {
-                        Handle_Disconnect(Client);
-                        Reader.Close();
-                        Client.Close();
+                    catch (Exception Ex) 
+                    { 
+                        Log($" Lỗi xử lý client: {Ex.Message}. Data: {Message}"); 
                     }
                 }
             }
             catch (Exception Ex)
             {
-                Log($"Client Error: {Ex.Message}");
+                Log($"Lỗi Client: {Ex.Message}");
             }
             finally
             {
-                Log($"Client {Client.Client.RemoteEndPoint} đã ngắt kết nối.");
-                Reader.Close();
-                Client.Close();
+                Handle_Disconnect(Client);
             }
         }
 
-        private string Handle_Login(Dictionary<string, string> data, NetworkStream stream, TcpClient client)
+        // Lấy email từ username
+        private string GetEmailFromUsername(string username)
+        {
+            lock (Db_Lock)
+            {
+                try
+                {
+                    string query = "SELECT Email FROM Info_User WHERE Username=@username";
+                    using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                    {
+                        cmd.Parameters.AddWithValue("@username", username);
+                        var result = cmd.ExecuteScalar();
+                        return result?.ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log($"Lỗi khi lấy email từ username {username}: {ex.Message}");
+                    return null;
+                }
+            }
+        }
+
+        // Hàm xử lý đăng nhập 
+        private string Handle_Login(Dictionary<string, string> data, TcpClient client)
         {
             try
             {
                 string username = data["username"];
                 string password = data["password"];
 
-                // Kiểm tra trong database
-                string query = "SELECT COUNT(*) FROM Info_User WHERE Username=@username AND Password=@password";
-                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                string userEmail = GetEmailFromUsername(username);
+                if (string.IsNullOrEmpty(userEmail))
                 {
-                    cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@password", password);
+                    return JsonSerializer.Serialize(new { status = "error", message = "Tài khoản không tồn tại" });
+                }
 
-                    long count = (long)cmd.ExecuteScalar();
-                    if (count > 0)
+                lock (Login_Lock)
+                {
+                    if (Active_Connections.ContainsKey(userEmail))
                     {
-                        return JsonSerializer.Serialize(new
+                        // Kick người cũ
+                        TcpClient Old_Client = Active_Connections[userEmail];
+                        try
                         {
-                            status = "success",
-                            message = "Login successful",
-                            username = username
-                        });
+                            if (Old_Client != null && Old_Client.Connected)
+                            {
+                                NetworkStream Old_Stream = Old_Client.GetStream();
+                                string kickMsg = JsonSerializer.Serialize(new { action = "force_logout", message = "Đăng nhập nơi khác" });
+                                Send_Message(Old_Stream, kickMsg);
+                                Old_Client.Close();
+                            }
+                        }
+                        catch { }
+                        Active_Connections.Remove(userEmail);
                     }
-                    else
+                }
+
+                long count = 0;
+                lock (Db_Lock)
+                {
+                    string query = "SELECT COUNT(*) FROM Info_User WHERE Username=@username AND Password=@password";
+                    using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
                     {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "error",
-                            message = "Invalid username or password"
-                        });
+                        cmd.Parameters.AddWithValue("@username", username);
+                        cmd.Parameters.AddWithValue("@password", password);
+                        count = (long)cmd.ExecuteScalar();
                     }
+                }
+
+                if (count > 0)
+                {
+                    lock (Login_Lock)
+                    {
+                        Active_Connections[userEmail] = client;
+                    }
+                    return JsonSerializer.Serialize(new { status = "success", message = "Login success", username = username });
+                }
+                else
+                {
+                    return JsonSerializer.Serialize(new { status = "error", message = "Sai mật khẩu" });
                 }
             }
             catch (Exception ex)
             {
-                return JsonSerializer.Serialize(new
-                {
-                    status = "error",
-                    message = $"Login error: {ex.Message}"
-                });
+                return JsonSerializer.Serialize(new { status = "error", message = ex.Message });
             }
         }
 
+        // Hàm xử lý đăng kí
         private string Handle_Register(Dictionary<string, string> data)
         {
-            try
+            lock (Db_Lock)
             {
-                string email = data["email"];
-                string username = data["username"];
-                string password = data["password"];
-                string birthday = data["birthday"];
-
-                // Kiểm tra xem email đã tồn tại chưa
-                string checkEmailQuery = "SELECT COUNT(*) FROM Info_User WHERE Email=@email";
-                using (var checkCmd = new SQLiteCommand(checkEmailQuery, SQL_Helper.Connection))
+                try
                 {
-                    checkCmd.Parameters.AddWithValue("@email", email);
-                    long emailCount = (long)checkCmd.ExecuteScalar();
-                    if (emailCount > 0)
+                    string email = data["email"];
+                    string username = data["username"];
+                    string password = data["password"];
+                    string birthday = data["birthday"];
+
+                    // Kiểm tra xem email đã tồn tại chưa
+                    string checkEmailQuery = "SELECT COUNT(*) FROM Info_User WHERE Email=@email";
+                    using (var checkCmd = new SQLiteCommand(checkEmailQuery, SQL_Helper.Connection))
                     {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "error",
-                            message = "Email already exists"
-                        });
-                    }
-                }
-
-                // Kiểm tra xem username đã tồn tại chưa
-                string checkUserQuery = "SELECT COUNT(*) FROM Info_User WHERE Username=@username";
-                using (var checkCmd = new SQLiteCommand(checkUserQuery, SQL_Helper.Connection))
-                {
-                    checkCmd.Parameters.AddWithValue("@username", username);
-                    long userCount = (long)checkCmd.ExecuteScalar();
-                    if (userCount > 0)
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "error",
-                            message = "Username already exists"
-                        });
-                    }
-                }
-
-                // Thêm user mới
-                string insertQuery = "INSERT INTO Info_User (Username, Email, Password, Birthday) VALUES (@username, @email, @password, @birthday)";
-                using (var insertCmd = new SQLiteCommand(insertQuery, SQL_Helper.Connection))
-                {
-                    insertCmd.Parameters.AddWithValue("@username", username);
-                    insertCmd.Parameters.AddWithValue("@email", email);
-                    insertCmd.Parameters.AddWithValue("@password", password);
-                    insertCmd.Parameters.AddWithValue("@birthday", birthday);
-
-                    int rowsAffected = insertCmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "success",
-                            message = "Registration successful"
-                        });
-                    }
-                    else
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "error",
-                            message = "Registration failed"
-                        });
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return JsonSerializer.Serialize(new
-                {
-                    status = "error",
-                    message = $"Registration error: {ex.Message}"
-                });
-            }
-        }
-
-        private string Handle_Get_Info(Dictionary<string, string> data)
-        {
-            try
-            {
-                string username = data["username"];
-
-                string query = "SELECT Username, Email, Birthday FROM Info_User WHERE Username=@username";
-                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
-                {
-                    cmd.Parameters.AddWithValue("@username", username);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
+                        checkCmd.Parameters.AddWithValue("@email", email);
+                        long emailCount = (long)checkCmd.ExecuteScalar();
+                        if (emailCount > 0)
                         {
                             return JsonSerializer.Serialize(new
                             {
-                                status = "success",
-                                username = reader["Username"].ToString(),
-                                email = reader["Email"].ToString(),
-                                birthday = reader["Birthday"].ToString()
+                                Status = "error",
+                                Message = "Email đã tồn tại"
+                            });
+                        }
+                    }
+
+                    // Kiểm tra xem username đã tồn tại chưa
+                    string checkUserQuery = "SELECT COUNT(*) FROM Info_User WHERE Username=@username";
+                    using (var checkCmd = new SQLiteCommand(checkUserQuery, SQL_Helper.Connection))
+                    {
+                        checkCmd.Parameters.AddWithValue("@username", username);
+                        long userCount = (long)checkCmd.ExecuteScalar();
+                        if (userCount > 0)
+                        {
+                            return JsonSerializer.Serialize(new
+                            {
+                                Status = "error",
+                                Message = "Tên người dùng đã tồn tại"
+                            });
+                        }
+                    }
+
+                    // Thêm user mới
+                    string insertQuery = "INSERT INTO Info_User (Username, Email, Password, Birthday) VALUES (@username, @email, @password, @birthday)";
+                    using (var insertCmd = new SQLiteCommand(insertQuery, SQL_Helper.Connection))
+                    {
+                        insertCmd.Parameters.AddWithValue("@username", username);
+                        insertCmd.Parameters.AddWithValue("@email", email);
+                        insertCmd.Parameters.AddWithValue("@password", password);
+                        insertCmd.Parameters.AddWithValue("@birthday", birthday);
+
+                        int rowsAffected = insertCmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            return JsonSerializer.Serialize(new
+                            {
+                                Status = "success",
+                                Message = "Đăng ký thành công"
                             });
                         }
                         else
                         {
                             return JsonSerializer.Serialize(new
                             {
-                                status = "error",
-                                message = "User not found"
+                                Status = "error",
+                                Message = "Đăng ký thất bại"
                             });
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                return JsonSerializer.Serialize(new
+                catch (Exception ex)
                 {
-                    status = "error",
-                    message = $"Get info error: {ex.Message}"
-                });
+                    return JsonSerializer.Serialize(new
+                    {
+                        Status = "error",
+                        Message = $"Lỗi đăng ký: {ex.Message}"
+                    });
+                }
+            }
+        }
+
+        // Hàm lấy thông tin người dùng
+        private string Handle_Get_Info(Dictionary<string, string> data)
+        {
+            lock (Db_Lock)
+            {
+                try
+                {
+                    string query = "SELECT Username, Email, Birthday FROM Info_User WHERE Username=@u";
+                    using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                    {
+                        cmd.Parameters.AddWithValue("@u", data["username"]);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return JsonSerializer.Serialize(new
+                                {
+                                    status = "success",
+                                    username = reader["Username"].ToString(),
+                                    email = reader["Email"].ToString(),
+                                    birthday = reader["Birthday"].ToString()
+                                });
+                            }
+                        }
+                    }
+                    return JsonSerializer.Serialize(new { status = "error", message = "User not found" });
+                }
+                catch (Exception ex) { return JsonSerializer.Serialize(new { status = "error", message = ex.Message }); }
             }
         }
 
         private string Handle_Forgot_Password(Dictionary<string, string> data)
         {
-            try
+            lock (Db_Lock)
             {
-                string email = data["email"];
-
-                // Kiểm tra email có tồn tại không
-                string query = "SELECT Username, Password FROM Info_User WHERE Email=@email";
-                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                try
                 {
-                    cmd.Parameters.AddWithValue("@email", email);
+                    string email = data["email"];
 
-                    using (var reader = cmd.ExecuteReader())
+                    // Kiểm tra email có tồn tại không
+                    string query = "SELECT Username, Password FROM Info_User WHERE Email=@email";
+                    using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
                     {
-                        if (reader.Read())
-                        {
-                            string username = reader["Username"].ToString();
-                            string password = reader["Password"].ToString();
+                        cmd.Parameters.AddWithValue("@email", email);
 
-                            Log($"Password reset requested for {email}. Password: {password}");
-
-                            return JsonSerializer.Serialize(new
-                            {
-                                status = "success",
-                                message = "Password reset email sent"
-                            });
-                        }
-                        else
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            return JsonSerializer.Serialize(new
+                            if (reader.Read())
                             {
-                                status = "error",
-                                message = "Email not found"
-                            });
+                                string username = reader["Username"].ToString();
+                                string password = reader["Password"].ToString();
+
+                                // Tạo token reset password
+                                string token = GenerateResetToken();
+                                lock (PasswordResetLock)
+                                {
+                                    PasswordResetTokens[email] = token;
+                                }
+
+                                // Gửi email với token
+                                bool sent = Send_Email(email, "Password Reset",
+                                    $"Hello {username}, your password reset token is: {token}");
+
+                                if (sent)
+                                {
+                                    return JsonSerializer.Serialize(new
+                                    {
+                                        Status = "success",
+                                        Message = "Đã gửi token đặt lại mật khẩu"
+                                    });
+                                }
+                                else
+                                {
+                                    return JsonSerializer.Serialize(new
+                                    {
+                                        Status = "error",
+                                        Message = "Không thể gửi token"
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                return JsonSerializer.Serialize(new
+                                {
+                                    Status = "error",
+                                    Message = "Email không tồn tại"
+                                });
+                            }
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                return JsonSerializer.Serialize(new
+                catch (Exception ex)
                 {
-                    status = "error",
-                    message = $"Forgot password error: {ex.Message}"
-                });
+                    return JsonSerializer.Serialize(new
+                    {
+                        Status = "error",
+                        Message = $"Lỗi quên mật khẩu: {ex.Message}"
+                    });
+                }
             }
         }
-
+        
+        // Hàm xử lý đổi mật khẩu
         private string Handle_Change_Password(Dictionary<string, string> data)
         {
             try
@@ -481,50 +542,52 @@ namespace Pixel_Drift_Server
                 string token = data["token"];
                 string newPassword = data["new_password"];
 
-                // Kiểm tra email có tồn tại không
-                string query = "SELECT Password FROM Info_User WHERE Email=@email";
-                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                // Kiểm tra token
+                lock (PasswordResetLock)
                 {
-                    cmd.Parameters.AddWithValue("@email", email);
-
-                    using (var reader = cmd.ExecuteReader())
+                    if (!PasswordResetTokens.ContainsKey(email) || PasswordResetTokens[email] != token)
                     {
-                        if (reader.Read())
+                        return JsonSerializer.Serialize(new
                         {
-                            string oldPassword = reader["Password"].ToString();
+                            Status = "error",
+                            Message = "Mã xác thực không hợp lệ hoặc đã hết hạn"
+                        });
+                    }
 
-                            string updateQuery = "UPDATE Info_User SET Password=@password WHERE Email=@email";
-                            using (var updateCmd = new SQLiteCommand(updateQuery, SQL_Helper.Connection))
-                            {
-                                updateCmd.Parameters.AddWithValue("@password", newPassword);
-                                updateCmd.Parameters.AddWithValue("@email", email);
+                    // Xóa token sau khi sử dụng
+                    PasswordResetTokens.Remove(email);
+                }
 
-                                int rowsAffected = updateCmd.ExecuteNonQuery();
-                                if (rowsAffected > 0)
-                                {
-                                    return JsonSerializer.Serialize(new
-                                    {
-                                        status = "success",
-                                        message = "Password changed successfully"
-                                    });
-                                }
-                            }
-                        }
+                // Cập nhật mật khẩu
+                string updateQuery = "UPDATE Info_User SET Password=@password WHERE Email=@email";
+                using (var updateCmd = new SQLiteCommand(updateQuery, SQL_Helper.Connection))
+                {
+                    updateCmd.Parameters.AddWithValue("@password", newPassword);
+                    updateCmd.Parameters.AddWithValue("@email", email);
+
+                    int rowsAffected = updateCmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "success",
+                            Message = "Đổi mật khẩu thành công"
+                        });
                     }
                 }
 
                 return JsonSerializer.Serialize(new
                 {
-                    status = "error",
-                    message = "Failed to change password"
+                    Status = "error",
+                    Message = "Không thể đổi mật khẩu"
                 });
             }
             catch (Exception ex)
             {
                 return JsonSerializer.Serialize(new
                 {
-                    status = "error",
-                    message = $"Change password error: {ex.Message}"
+                    Status = "error",
+                    Message = $"Lỗi đổi mật khẩu: {ex.Message}"
                 });
             }
         }
@@ -562,7 +625,13 @@ namespace Pixel_Drift_Server
         private string Handle_Join_Room(TcpClient Client, Dictionary<string, JsonElement> Data)
         {
             string Username = Data.ContainsKey("username") ? Data["username"].GetString() : "Unknown";
-            string ID_Room = GenerateRoomID();
+
+            string ID_Room = Data.ContainsKey("room_id") ? Data["room_id"].GetString() : "";
+
+            if (string.IsNullOrEmpty(ID_Room))
+            {
+                return JsonSerializer.Serialize(new { status = "error", message = "Vui lòng nhập ID phòng" });
+            }
 
             lock (Room_Lock)
             {
@@ -575,16 +644,21 @@ namespace Pixel_Drift_Server
                     {
                         Players[Client] = ID_Room;
                         Log($"Client {Username} đã vào phòng {ID_Room}");
-                        return JsonSerializer.Serialize(new { action = "join_room_success", room_id = ID_Room, player_number = Player_Number });
+                        return JsonSerializer.Serialize(new
+                        {
+                            action = "join_room_success",
+                            room_id = ID_Room,
+                            player_number = Player_Number
+                        });
                     }
                     else
                     {
-                        return JsonSerializer.Serialize(new { status = "error", message = "Room is full" });
+                        return JsonSerializer.Serialize(new { status = "error", message = "Phòng đã đầy" });
                     }
                 }
                 else
                 {
-                    return JsonSerializer.Serialize(new { status = "error", message = "Room not found" });
+                    return JsonSerializer.Serialize(new { status = "error", message = "Không tìm thấy phòng này" });
                 }
             }
         }
@@ -605,8 +679,9 @@ namespace Pixel_Drift_Server
             }
         }
 
-        private void Handle_Disconnect(TcpClient Client) 
+        private void Handle_Disconnect(TcpClient Client)
         {
+            // Xử lý đăng xuất ở trong phòng
             lock (Room_Lock)
             {
                 if (Players.ContainsKey(Client))
@@ -625,7 +700,57 @@ namespace Pixel_Drift_Server
                     Players.Remove(Client);
                 }
             }
+
+            // Xử lý đăng nhập trùng
+            lock (Login_Lock)
+            {
+                string Email_To_Remove = null;
+                foreach (var kvp in Active_Connections)
+                {
+                    if (kvp.Value == Client)
+                    {
+                        Email_To_Remove = kvp.Key;
+                        break;
+                    }
+                }
+                if (Email_To_Remove != null)
+                {
+                    Active_Connections.Remove(Email_To_Remove);
+                    Log($"User {Email_To_Remove} đã đăng xuất.");
+                }
+            }
+
+            try { Client?.Close(); } catch { }
             Log($"Client ngắt kết nối.");
+        }
+
+        private string GenerateResetToken()
+        {
+            return Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+        }
+
+        // Hàm gửi mail
+        private bool Send_Email(string To, string Subject, string Body)
+        {
+            try
+            {
+                MailMessage Mail = new MailMessage();
+                Mail.From = new MailAddress("hoangphihung200706@gmail.com");
+                Mail.To.Add(To);
+                Mail.Subject = Subject;
+                Mail.Body = Body;
+                SmtpClient Smtp = new SmtpClient("smtp.gmail.com", 587);
+
+                Smtp.Credentials = new System.Net.NetworkCredential("hoangphihung200706@gmail.com", "jhtp vhhn bavf bqeo");
+                Smtp.EnableSsl = true;
+                Smtp.Send(Mail);
+                return true;
+            }
+            catch (Exception Ex)
+            {
+                Log("Lỗi gửi mail: " + Ex.Message);
+                return false;
+            }
         }
     }
 }
