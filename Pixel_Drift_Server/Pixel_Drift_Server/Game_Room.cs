@@ -81,8 +81,13 @@ namespace Pixel_Drift_Server
             lock (Player_Lock)
             {
                 string leftUser = "Unknown";
-                if (Player_1 != null && Player_1.Client == client) { leftUser = Player_1.Username; Player_1 = null; }
-                else if (Player_2 != null && Player_2.Client == client) { leftUser = Player_2.Username; Player_2 = null; }
+                if (Player_1 != null && Player_1.Client == client) 
+                { 
+                    leftUser = Player_1.Username; Player_1 = null; 
+                }
+                else if (Player_2 != null && Player_2.Client == client) { 
+                    leftUser = Player_2.Username; Player_2 = null; 
+                }
 
                 StopGame(); 
                 Broadcast(JsonSerializer.Serialize(new { action = "player_disconnected", username = leftUser }));

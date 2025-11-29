@@ -86,7 +86,7 @@ namespace Pixel_Drift
 
                         var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
-                        if (dict.ContainsKey("Status") && dict["Status"] == "success")
+                        if (dict.ContainsKey("status") && dict["status"] == "success")
                         {
                             MessageBox.Show("Đăng nhập thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Form_Dang_Nhap.Current_Username = username;
@@ -95,7 +95,7 @@ namespace Pixel_Drift
                             formThongTin.ShowDialog();
                             this.Close();
                         }
-                        else if (dict.ContainsKey("Status") && dict["Status"] == "force_logout")
+                        else if (dict.ContainsKey("status") && dict["status"] == "force_logout")
                         {
                             string msg = dict.ContainsKey("Message") ? dict["Message"] : "Tài khoản đang được đăng nhập ở nơi khác. Vui lòng thử lại sau";
                             MessageBox.Show(msg, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);

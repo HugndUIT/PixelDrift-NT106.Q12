@@ -370,7 +370,7 @@ namespace Pixel_Drift_Server
                         {
                             return JsonSerializer.Serialize(new
                             {
-                                Status = "error",
+                                status = "error",
                                 Message = "Email đã tồn tại"
                             });
                         }
@@ -386,7 +386,7 @@ namespace Pixel_Drift_Server
                         {
                             return JsonSerializer.Serialize(new
                             {
-                                Status = "error",
+                                status = "error",
                                 Message = "Tên người dùng đã tồn tại"
                             });
                         }
@@ -406,7 +406,7 @@ namespace Pixel_Drift_Server
                         {
                             return JsonSerializer.Serialize(new
                             {
-                                Status = "success",
+                                status = "success",
                                 Message = "Đăng ký thành công"
                             });
                         }
@@ -414,7 +414,7 @@ namespace Pixel_Drift_Server
                         {
                             return JsonSerializer.Serialize(new
                             {
-                                Status = "error",
+                                status = "error",
                                 Message = "Đăng ký thất bại"
                             });
                         }
