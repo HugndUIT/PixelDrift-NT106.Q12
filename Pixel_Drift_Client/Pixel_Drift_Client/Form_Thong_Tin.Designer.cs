@@ -31,7 +31,6 @@ namespace Pixel_Drift
         /// </summary>
         private void InitializeComponent()
         {
-            this.lbl_TieuDe = new System.Windows.Forms.Label();
             this.btnVaoGame = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lbl_CardName = new System.Windows.Forms.Label();
@@ -39,34 +38,25 @@ namespace Pixel_Drift
             this.lbl_TenDangNhap = new System.Windows.Forms.Label();
             this.lbl_Email = new System.Windows.Forms.Label();
             this.lbl_Birthday = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_Avatar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // lbl_TieuDe
-            // 
-            this.lbl_TieuDe.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbl_TieuDe.Font = new System.Drawing.Font("Times New Roman", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_TieuDe.Location = new System.Drawing.Point(0, 0);
-            this.lbl_TieuDe.Name = "lbl_TieuDe";
-            this.lbl_TieuDe.Size = new System.Drawing.Size(640, 119);
-            this.lbl_TieuDe.TabIndex = 1;
-            this.lbl_TieuDe.Text = "Thông tin người dùng";
-            this.lbl_TieuDe.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnVaoGame
             // 
             this.btnVaoGame.BackColor = System.Drawing.Color.Firebrick;
             this.btnVaoGame.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVaoGame.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnVaoGame.Location = new System.Drawing.Point(204, 458);
+            this.btnVaoGame.Location = new System.Drawing.Point(318, 501);
             this.btnVaoGame.Margin = new System.Windows.Forms.Padding(4);
             this.btnVaoGame.Name = "btnVaoGame";
-            this.btnVaoGame.Size = new System.Drawing.Size(168, 45);
+            this.btnVaoGame.Size = new System.Drawing.Size(233, 63);
             this.btnVaoGame.TabIndex = 0;
             this.btnVaoGame.Text = "Vào game";
             this.btnVaoGame.UseVisualStyleBackColor = false;
-            this.btnVaoGame.Click += new System.EventHandler(this.btnThoat_Click_1);
+            this.btnVaoGame.Click += new System.EventHandler(this.btnVaoGame_Click);
             // 
             // panel1
             // 
@@ -79,7 +69,7 @@ namespace Pixel_Drift
             this.panel1.Controls.Add(this.lbl_TenDangNhap);
             this.panel1.Controls.Add(this.lbl_Email);
             this.panel1.Controls.Add(this.lbl_Birthday);
-            this.panel1.Location = new System.Drawing.Point(73, 113);
+            this.panel1.Location = new System.Drawing.Point(184, 149);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(498, 275);
             this.panel1.TabIndex = 5;
@@ -140,16 +130,26 @@ namespace Pixel_Drift
             this.lbl_Birthday.TabIndex = 2;
             this.lbl_Birthday.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Pixel_Drift.Properties.Resources.Thong_Tin;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(870, 613);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
+            // 
             // Form_Thong_Tin
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 33F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.AliceBlue;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(640, 589);
+            this.ClientSize = new System.Drawing.Size(870, 613);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.lbl_TieuDe);
             this.Controls.Add(this.btnVaoGame);
+            this.Controls.Add(this.pictureBox1);
             this.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -159,6 +159,7 @@ namespace Pixel_Drift
             this.Load += new System.EventHandler(this.Form_Thong_Tin_Load);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ptb_Avatar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -166,12 +167,12 @@ namespace Pixel_Drift
         #endregion
 
         private System.Windows.Forms.Label lbl_Birthday;
-        private System.Windows.Forms.Label lbl_TieuDe;
         private System.Windows.Forms.Label lbl_Email;
         private System.Windows.Forms.Label lbl_TenDangNhap;
         private System.Windows.Forms.Button btnVaoGame;
         private Panel panel1;
         private PictureBox ptb_Avatar;
         private Label lbl_CardName;
+        private PictureBox pictureBox1;
     }
 }

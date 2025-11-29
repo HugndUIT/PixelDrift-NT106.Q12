@@ -57,6 +57,7 @@ namespace Pixel_Drift
             this.lbl_GameTimer = new System.Windows.Forms.Label();
             this.lbl_Score1 = new System.Windows.Forms.Label();
             this.lbl_Score2 = new System.Windows.Forms.Label();
+            this.btn_ID = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_roadtrack1dup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_increasingroad1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptb_decreasingroad1)).BeginInit();
@@ -351,11 +352,24 @@ namespace Pixel_Drift
             this.lbl_Score2.TabIndex = 11;
             this.lbl_Score2.Text = "Score:";
             // 
+            // btn_ID
+            // 
+            this.btn_ID.Enabled = false;
+            this.btn_ID.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_ID.Location = new System.Drawing.Point(593, 657);
+            this.btn_ID.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.btn_ID.Name = "btn_ID";
+            this.btn_ID.Size = new System.Drawing.Size(285, 78);
+            this.btn_ID.TabIndex = 12;
+            this.btn_ID.Text = "ID:";
+            this.btn_ID.UseVisualStyleBackColor = true;
+            // 
             // Game_Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(964, 745);
+            this.Controls.Add(this.btn_ID);
             this.Controls.Add(this.lbl_Score2);
             this.Controls.Add(this.lbl_Score1);
             this.Controls.Add(this.lbl_GameTimer);
@@ -426,5 +440,6 @@ namespace Pixel_Drift
         private System.Windows.Forms.Label lbl_GameTimer;
         private System.Windows.Forms.Label lbl_Score1;
         private System.Windows.Forms.Label lbl_Score2;
+        private System.Windows.Forms.Button btn_ID;
     }
 }

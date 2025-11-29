@@ -35,7 +35,6 @@ namespace Pixel_Drift
         {
             try
             {
-                // Gửi yêu cầu lấy scoreboard theo format JSON
                 var request = new { action = "get_scoreboard", top_count = 50 };
                 SendToServer(JsonSerializer.Serialize(request));
             }
@@ -175,7 +174,7 @@ namespace Pixel_Drift
         // Phương thức này để hiển thị kết quả tìm kiếm
         public void DisplaySearchResults(string jsonData)
         {
-            DisplayScoreBoard(jsonData); // Dùng chung method hiển thị
+            DisplayScoreBoard(jsonData); 
         }
 
         private void btn_Refresh_Click(object sender, EventArgs e)

@@ -118,5 +118,7 @@ namespace Pixel_Drift
             formdangnhap.ShowDialog();
             this.Close();
         }
+
+
     }
 }

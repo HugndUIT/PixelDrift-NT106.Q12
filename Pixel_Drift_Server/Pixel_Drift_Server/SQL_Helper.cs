@@ -23,6 +23,7 @@ namespace Pixel_Drift_Server
                 Password TEXT,
                 Birthday TEXT
             )";
+
             using (var Command = new SQLiteCommand(SQL_Query_User, Connection))
             {
                 Command.ExecuteNonQuery();
@@ -37,6 +38,7 @@ namespace Pixel_Drift_Server
                 TotalScore REAL DEFAULT 0,
                 DatePlayed DATETIME DEFAULT CURRENT_TIMESTAMP
             )";
+
             using (var Command = new SQLiteCommand(SQL_Query_ScoreBoard, Connection))
             {
                 Command.ExecuteNonQuery();
@@ -76,10 +78,10 @@ namespace Pixel_Drift_Server
             {
                 StringBuilder result = new StringBuilder();
                 string query = @"
-        SELECT PlayerName, WinCount, CrashCount, TotalScore, DatePlayed 
-        FROM ScoreBoard 
-        ORDER BY TotalScore DESC, WinCount DESC, CrashCount ASC 
-        LIMIT @Limit";
+                SELECT PlayerName, WinCount, CrashCount, TotalScore, DatePlayed 
+                FROM ScoreBoard 
+                ORDER BY TotalScore DESC, WinCount DESC, CrashCount ASC 
+                LIMIT @Limit";
 
                 using (var cmd = new SQLiteCommand(query, Connection))
                 {
@@ -96,7 +98,6 @@ namespace Pixel_Drift_Server
                             double totalScore = reader.GetDouble(3);
                             string datePlayed = reader.GetString(4);
 
-                            // Format: rank|playerName|winCount|crashCount|totalScore|datePlayed
                             result.AppendLine($"{rank}|{playerName}|{winCount}|{crashCount}|{totalScore:F2}|{datePlayed}");
                             rank++;
                         }
@@ -111,6 +112,7 @@ namespace Pixel_Drift_Server
                 return "ERROR";
             }
         }
+
         public static string SearchPlayer(string searchText)
         {
             try
@@ -150,54 +152,6 @@ namespace Pixel_Drift_Server
             {
                 Console.WriteLine($"Error searching player: {ex.Message}");
                 return "ERROR";
-            }
-        }
-
-        public static bool ClearScoreBoard()
-        {
-            try
-            {
-                string query = "DELETE FROM ScoreBoard";
-                using (var cmd = new SQLiteCommand(query, Connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error clearing scoreboard: {ex.Message}");
-                return false;
-            }
-        }
-        public static void AddSampleData()
-        {
-            AddScore("Nguyễn Văn A", 15, 3, 2850.5);
-            AddScore("Trần Thị B", 12, 5, 2456.8);
-            AddScore("Lê Văn C", 18, 2, 3120.9);
-            AddScore("Phạm Thị D", 10, 7, 2100.4);
-            AddScore("Hoàng Văn E", 14, 4, 2680.3);
-            AddScore("Đặng Thị F", 9, 8, 1950.7);
-            AddScore("Vũ Văn G", 16, 3, 2920.1);
-            AddScore("Bùi Thị H", 11, 6, 2230.6);
-
-            Console.WriteLine("Sample data added successfully!");
-        }
-
-        public static void ClearSampleData()
-        {
-            try
-            {
-                string query = "DELETE FROM ScoreBoard WHERE PlayerName IN ('Nguyễn Văn A', 'Trần Thị B', 'Lê Văn C', 'Phạm Thị D', 'Hoàng Văn E', 'Đặng Thị F', 'Vũ Văn G', 'Bùi Thị H')";
-                using (var cmd = new SQLiteCommand(query, Connection))
-                {
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    Console.WriteLine($"Đã xóa {rowsAffected} bản ghi mẫu");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error clearing sample data: {ex.Message}");
             }
         }
     }

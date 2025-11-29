@@ -89,8 +89,15 @@ namespace Pixel_Drift_Server
                     leftUser = Player_2.Username; Player_2 = null; 
                 }
 
-                StopGame(); 
-                Broadcast(JsonSerializer.Serialize(new { action = "player_disconnected", username = leftUser }));
+                StopGame();
+
+                var disconnectMsg = new
+                {
+                    action = "player_disconnected",
+                    name = leftUser 
+                };
+
+                Broadcast(JsonSerializer.Serialize(disconnectMsg));
                 Broadcast_Ready_Status();
             }
         }

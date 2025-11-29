@@ -13,9 +13,6 @@ namespace Pixel_Drift
         private static StreamReader reader;
         private static NetworkStream stream;
 
-        /// <summary>
-        /// Kết nối đến server và giữ kết nối.
-        /// </summary>
         public static bool Connect(string ip, int port)
         {
             try
