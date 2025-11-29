@@ -183,7 +183,9 @@ namespace Pixel_Drift
             // 
             // btn_xacnhan
             // 
+            this.btn_xacnhan.BorderColor = System.Drawing.Color.Orange;
             this.btn_xacnhan.BorderRadius = 15;
+            this.btn_xacnhan.BorderThickness = 3;
             this.btn_xacnhan.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.btn_xacnhan.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btn_xacnhan.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
@@ -252,12 +254,9 @@ namespace Pixel_Drift
             // Panel_Chua_Form
             // 
             this.Panel_Chua_Form.BackColor = System.Drawing.Color.Transparent;
+            this.Panel_Chua_Form.BorderColor = System.Drawing.Color.White;
             this.Panel_Chua_Form.BorderRadius = 15;
-            this.Panel_Chua_Form.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0))))); // Đen mờ ảo hơn
-            this.Panel_Chua_Form.Location = new System.Drawing.Point(100, 100);
-            this.Panel_Chua_Form.Name = "Panel_Chua_Form";
-            this.Panel_Chua_Form.Size = new System.Drawing.Size(864, 612);
-            this.Panel_Chua_Form.TabIndex = 0;
+            this.Panel_Chua_Form.BorderThickness = 3;
             this.Panel_Chua_Form.Controls.Add(this.btn_backdn);
             this.Panel_Chua_Form.Controls.Add(this.label1);
             this.Panel_Chua_Form.Controls.Add(this.btn_xacnhan);
@@ -271,6 +270,11 @@ namespace Pixel_Drift
             this.Panel_Chua_Form.Controls.Add(this.label4);
             this.Panel_Chua_Form.Controls.Add(this.label3);
             this.Panel_Chua_Form.Controls.Add(this.label2);
+            this.Panel_Chua_Form.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.Panel_Chua_Form.Location = new System.Drawing.Point(100, 100);
+            this.Panel_Chua_Form.Name = "Panel_Chua_Form";
+            this.Panel_Chua_Form.Size = new System.Drawing.Size(864, 612);
+            this.Panel_Chua_Form.TabIndex = 0;
             // 
             // Form_Dang_Ki
             // 

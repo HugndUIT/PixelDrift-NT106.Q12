@@ -495,6 +495,12 @@
     <Content Include="nhac_thi_dau.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\modaub.jpg" />
+    <None Include="Resources\rackrack.jpg" />
+    <None Include="Resources\racbou.jpg" />
+    <None Include="Resources\backrou.jpg" />
+    <None Include="Resources\31564d5d33242f05596b764177067545.jpg" />
+    <None Include="Resources\gameback.jpg" />
     <None Include="Resources\formm_odau.jpg" />
     <None Include="Resources\formmodau.jpg" />
     <None Include="Resources\Quen_MK.png" />

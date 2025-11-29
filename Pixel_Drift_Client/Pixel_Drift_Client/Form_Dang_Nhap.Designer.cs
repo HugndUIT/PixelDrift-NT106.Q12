@@ -133,7 +133,9 @@ namespace Pixel_Drift
             // 
             // btn_vaogame
             // 
+            this.btn_vaogame.BorderColor = System.Drawing.Color.Orange;
             this.btn_vaogame.BorderRadius = 15;
+            this.btn_vaogame.BorderThickness = 3;
             this.btn_vaogame.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.btn_vaogame.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btn_vaogame.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
@@ -193,7 +195,9 @@ namespace Pixel_Drift
             // Panel_Chua_Form
             // 
             this.Panel_Chua_Form.BackColor = System.Drawing.Color.Transparent;
+            this.Panel_Chua_Form.BorderColor = System.Drawing.Color.Aquamarine;
             this.Panel_Chua_Form.BorderRadius = 15;
+            this.Panel_Chua_Form.BorderThickness = 2;
             this.Panel_Chua_Form.Controls.Add(this.btn_backdk);
             this.Panel_Chua_Form.Controls.Add(this.btn_quenmatkhau);
             this.Panel_Chua_Form.Controls.Add(this.btn_vaogame);

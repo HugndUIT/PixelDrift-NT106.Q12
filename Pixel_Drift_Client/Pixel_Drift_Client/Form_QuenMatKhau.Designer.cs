@@ -36,6 +36,7 @@
             // 
             // txt_email
             // 
+            this.txt_email.BackColor = System.Drawing.Color.LightSlateGray;
             this.txt_email.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txt_email.Location = new System.Drawing.Point(268, 158);
             this.txt_email.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -45,23 +46,24 @@
             // 
             // btn_guimahoa
             // 
+            this.btn_guimahoa.BackColor = System.Drawing.Color.White;
             this.btn_guimahoa.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_guimahoa.Location = new System.Drawing.Point(368, 231);
+            this.btn_guimahoa.Location = new System.Drawing.Point(376, 231);
             this.btn_guimahoa.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_guimahoa.Name = "btn_guimahoa";
-            this.btn_guimahoa.Size = new System.Drawing.Size(151, 36);
+            this.btn_guimahoa.Size = new System.Drawing.Size(137, 44);
             this.btn_guimahoa.TabIndex = 3;
             this.btn_guimahoa.Text = "Gửi mã xác thực";
-            this.btn_guimahoa.UseVisualStyleBackColor = true;
+            this.btn_guimahoa.UseVisualStyleBackColor = false;
             this.btn_guimahoa.Click += new System.EventHandler(this.btn_quenmatkhau_Click);
             // 
             // btn_quaylai
             // 
             this.btn_quaylai.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_quaylai.Location = new System.Drawing.Point(536, 231);
+            this.btn_quaylai.Location = new System.Drawing.Point(533, 231);
             this.btn_quaylai.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_quaylai.Name = "btn_quaylai";
-            this.btn_quaylai.Size = new System.Drawing.Size(135, 36);
+            this.btn_quaylai.Size = new System.Drawing.Size(138, 44);
             this.btn_quaylai.TabIndex = 4;
             this.btn_quaylai.Text = "Quay lại";
             this.btn_quaylai.UseVisualStyleBackColor = true;
