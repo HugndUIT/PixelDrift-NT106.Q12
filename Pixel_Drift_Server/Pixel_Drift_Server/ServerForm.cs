@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Sockets;
@@ -10,7 +11,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
-using System.IO;
 using System.Security.Cryptography;
 
 namespace Pixel_Drift_Server
@@ -31,9 +31,8 @@ namespace Pixel_Drift_Server
         private const int Tick_Rate = 18;
         private const int Player_Move_Speed = 9;
 
-        // Lưu trữ vị trí (Point) của tất cả các đối tượng trong game
+        // Lưu trữ vị trí và kích thước đối tượng game
         private Dictionary<string, Point> Game_Objects = new Dictionary<string, Point>();
-        // Lưu trữ kích thước (Size) của các đối tượng trong game
         private Dictionary<string, Size> Object_Sizes = new Dictionary<string, Size>();
         private int P1_Speed = 10;
         private int P2_Speed = 10;
@@ -48,15 +47,17 @@ namespace Pixel_Drift_Server
         private const int P2_Max_X = 530;
 
         private Random Server_Rand = new Random();
-        // Quản lý ai đang đăng nhập theo email
-        private Dictionary<string, Player_Slot> ConnectedEmails = new Dictionary<string, Player_Slot>();
-        private readonly object ConnectedEmailsLock = new object();
 
-        // Dictionary để lưu trữ token reset password
+        // CHỐNG LOGIN TRÙNG - SỬA: Dùng email làm key thay vì username
+        private Dictionary<string, DateTime> Logged_In_Users = new Dictionary<string, DateTime>();
+        private Dictionary<string, TcpClient> Active_Connections = new Dictionary<string, TcpClient>();
+        private readonly object Login_Lock = new object();
+        private readonly object Db_Lock = new object();
+
+        // QUẢN LÝ TOKEN RESET PASSWORD
         private Dictionary<string, string> PasswordResetTokens = new Dictionary<string, string>();
         private readonly object PasswordResetLock = new object();
 
-        // Lớp chứa thông tin chi tiết về một slot người chơi
         public class Player_Slot
         {
             public TcpClient Client { get; set; }
@@ -70,7 +71,6 @@ namespace Pixel_Drift_Server
             InitializeComponent();
         }
 
-        // Xử lý sự kiện khi Form Server được load, dùng để khởi tạo cơ sở dữ liệu
         private void ServerForm_Load(object sender, EventArgs e)
         {
             try
@@ -84,7 +84,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Xử lý sự kiện click nút Start Server, khởi động luồng lắng nghe chính
         private void btn_Start_Server_Click(object sender, EventArgs e)
         {
             Thread Server_Thread = new Thread(Start_Server);
@@ -93,7 +92,6 @@ namespace Pixel_Drift_Server
             btn_Start_Server.Enabled = false;
         }
 
-        // Ghi log ra TextBox trên Form (đảm bảo Thread-safe)
         private void Log(string Message)
         {
             if (tb_hienthi.InvokeRequired)
@@ -106,7 +104,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Khởi động TCP Listener và chấp nhận kết nối client
         private void Start_Server()
         {
             try
@@ -118,6 +115,8 @@ namespace Pixel_Drift_Server
                 while (true)
                 {
                     TcpClient TCP_Client = TCP_Server.AcceptTcpClient();
+                    Log($"Client {TCP_Client.Client.RemoteEndPoint} đã kết nối!");
+
                     Thread Client_Thread = new Thread(() => Handle_Client(TCP_Client));
                     Client_Thread.IsBackground = true;
                     Client_Thread.Start();
@@ -125,11 +124,10 @@ namespace Pixel_Drift_Server
             }
             catch (Exception Ex)
             {
-                Log($"Server Error: {Ex.Message}");
+                Log($"Lỗi máy chủ: {Ex.Message}");
             }
         }
 
-        // Gửi tin nhắn đến một luồng mạng cụ thể
         private void Send_Message(NetworkStream Stream, string Message)
         {
             if (Stream == null || !Stream.CanWrite) return;
@@ -145,7 +143,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Phát sóng tin nhắn đến tất cả người chơi đang kết nối
         private void Broadcast(string Message)
         {
             lock (Player_Lock)
@@ -157,7 +154,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Phát sóng trạng thái sẵn sàng (Ready Status) của cả hai người chơi
         private void Broadcast_Ready_Status()
         {
             lock (Player_Lock)
@@ -174,7 +170,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Kiểm tra xem cả hai người chơi đã sẵn sàng chưa để bắt đầu đếm ngược
         private void Check_Start_Countdown()
         {
             lock (Player_Lock)
@@ -188,7 +183,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Xử lý mỗi tick của bộ đếm ngược
         private void Countdown_Tick(object State)
         {
             if (Countdown_Value > 0)
@@ -212,7 +206,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Xử lý mỗi giây của Game Timer
         private void Game_Timer_Tick(object State)
         {
             if (Game_Time_Remaining > 0)
@@ -251,7 +244,7 @@ namespace Pixel_Drift_Server
                 Server_Game_Loop?.Dispose();
                 Server_Game_Loop = null;
 
-                // Lưu điểm số khi game kết thúc
+                // Lưu điểm số khi game kết thúc (TÍNH NĂNG SCOREBOARD)
                 SaveGameScores();
 
                 Broadcast(JsonSerializer.Serialize(new { action = "game_over" }));
@@ -266,7 +259,7 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Lưu điểm số vào database khi game kết thúc
+        // TÍNH NĂNG SCOREBOARD
         private void SaveGameScores()
         {
             try
@@ -302,7 +295,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Khởi tạo/Thiết lập lại vị trí và trạng thái ban đầu của các đối tượng game
         private void Initialize_Game()
         {
             lock (Player_Lock)
@@ -317,20 +309,20 @@ namespace Pixel_Drift_Server
                 Game_Objects.Clear();
                 Object_Sizes.Clear();
 
-                // --- CẤU HÌNH KÍCH THƯỚC ĐƯỜNG ĐUA ---
+                // SỬ DỤNG KÍCH THƯỚC CHUẨN
                 int Road_Width = 500;
                 int Safe_Margin = 50;
                 int Min_X = Safe_Margin;
                 int Max_X = Road_Width - Safe_Margin;
 
-                // --- KHỞI TẠO PLAYER ---
+                // KHỞI TẠO PLAYER - kích thước chuẩn
                 Object_Sizes["ptb_player1"] = new Size(72, 117);
                 Game_Objects["ptb_player1"] = new Point(202, 470);
 
                 Object_Sizes["ptb_player2"] = new Size(72, 117);
                 Game_Objects["ptb_player2"] = new Point(202, 470);
 
-                // --- KHỞI TẠO ĐƯỜNG ĐUA (ROAD) ---
+                // KHỞI TẠO ĐƯỜNG ĐUA - kích thước chuẩn
                 Object_Sizes["ptb_roadtrack1"] = new Size(617, 734);
                 Game_Objects["ptb_roadtrack1"] = new Point(0, -2);
 
@@ -343,7 +335,7 @@ namespace Pixel_Drift_Server
                 Object_Sizes["ptb_roadtrack2dup"] = new Size(458, 596);
                 Game_Objects["ptb_roadtrack2dup"] = new Point(0, 596);
 
-                // --- KHỞI TẠO AI CAR & ITEM ---
+                // KHỞI TẠO AI CAR & ITEM - kích thước chuẩn
                 Object_Sizes["ptb_AICar1"] = new Size(50, 100);
                 Game_Objects["ptb_AICar1"] = Reposition_Object("ptb_AICar1", Min_X, Max_X);
 
@@ -356,7 +348,7 @@ namespace Pixel_Drift_Server
                 Object_Sizes["ptb_AICar6"] = new Size(74, 128);
                 Game_Objects["ptb_AICar6"] = Reposition_Object("ptb_AICar6", Min_X, Max_X);
 
-                // Buffs/Debuffs
+                // Buffs/Debuffs - kích thước chuẩn
                 Object_Sizes["ptb_increasingroad1"] = new Size(30, 30);
                 Game_Objects["ptb_increasingroad1"] = Reposition_Object("ptb_increasingroad1", Min_X, Max_X);
 
@@ -371,7 +363,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Thiết lập lại vị trí ngẫu nhiên cho một đối tượng (AI car hoặc power-up) ở ngoài màn hình
         private Point Reposition_Object(string Name, int Min_X, int Max_X)
         {
             Size Current_Size = Object_Sizes.ContainsKey(Name) ? Object_Sizes[Name] : new Size(30, 30);
@@ -422,7 +413,6 @@ namespace Pixel_Drift_Server
             return New_Pos;
         }
 
-        // Vòng lặp chính của Game Server (Game Tick) - Xử lý logic di chuyển, va chạm và gửi trạng thái
         private void Server_Game_Loop_Tick(object State)
         {
             try
@@ -431,6 +421,7 @@ namespace Pixel_Drift_Server
                 {
                     if (Game_Timer == null) return;
 
+                    // DI CHUYỂN PLAYER
                     Point P1_Pos = Game_Objects["ptb_player1"];
                     if (P1_Left && P1_Pos.X > P1_Min_X) P1_Pos.X -= Player_Move_Speed;
                     if (P1_Right && P1_Pos.X < P1_Max_X - Object_Sizes["ptb_player1"].Width) P1_Pos.X += Player_Move_Speed;
@@ -441,6 +432,7 @@ namespace Pixel_Drift_Server
                     if (P2_Right && P2_Pos.X < P2_Max_X - Object_Sizes["ptb_player2"].Width) P2_Pos.X += Player_Move_Speed;
                     Game_Objects["ptb_player2"] = P2_Pos;
 
+                    // DI CHUYỂN OBJECTS 
                     Move_Object_Down("ptb_roadtrack1", P1_Speed, Game_Height, true);
                     Move_Object_Down("ptb_roadtrack1dup", P1_Speed, Game_Height, true);
                     Move_Object_Down("ptb_AICar1", P1_Speed, Game_Height, false, P1_Min_X, P1_Max_X);
@@ -455,17 +447,56 @@ namespace Pixel_Drift_Server
                     Move_Object_Down("ptb_increasingroad2", P2_Speed, Game_Height, false, P2_Min_X, P2_Max_X);
                     Move_Object_Down("ptb_decreasingroad2", P2_Speed, Game_Height, false, P2_Min_X, P2_Max_X);
 
-                    // Check Collisions Player 1
-                    if (Check_Collision("ptb_player1", "ptb_increasingroad1")) { P1_Speed += 3; Reposition_Object("ptb_increasingroad1", P1_Min_X, P1_Max_X); Send_Message(Player_1.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "buff" })); }
-                    if (Check_Collision("ptb_player1", "ptb_decreasingroad1")) { P1_Speed -= 3; Reposition_Object("ptb_decreasingroad1", P1_Min_X, P1_Max_X); Send_Message(Player_1.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "debuff" })); }
-                    if (Check_Collision("ptb_player1", "ptb_AICar1")) { P1_Speed -= 4; Reposition_Object("ptb_AICar1", P1_Min_X, P1_Max_X); Send_Message(Player_2.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "hit_car" })); }
-                    if (Check_Collision("ptb_player1", "ptb_AICar5")) { P1_Speed -= 4; Reposition_Object("ptb_AICar5", P1_Min_X, P1_Max_X); Send_Message(Player_2.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "hit_car" })); }
+                    // CHECK COLLISIONS 
+                    if (Check_Collision("ptb_player1", "ptb_increasingroad1"))
+                    {
+                        P1_Speed += 3;
+                        Reposition_Object("ptb_increasingroad1", P1_Min_X, P1_Max_X);
+                        Send_Message(Player_1.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "buff" }));
+                    }
+                    if (Check_Collision("ptb_player1", "ptb_decreasingroad1"))
+                    {
+                        P1_Speed -= 3;
+                        Reposition_Object("ptb_decreasingroad1", P1_Min_X, P1_Max_X);
+                        Send_Message(Player_1.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "debuff" }));
+                    }
+                    if (Check_Collision("ptb_player1", "ptb_AICar1"))
+                    {
+                        P1_Speed -= 4;
+                        Reposition_Object("ptb_AICar1", P1_Min_X, P1_Max_X);
+                        Send_Message(Player_1.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "hit_car" }));
+                    }
+                    if (Check_Collision("ptb_player1", "ptb_AICar5"))
+                    {
+                        P1_Speed -= 4;
+                        Reposition_Object("ptb_AICar5", P1_Min_X, P1_Max_X);
+                        Send_Message(Player_1.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "hit_car" }));
+                    }
 
-                    // Check Collisions Player 2
-                    if (Check_Collision("ptb_player2", "ptb_increasingroad2")) { P2_Speed += 3; Reposition_Object("ptb_increasingroad2", P2_Min_X, P2_Max_X); Send_Message(Player_1.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "buff" })); }
-                    if (Check_Collision("ptb_player2", "ptb_decreasingroad2")) { P2_Speed -= 3; Reposition_Object("ptb_decreasingroad2", P2_Min_X, P2_Max_X); Send_Message(Player_1.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "debuff" })); }
-                    if (Check_Collision("ptb_player2", "ptb_AICar3")) { P2_Speed -= 4; Reposition_Object("ptb_AICar3", P2_Min_X, P2_Max_X); Send_Message(Player_2.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "hit_car" })); }
-                    if (Check_Collision("ptb_player2", "ptb_AICar6")) { P2_Speed -= 4; Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X); Send_Message(Player_2.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "hit_car" })); }
+                    if (Check_Collision("ptb_player2", "ptb_increasingroad2"))
+                    {
+                        P2_Speed += 3;
+                        Reposition_Object("ptb_increasingroad2", P2_Min_X, P2_Max_X);
+                        Send_Message(Player_2.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "buff" }));
+                    }
+                    if (Check_Collision("ptb_player2", "ptb_decreasingroad2"))
+                    {
+                        P2_Speed -= 3;
+                        Reposition_Object("ptb_decreasingroad2", P2_Min_X, P2_Max_X);
+                        Send_Message(Player_2.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "debuff" }));
+                    }
+                    if (Check_Collision("ptb_player2", "ptb_AICar3"))
+                    {
+                        P2_Speed -= 4;
+                        Reposition_Object("ptb_AICar3", P2_Min_X, P2_Max_X);
+                        Send_Message(Player_2.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "hit_car" }));
+                    }
+                    if (Check_Collision("ptb_player2", "ptb_AICar6"))
+                    {
+                        P2_Speed -= 4;
+                        Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X);
+                        Send_Message(Player_2.Stream, JsonSerializer.Serialize(new { action = "play_sound", sound = "hit_car" }));
+                    }
 
                     int Min_Speed = 4;
                     P1_Speed = Math.Max(P1_Speed, Min_Speed);
@@ -490,7 +521,6 @@ namespace Pixel_Drift_Server
             }
         }
 
-        // Di chuyển một đối tượng xuống dưới và thiết lập lại vị trí nếu nó đi ra khỏi màn hình
         private void Move_Object_Down(string Name, int Speed, int Screen_Height, bool Is_Road, int Min_X = 0, int Max_X = 0)
         {
             if (!Game_Objects.ContainsKey(Name)) return;
@@ -515,7 +545,6 @@ namespace Pixel_Drift_Server
             Game_Objects[Name] = Pos;
         }
 
-        // Kiểm tra va chạm giữa hai đối tượng game
         private bool Check_Collision(string Player, string Obj)
         {
             if (!Game_Objects.ContainsKey(Player) || !Game_Objects.ContainsKey(Obj)) return false;
@@ -525,286 +554,7 @@ namespace Pixel_Drift_Server
             return Rect_Player.IntersectsWith(Rect_Obj);
         }
 
-        // ========== CÁC PHƯƠNG THỨC XỬ LÝ AUTHENTICATION BỊ THIẾU ==========
-
-        private string Handle_Login(Dictionary<string, string> data, NetworkStream stream, TcpClient client)
-        {
-            try
-            {
-                string username = data["username"];
-                string password = data["password"];
-
-                // Kiểm tra trong database
-                string query = "SELECT COUNT(*) FROM Info_User WHERE Username=@username AND Password=@password";
-                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
-                {
-                    cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@password", password);
-
-                    long count = (long)cmd.ExecuteScalar();
-                    if (count > 0)
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "success",
-                            message = "Login successful",
-                            username = username
-                        });
-                    }
-                    else
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "error",
-                            message = "Invalid username or password"
-                        });
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return JsonSerializer.Serialize(new
-                {
-                    status = "error",
-                    message = $"Login error: {ex.Message}"
-                });
-            }
-        }
-
-        private string Handle_Register(Dictionary<string, string> data)
-        {
-            try
-            {
-                string email = data["email"];
-                string username = data["username"];
-                string password = data["password"];
-                string birthday = data["birthday"];
-
-                // Kiểm tra xem email đã tồn tại chưa
-                string checkEmailQuery = "SELECT COUNT(*) FROM Info_User WHERE Email=@email";
-                using (var checkCmd = new SQLiteCommand(checkEmailQuery, SQL_Helper.Connection))
-                {
-                    checkCmd.Parameters.AddWithValue("@email", email);
-                    long emailCount = (long)checkCmd.ExecuteScalar();
-                    if (emailCount > 0)
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "error",
-                            message = "Email already exists"
-                        });
-                    }
-                }
-
-                // Kiểm tra xem username đã tồn tại chưa
-                string checkUserQuery = "SELECT COUNT(*) FROM Info_User WHERE Username=@username";
-                using (var checkCmd = new SQLiteCommand(checkUserQuery, SQL_Helper.Connection))
-                {
-                    checkCmd.Parameters.AddWithValue("@username", username);
-                    long userCount = (long)checkCmd.ExecuteScalar();
-                    if (userCount > 0)
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "error",
-                            message = "Username already exists"
-                        });
-                    }
-                }
-
-                // Thêm user mới
-                string insertQuery = "INSERT INTO Info_User (Username, Email, Password, Birthday) VALUES (@username, @email, @password, @birthday)";
-                using (var insertCmd = new SQLiteCommand(insertQuery, SQL_Helper.Connection))
-                {
-                    insertCmd.Parameters.AddWithValue("@username", username);
-                    insertCmd.Parameters.AddWithValue("@email", email);
-                    insertCmd.Parameters.AddWithValue("@password", password);
-                    insertCmd.Parameters.AddWithValue("@birthday", birthday);
-
-                    int rowsAffected = insertCmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "success",
-                            message = "Registration successful"
-                        });
-                    }
-                    else
-                    {
-                        return JsonSerializer.Serialize(new
-                        {
-                            status = "error",
-                            message = "Registration failed"
-                        });
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return JsonSerializer.Serialize(new
-                {
-                    status = "error",
-                    message = $"Registration error: {ex.Message}"
-                });
-            }
-        }
-
-        private string Handle_Get_Info(Dictionary<string, string> data)
-        {
-            try
-            {
-                string username = data["username"];
-
-                string query = "SELECT Username, Email, Birthday FROM Info_User WHERE Username=@username";
-                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
-                {
-                    cmd.Parameters.AddWithValue("@username", username);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return JsonSerializer.Serialize(new
-                            {
-                                status = "success",
-                                username = reader["Username"].ToString(),
-                                email = reader["Email"].ToString(),
-                                birthday = reader["Birthday"].ToString()
-                            });
-                        }
-                        else
-                        {
-                            return JsonSerializer.Serialize(new
-                            {
-                                status = "error",
-                                message = "User not found"
-                            });
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return JsonSerializer.Serialize(new
-                {
-                    status = "error",
-                    message = $"Get info error: {ex.Message}"
-                });
-            }
-        }
-
-        private string Handle_Forgot_Password(Dictionary<string, string> data)
-        {
-            try
-            {
-                string email = data["email"];
-
-                // Kiểm tra email có tồn tại không
-                string query = "SELECT Username, Password FROM Info_User WHERE Email=@email";
-                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
-                {
-                    cmd.Parameters.AddWithValue("@email", email);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            string username = reader["Username"].ToString();
-                            string password = reader["Password"].ToString();
-
-                            // Trong thực tế, bạn sẽ gửi email ở đây
-                            // Nhưng để demo, chúng ta sẽ log thông tin
-                            Log($"Password reset requested for {email}. Password: {password}");
-
-                            return JsonSerializer.Serialize(new
-                            {
-                                status = "success",
-                                message = "Password reset email sent"
-                            });
-                        }
-                        else
-                        {
-                            return JsonSerializer.Serialize(new
-                            {
-                                status = "error",
-                                message = "Email not found"
-                            });
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return JsonSerializer.Serialize(new
-                {
-                    status = "error",
-                    message = $"Forgot password error: {ex.Message}"
-                });
-            }
-        }
-
-        private string Handle_Change_Password(Dictionary<string, string> data)
-        {
-            try
-            {
-                string email = data["email"];
-                string token = data["token"];
-                string newPassword = data["new_password"];
-
-                // Kiểm tra email có tồn tại không
-                string query = "SELECT Password FROM Info_User WHERE Email=@email";
-                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
-                {
-                    cmd.Parameters.AddWithValue("@email", email);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            string oldPassword = reader["Password"].ToString();
-
-                            // Đơn giản hóa: cho phép đổi mật khẩu mà không cần token
-                            // Trong thực tế, bạn nên xác thực token
-                            string updateQuery = "UPDATE Info_User SET Password=@password WHERE Email=@email";
-                            using (var updateCmd = new SQLiteCommand(updateQuery, SQL_Helper.Connection))
-                            {
-                                updateCmd.Parameters.AddWithValue("@password", newPassword);
-                                updateCmd.Parameters.AddWithValue("@email", email);
-
-                                int rowsAffected = updateCmd.ExecuteNonQuery();
-                                if (rowsAffected > 0)
-                                {
-                                    return JsonSerializer.Serialize(new
-                                    {
-                                        status = "success",
-                                        message = "Password changed successfully"
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return JsonSerializer.Serialize(new
-                {
-                    status = "error",
-                    message = "Failed to change password"
-                });
-            }
-            catch (Exception ex)
-            {
-                return JsonSerializer.Serialize(new
-                {
-                    status = "error",
-                    message = $"Change password error: {ex.Message}"
-                });
-            }
-        }
-
-        // ========== KẾT THÚC CÁC PHƯƠNG THỨC XỬ LÝ AUTHENTICATION ==========
-
-        // Hàm chính xử lý tất cả tin nhắn đến từ client
+        // XỬ LÝ CLIENT VỚI TẤT CẢ TÍNH NĂNG
         private void Handle_Client(TcpClient Client)
         {
             NetworkStream Stream = Client.GetStream();
@@ -836,7 +586,7 @@ namespace Pixel_Drift_Server
                                         { "username", Data["username"].GetString() },
                                         { "password", Data["password"].GetString() }
                                     };
-                                    Response = Handle_Login(Login_Data, Stream, Client);
+                                    Response = Handle_Login(Login_Data, Client); // Truyền Client vào
                                     break;
                                 }
 
@@ -873,11 +623,55 @@ namespace Pixel_Drift_Server
                                 lock (Player_Lock)
                                 {
                                     string Username = Data.ContainsKey("username") ? Data["username"].GetString() : "Player";
+
+                                    // CHỐNG LOGIN TRÙNG: Lấy email từ username để kiểm tra
+                                    string userEmail = GetEmailFromUsername(Username);
+                                    if (string.IsNullOrEmpty(userEmail))
+                                    {
+                                        userEmail = Username; // Fallback nếu không tìm thấy email
+                                    }
+
+                                    lock (Login_Lock)
+                                    {
+                                        if (Active_Connections.ContainsKey(userEmail)) // Kiểm tra bằng email
+                                        {
+                                            TcpClient Old_Client = Active_Connections[userEmail];
+                                            Log($"Phát hiện join_lobby trùng: {Username} (Email: {userEmail})");
+
+                                            try
+                                            {
+                                                if (Old_Client != null && Old_Client.Connected)
+                                                {
+                                                    NetworkStream Old_Stream = Old_Client.GetStream();
+                                                    string kickMsg = JsonSerializer.Serialize(new
+                                                    {
+                                                        action = "force_logout",
+                                                        Message = "Tài khoản của bạn đã được đăng nhập từ nơi khác."
+                                                    });
+                                                    Send_Message(Old_Stream, kickMsg);
+                                                    System.Threading.Thread.Sleep(200);
+                                                    Old_Stream.Close();
+                                                    Old_Client.Close();
+                                                    Log($"Đã kick kết nối cũ của {Username} (Email: {userEmail})");
+                                                }
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                Log($"Lỗi khi kick: {ex.Message}");
+                                            }
+
+                                            Active_Connections.Remove(userEmail); // Xóa bằng email
+                                        }
+
+                                        Active_Connections[userEmail] = Client; // Lưu bằng email
+                                        Log($"Đã lưu kết nối cho {Username} (Email: {userEmail})");
+                                    }
+
                                     if (Player_1.Client == null)
                                     {
                                         Player_1.Client = Client;
                                         Player_1.Stream = Stream;
-                                        Player_1.Username = Username + " (Xe Đỏ)";
+                                        Player_1.Username = Username;
                                         Current_Player_Slot = Player_1;
                                         Response = JsonSerializer.Serialize(new { action = "assign_player", player_number = 1 });
                                         Log($"Player 1 ({Player_1.Username}) đã kết nối.");
@@ -886,7 +680,7 @@ namespace Pixel_Drift_Server
                                     {
                                         Player_2.Client = Client;
                                         Player_2.Stream = Stream;
-                                        Player_2.Username = Username + " (Xe Xanh)";
+                                        Player_2.Username = Username;
                                         Current_Player_Slot = Player_2;
                                         Response = JsonSerializer.Serialize(new { action = "assign_player", player_number = 2 });
                                         Log($"Player 2 ({Player_2.Username}) đã kết nối.");
@@ -894,17 +688,6 @@ namespace Pixel_Drift_Server
                                     else
                                     {
                                         Response = JsonSerializer.Serialize(new { action = "lobby_full" });
-                                    }
-
-                                    if (Data.TryGetValue("email", out JsonElement emailElement))
-                                    {
-                                        string Email = emailElement.GetString();
-                                        Current_Player_Slot.Username = Email;
-
-                                        lock (ConnectedEmailsLock)
-                                        {
-                                            ConnectedEmails[Email] = Current_Player_Slot;
-                                        }
                                     }
                                 }
                                 Broadcast_Ready_Status();
@@ -942,7 +725,7 @@ namespace Pixel_Drift_Server
                                 }
                                 break;
 
-                            // ========== XỬ LÝ SCOREBOARD ==========
+                            // TÍNH NĂNG SCOREBOARD
                             case "get_scoreboard":
                                 int TopCount = Data.ContainsKey("top_count") ? Data["top_count"].GetInt32() : 50;
                                 string Scoreboard_Data = SQL_Helper.GetTopScores(TopCount);
@@ -976,7 +759,6 @@ namespace Pixel_Drift_Server
                                     success = Success
                                 });
                                 break;
-                            // ========== KẾT THÚC XỬ LÝ SCOREBOARD ==========
 
                             default:
                                 Response = JsonSerializer.Serialize(new { Status = "error", Message = "Unknown action" });
@@ -989,51 +771,501 @@ namespace Pixel_Drift_Server
                         }
                     }
                     catch (JsonException Ex) { Log($" Lỗi JSON: {Ex.Message}. Data: {Message}"); }
-                    catch (Exception Ex) { Log($" Lỗi Handle_Client: {Ex.Message}. Data: {Message}"); }
+                    catch (Exception Ex) { Log($" Lỗi xử lý client: {Ex.Message}. Data: {Message}"); }
                 }
             }
             catch (Exception Ex)
             {
-                Log($"Client Error: {Ex.Message}");
+                Log($"Lỗi Client: {Ex.Message}");
             }
             finally
             {
-                Log($"Client {Client.Client.RemoteEndPoint} đã ngắt kết nối.");
-                lock (Player_Lock)
+                try
                 {
-                    string Disconnected_Player_Name = "Unknown";
-                    if (Current_Player_Slot == Player_1)
+                    Log($"Client {Client.Client.RemoteEndPoint} đã ngắt kết nối.");
+                }
+                catch { }
+                lock (Login_Lock)
+                {
+                    string Email_To_Remove = null;
+                    foreach (var kvp in Active_Connections)
                     {
-                        Disconnected_Player_Name = Player_1.Username;
-                        Player_1 = new Player_Slot();
-                    }
-                    else if (Current_Player_Slot == Player_2)
-                    {
-                        Disconnected_Player_Name = Player_2.Username;
-                        Player_2 = new Player_Slot();
-                    }
-
-                    Countdown_Timer?.Dispose();
-                    Countdown_Timer = null;
-                    Game_Timer?.Dispose();
-                    Game_Timer = null;
-                    Server_Game_Loop?.Dispose();
-                    Server_Game_Loop = null;
-
-                    Broadcast(JsonSerializer.Serialize(new { action = "player_disconnected", Name = Disconnected_Player_Name }));
-                    Broadcast_Ready_Status();
-
-                    if (Current_Player_Slot != null && !string.IsNullOrEmpty(Current_Player_Slot.Username))
-                    {
-                        lock (ConnectedEmailsLock)
+                        if (kvp.Value == Client)
                         {
-                            if (ConnectedEmails.ContainsKey(Current_Player_Slot.Username))
-                                ConnectedEmails.Remove(Current_Player_Slot.Username);
+                            Email_To_Remove = kvp.Key;
+                            break;
+                        }
+                    }
+                    if (Email_To_Remove != null)
+                    {
+                        Active_Connections.Remove(Email_To_Remove);
+                        Log($"Đã xóa {Email_To_Remove} khỏi Active_Connections.");
+                    }
+                }
+                try
+                {
+                    lock (Player_Lock)
+                    {
+                        string Disconnected_Player_Name = "Unknown";
+                        if (Current_Player_Slot == Player_1)
+                        {
+                            Disconnected_Player_Name = Player_1.Username;
+                            Player_1 = new Player_Slot();
+                        }
+                        else if (Current_Player_Slot == Player_2)
+                        {
+                            Disconnected_Player_Name = Player_2.Username;
+                            Player_2 = new Player_Slot();
+                        }
+                        try { Countdown_Timer?.Dispose(); } catch { }
+                        try { Game_Timer?.Dispose(); } catch { }
+                        try { Server_Game_Loop?.Dispose(); } catch { }
+
+                        Countdown_Timer = null;
+                        Game_Timer = null;
+                        Server_Game_Loop = null;
+
+                        try
+                        {
+                            Broadcast(JsonSerializer.Serialize(new { action = "player_disconnected", Name = Disconnected_Player_Name }));
+                            Broadcast_Ready_Status();
+                        }
+                        catch (Exception ex)
+                        {
+                            Log($"Lỗi khi broadcast disconnect: {ex.Message}");
                         }
                     }
                 }
-                Reader.Close();
-                Client.Close();
+                catch (Exception ex)
+                {
+                    Log($"Lỗi trong player cleanup: {ex.Message}");
+                }
+
+                try { Reader?.Close(); } catch { }
+                try { Client?.Close(); } catch { }
+            }
+        }
+
+        // Lấy email từ username
+        private string GetEmailFromUsername(string username)
+        {
+            lock (Db_Lock)
+            {
+                try
+                {
+                    string query = "SELECT Email FROM Info_User WHERE Username=@username";
+                    using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                    {
+                        cmd.Parameters.AddWithValue("@username", username);
+                        var result = cmd.ExecuteScalar();
+                        return result?.ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log($"Lỗi khi lấy email từ username {username}: {ex.Message}");
+                    return null;
+                }
+            }
+        }
+
+        // CÁC PHƯƠNG THỨC AUTHENTICATION 
+        private string Handle_Login(Dictionary<string, string> data, TcpClient client)
+        {
+            try
+            {
+                string username = data["username"];
+                string password = data["password"];
+
+                // Lấy email từ username trước khi kiểm tra
+                string userEmail = GetEmailFromUsername(username);
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return JsonSerializer.Serialize(new
+                    {
+                        Status = "error",
+                        Message = "Tài khoản không tồn tại"
+                    });
+                }
+
+                // CHỐNG LOGIN TRÙNG - Dùng email thay vì username
+                lock (Login_Lock)
+                {
+                    if (Active_Connections.ContainsKey(userEmail))
+                    {
+                        TcpClient Old_Client = Active_Connections[userEmail];
+                        Log($"Kick user đang chơi: {username} (Email: {userEmail})");
+                        try
+                        {
+                            if (Old_Client != null && Old_Client.Connected)
+                            {
+                                NetworkStream Old_Stream = Old_Client.GetStream();
+                                string kickMsg = JsonSerializer.Serialize(new
+                                {
+                                    action = "force_logout",
+                                    Message = "Tài khoản của bạn đã được đăng nhập từ nơi khác."
+                                });
+                                Send_Message(Old_Stream, kickMsg);
+                                System.Threading.Thread.Sleep(200);
+                                try { Old_Stream?.Close(); } catch { }
+                                try { Old_Client?.Close(); } catch { }
+
+                                Log($"Đã kick {username} (Email: {userEmail}) khỏi game");
+                            }
+                        }
+                        catch (ObjectDisposedException)
+                        {
+                            Log($"Client {username} đã bị disposed - bỏ qua");
+                        }
+                        catch (IOException ioEx)
+                        {
+                            Log($"Lỗi IO khi kick {username}: {ioEx.Message}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Log($"Lỗi khi kick {username}: {ex.Message}");
+                        }
+                        finally
+                        {
+                            // đảm bảo luôn remote ACTIVE_CONNECTIONS
+                            Active_Connections.Remove(userEmail);
+                        }
+
+                        // Xóa khỏi Player slot nếu có
+                        lock (Player_Lock)
+                        {
+                            if (Player_1.Username != null && Player_1.Username.Contains(username))
+                            {
+                                Player_1 = new Player_Slot();
+                            }
+                            if (Player_2.Username != null && Player_2.Username.Contains(username))
+                            {
+                                Player_2 = new Player_Slot();
+                            }
+                        }
+                    }
+
+                    // Kiểm tra trong database
+                    long count = 0;
+                    lock (Db_Lock)
+                    {
+                        string query = "SELECT COUNT(*) FROM Info_User WHERE Username=@username AND Password=@password";
+                        using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                        {
+                            cmd.Parameters.AddWithValue("@username", username);
+                            cmd.Parameters.AddWithValue("@password", password);
+                            count = (long)cmd.ExecuteScalar();
+                        }
+                    }
+
+                    if (count > 0)
+                    {
+                        // Lưu kết nối mới bằng email
+                        Active_Connections[userEmail] = client;
+                        Logged_In_Users[username] = DateTime.Now;
+
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "success",
+                            Message = "Đăng nhập thành công",
+                            username = username
+                        });
+                    }
+                    else
+                    {
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "error",
+                            Message = "Sai tên đăng nhập hoặc mật khẩu"
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "error",
+                    Message = $"Lỗi đăng nhập: {ex.Message}"
+                });
+            }
+        }
+
+        // Các phương thức khác giữ nguyên
+        private string Handle_Register(Dictionary<string, string> data)
+        {
+            try
+            {
+                string email = data["email"];
+                string username = data["username"];
+                string password = data["password"];
+                string birthday = data["birthday"];
+
+                // Kiểm tra xem email đã tồn tại chưa
+                string checkEmailQuery = "SELECT COUNT(*) FROM Info_User WHERE Email=@email";
+                using (var checkCmd = new SQLiteCommand(checkEmailQuery, SQL_Helper.Connection))
+                {
+                    checkCmd.Parameters.AddWithValue("@email", email);
+                    long emailCount = (long)checkCmd.ExecuteScalar();
+                    if (emailCount > 0)
+                    {
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "error",
+                            Message = "Email đã tồn tạ"
+                        });
+                    }
+                }
+
+                // Kiểm tra xem username đã tồn tại chưa
+                string checkUserQuery = "SELECT COUNT(*) FROM Info_User WHERE Username=@username";
+                using (var checkCmd = new SQLiteCommand(checkUserQuery, SQL_Helper.Connection))
+                {
+                    checkCmd.Parameters.AddWithValue("@username", username);
+                    long userCount = (long)checkCmd.ExecuteScalar();
+                    if (userCount > 0)
+                    {
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "error",
+                            Message = "Tên người dùng đã tồn tại"
+                        });
+                    }
+                }
+
+                // Thêm user mới
+                string insertQuery = "INSERT INTO Info_User (Username, Email, Password, Birthday) VALUES (@username, @email, @password, @birthday)";
+                using (var insertCmd = new SQLiteCommand(insertQuery, SQL_Helper.Connection))
+                {
+                    insertCmd.Parameters.AddWithValue("@username", username);
+                    insertCmd.Parameters.AddWithValue("@email", email);
+                    insertCmd.Parameters.AddWithValue("@password", password);
+                    insertCmd.Parameters.AddWithValue("@birthday", birthday);
+
+                    int rowsAffected = insertCmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "success",
+                            Message = "Đăng ký thành công"
+                        });
+                    }
+                    else
+                    {
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "error",
+                            Message = "Đăng ký thất bại"
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "error",
+                    Message = $"Lỗi đăng ký: {ex.Message}"
+                });
+            }
+        }
+
+        private string Handle_Get_Info(Dictionary<string, string> data)
+        {
+            try
+            {
+                string username = data["username"];
+
+                string query = "SELECT Username, Email, Birthday FROM Info_User WHERE Username=@username";
+                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                {
+                    cmd.Parameters.AddWithValue("@username", username);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return JsonSerializer.Serialize(new
+                            {
+                                Status = "success",
+                                username = reader["Username"].ToString(),
+                                email = reader["Email"].ToString(),
+                                birthday = reader["Birthday"].ToString()
+                            });
+                        }
+                        else
+                        {
+                            return JsonSerializer.Serialize(new
+                            {
+                                Status = "error",
+                                Message = "Không tìm thấy người dùng"
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "error",
+                    Message = $"Lỗi lấy thông tin: {ex.Message}"
+                });
+            }
+        }
+
+        private string Handle_Forgot_Password(Dictionary<string, string> data)
+        {
+            try
+            {
+                string email = data["email"];
+
+                // Kiểm tra email có tồn tại không
+                string query = "SELECT Username, Password FROM Info_User WHERE Email=@email";
+                using (var cmd = new SQLiteCommand(query, SQL_Helper.Connection))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string username = reader["Username"].ToString();
+                            string password = reader["Password"].ToString();
+
+                            // Tạo token reset password
+                            string token = GenerateResetToken();
+                            lock (PasswordResetLock)
+                            {
+                                PasswordResetTokens[email] = token;
+                            }
+
+                            // Gửi email với token
+                            bool sent = Send_Email(email, "Password Reset",
+                                $"Hello {username}, your password reset token is: {token}");
+
+                            if (sent)
+                            {
+                                return JsonSerializer.Serialize(new
+                                {
+                                    Status = "success",
+                                    Message = "Đã gửi token đặt lại mật khẩu"
+                                });
+                            }
+                            else
+                            {
+                                return JsonSerializer.Serialize(new
+                                {
+                                    Status = "error",
+                                    Message = "Không thể gửi token"
+                                });
+                            }
+                        }
+                        else
+                        {
+                            return JsonSerializer.Serialize(new
+                            {
+                                Status = "error",
+                                Message = "Email không tồn tại"
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "error",
+                    Message = $"Lỗi quên mật khẩu: {ex.Message}"
+                });
+            }
+        }
+
+        private string Handle_Change_Password(Dictionary<string, string> data)
+        {
+            try
+            {
+                string email = data["email"];
+                string token = data["token"];
+                string newPassword = data["new_password"];
+
+                // Kiểm tra token
+                lock (PasswordResetLock)
+                {
+                    if (!PasswordResetTokens.ContainsKey(email) || PasswordResetTokens[email] != token)
+                    {
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "error",
+                            Message = "Mã xác thực không hợp lệ hoặc đã hết hạn"
+                        });
+                    }
+
+                    // Xóa token sau khi sử dụng
+                    PasswordResetTokens.Remove(email);
+                }
+
+                // Cập nhật mật khẩu
+                string updateQuery = "UPDATE Info_User SET Password=@password WHERE Email=@email";
+                using (var updateCmd = new SQLiteCommand(updateQuery, SQL_Helper.Connection))
+                {
+                    updateCmd.Parameters.AddWithValue("@password", newPassword);
+                    updateCmd.Parameters.AddWithValue("@email", email);
+
+                    int rowsAffected = updateCmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        return JsonSerializer.Serialize(new
+                        {
+                            Status = "success",
+                            Message = "Đổi mật khẩu thành công"
+                        });
+                    }
+                }
+
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "error",
+                    Message = "Không thể đổi mật khẩu"
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonSerializer.Serialize(new
+                {
+                    Status = "error",
+                    Message = $"Lỗi đổi mật khẩu: {ex.Message}"
+                });
+            }
+        }
+
+        private string GenerateResetToken()
+        {
+            return Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+        }
+
+        private bool Send_Email(string To, string Subject, string Body)
+        {
+            try
+            {
+                MailMessage Mail = new MailMessage();
+                Mail.From = new MailAddress("hoangphihung200706@gmail.com");
+                Mail.To.Add(To);
+                Mail.Subject = Subject;
+                Mail.Body = Body;
+                SmtpClient Smtp = new SmtpClient("smtp.gmail.com", 587);
+
+                Smtp.Credentials = new System.Net.NetworkCredential("hoangphihung200706@gmail.com", "jhtp vhhn bavf bqeo");
+                Smtp.EnableSsl = true;
+                Smtp.Send(Mail);
+                return true;
+            }
+            catch (Exception Ex)
+            {
+                Log("Lỗi gửi mail: " + Ex.Message);
+                return false;
             }
         }
     }

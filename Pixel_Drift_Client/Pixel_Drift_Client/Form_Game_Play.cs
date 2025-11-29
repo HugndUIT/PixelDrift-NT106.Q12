@@ -21,13 +21,15 @@ namespace Pixel_Drift
         private NetworkStream stream;
         private StreamReader reader;
         private int myPlayerNumber = 0;
-        private string myUsername = "Player";
+        private string myUsername = Form_Dang_Nhap.Current_Username ?? "Player";
         // File Âm thanh
         private WindowsMediaPlayer Music;
         private SoundPlayer CountDown_5Sec;
         private SoundPlayer Buff;
         private SoundPlayer Debuff;
         private SoundPlayer Car_Hit;
+
+        // TÍNH NĂNG SCOREBOARD
         private long player1Score = 0;
         private long player2Score = 0;
         private int crashCount = 0;
@@ -40,39 +42,67 @@ namespace Pixel_Drift
 
         private void Game_Window_Load(object sender, EventArgs e)
         {
-            // Gán file âm thanh
-            Music = new WindowsMediaPlayer();
-            Music.settings.setMode("loop", true);
-            Music.settings.volume = 30;
-            CountDown_5Sec = new SoundPlayer("dem_nguoc.wav");
-            Buff = new SoundPlayer("buff.wav");
-            Debuff = new SoundPlayer("debuff.wav");
-            Car_Hit = new SoundPlayer("car_crash.wav");
-
-            // Load vô bộ nhớ để không bị delay
-            CountDown_5Sec.LoadAsync();
-            Buff.LoadAsync();
-            Debuff.LoadAsync();
-            Car_Hit.LoadAsync();
-
-            // Thiết lập giao diện phòng chờ
-            ResetToLobby();
-            // Kết nối và lắng nghe
             try
             {
-                client = new TcpClient();
-                client.Connect("127.0.0.1", 1111);
-                stream = client.GetStream();
-                reader = new StreamReader(stream, Encoding.UTF8);
+                // Gán file âm thanh
+                Music = new WindowsMediaPlayer();
+                Music.settings.setMode("loop", true);
+                Music.settings.volume = 30;
 
-                Task.Run(() => ListenForServerMessages());
+                try
+                {
+                    CountDown_5Sec = new SoundPlayer("dem_nguoc.wav");
+                    Buff = new SoundPlayer("buff.wav");
+                    Debuff = new SoundPlayer("debuff.wav");
+                    Car_Hit = new SoundPlayer("car_crash.wav");
 
-                var joinRequest = new { action = "join_lobby", username = myUsername };
-                Send(JsonSerializer.Serialize(joinRequest));
+                    CountDown_5Sec.LoadAsync();
+                    Buff.LoadAsync();
+                    Debuff.LoadAsync();
+                    Car_Hit.LoadAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Không tải được file âm thanh: {ex.Message}", "Cảnh báo");
+                }
+
+                ResetToLobby();
+
+                try
+                {
+                    client = new TcpClient();
+
+                    // TIMEOUT CONNECTION
+                    var result = client.BeginConnect("127.0.0.1", 1111, null, null);
+                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
+
+                    if (!success)
+                    {
+                        MessageBox.Show("Không thể kết nối đến server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        this.Close();
+                        return;
+                    }
+
+                    client.EndConnect(result);
+                    stream = client.GetStream();
+                    stream.ReadTimeout = 10000;
+                    reader = new StreamReader(stream, Encoding.UTF8);
+
+                    Task.Run(() => ListenForServerMessages());
+
+                    var joinRequest = new { action = "join_lobby", username = myUsername };
+                    Send(JsonSerializer.Serialize(joinRequest));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.Close();
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không thể kết nối đến server: {ex.Message}");
+                MessageBox.Show($"Lỗi Game_Window_Load: {ex.Message}\n\nStackTrace: {ex.StackTrace}",
+                    "Lỗi Nghiêm Trọng", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
             }
         }
@@ -106,7 +136,7 @@ namespace Pixel_Drift
             }
         }
 
-        // Luồng lắng nghe (Dùng StreamReader)
+        // Luồng lắng nghe với ERROR HANDLING 
         private async Task ListenForServerMessages()
         {
             string message;
@@ -114,16 +144,35 @@ namespace Pixel_Drift
             {
                 while ((message = await reader.ReadLineAsync()) != null)
                 {
-                    this.Invoke(new Action(() => ProcessServerMessage(message)));
+                    if (this.IsHandleCreated && !this.IsDisposed)
+                    {
+                        this.Invoke(new Action(() => ProcessServerMessage(message)));
+                    }
                 }
             }
-            catch (Exception)
+            catch (System.IO.IOException)
             {
-                if (this.IsHandleCreated)
+                // Kết nối bị đóng bởi server - không hiện lỗi
+                if (this.IsHandleCreated && !this.IsDisposed)
+                {
                     this.Invoke(new Action(() => {
-                        MessageBox.Show("Mất kết nối server.");
                         ResetToLobby();
                     }));
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // Form đã đóng - bỏ qua
+            }
+            catch (Exception ex)
+            {
+                if (this.IsHandleCreated && !this.IsDisposed)
+                {
+                    this.Invoke(new Action(() => {
+                        MessageBox.Show($"Mất kết nối server: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        ResetToLobby();
+                    }));
+                }
             }
         }
 
@@ -139,12 +188,18 @@ namespace Pixel_Drift
                 {
                     case "assign_player":
                         myPlayerNumber = data["player_number"].GetInt32();
-                        this.Text = $"Pixel Drift - PLAYER {myPlayerNumber} ({(myPlayerNumber == 1 ? "Xe Đỏ" : "Xe Xanh")})";
+                        string playerColor = (myPlayerNumber == 1) ? "Xe Đỏ" : "Xe Xanh";
+                        this.Text = $"Pixel Drift - PLAYER {myPlayerNumber} ({playerColor})";
                         break;
 
                     case "update_ready_status":
-                        lbl_P1_Status.Text = $"Player 1 ({data["player1_name"].GetString()}): {(data["player1_ready"].GetBoolean() ? "Sẵn sàng" : "Chưa sẵn sàng")}";
-                        lbl_P2_Status.Text = $"Player 2 ({data["player2_name"].GetString()}): {(data["player2_ready"].GetBoolean() ? "Sẵn sàng" : "Chưa sẵn sàng")}";
+                        string p1Name = data["player1_name"].GetString();
+                        string p2Name = data["player2_name"].GetString();
+                        bool p1Ready = data["player1_ready"].GetBoolean();
+                        bool p2Ready = data["player2_ready"].GetBoolean();
+
+                        lbl_P1_Status.Text = $"Player 1 ({p1Name} - Xe Đỏ): {(p1Ready ? "Sẵn sàng" : "Chưa sẵn sàng")}";
+                        lbl_P2_Status.Text = $"Player 2 ({p2Name} - Xe Xanh): {(p2Ready ? "Sẵn sàng" : "Chưa sẵn sàng")}";
                         break;
 
                     case "countdown":
@@ -168,7 +223,7 @@ namespace Pixel_Drift
                     case "update_score":
                         player1Score = data["p1_score"].GetInt64();
                         player2Score = data["p2_score"].GetInt64();
-                        // ========== SỬA LỖI: DÙNG BIẾN ĐÃ GÁN ==========
+
                         if (lbl_Score1 != null)
                             lbl_Score1.Text = "Score: " + player1Score.ToString();
                         if (lbl_Score2 != null)
@@ -178,17 +233,27 @@ namespace Pixel_Drift
                     case "game_over":
                         Music?.controls.stop();
                         MessageBox.Show("Hết giờ!", "Trò chơi kết thúc");
+                        // THÊM XỬ LÝ END GAME
                         EndGame();
                         ResetToLobby();
                         break;
 
                     case "player_disconnected":
-                        string name = "Người chơi khác";
+                        // XỬ LÝ THÔNG MINH
+                        string name = "";
                         if (data.ContainsKey("Name") && data["Name"].ValueKind == JsonValueKind.String)
                         {
                             name = data["Name"].GetString();
                         }
-                        MessageBox.Show($"{name} đã ngắt kết nối. Trở về sảnh chờ.");
+
+                        // bỏ qua nếu là "Unknown" hoặc rỗng (đây là noise khi join lobby)
+                        if (string.IsNullOrEmpty(name) || name == "Unknown" || name.Contains("Unknown"))
+                        {
+                            break;
+                        }
+
+                        // Chỉ xử lý khi có tên người chơi thật
+                        MessageBox.Show($"{name} đã ngắt kết nối. Trở về sảnh chờ.", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         ResetToLobby();
                         break;
 
@@ -197,101 +262,31 @@ namespace Pixel_Drift
                         break;
 
                     case "update_game_state":
-                        if (data.ContainsKey("ptb_player1"))
-                        {
-                            JsonElement el = data["ptb_player1"];
-                            ptb_player1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_player2"))
-                        {
-                            JsonElement el = data["ptb_player2"];
-                            ptb_player2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-
-                        if (data.ContainsKey("ptb_roadtrack1"))
-                        {
-                            JsonElement el = data["ptb_roadtrack1"];
-                            ptb_roadtrack1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_roadtrack1dup"))
-                        {
-                            JsonElement el = data["ptb_roadtrack1dup"];
-                            ptb_roadtrack1dup.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_roadtrack2"))
-                        {
-                            JsonElement el = data["ptb_roadtrack2"];
-                            ptb_roadtrack2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_roadtrack2dup"))
-                        {
-                            JsonElement el = data["ptb_roadtrack2dup"];
-                            ptb_roadtrack2dup.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-
-                        if (data.ContainsKey("ptb_AICar1"))
-                        {
-                            JsonElement el = data["ptb_AICar1"];
-                            ptb_AICar1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_AICar3"))
-                        {
-                            JsonElement el = data["ptb_AICar3"];
-                            ptb_AICar3.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_AICar5"))
-                        {
-                            JsonElement el = data["ptb_AICar5"];
-                            ptb_AICar5.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_AICar6"))
-                        {
-                            JsonElement el = data["ptb_AICar6"];
-                            ptb_AICar6.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-
-                        if (data.ContainsKey("ptb_increasingroad1"))
-                        {
-                            JsonElement el = data["ptb_increasingroad1"];
-                            ptb_increasingroad1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_decreasingroad1"))
-                        {
-                            JsonElement el = data["ptb_decreasingroad1"];
-                            ptb_decreasingroad1.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_increasingroad2"))
-                        {
-                            JsonElement el = data["ptb_increasingroad2"];
-                            ptb_increasingroad2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
-                        if (data.ContainsKey("ptb_decreasingroad2"))
-                        {
-                            JsonElement el = data["ptb_decreasingroad2"];
-                            ptb_decreasingroad2.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
-                        }
+                        UpdateGameObjects(data);
                         break;
 
                     case "play_sound":
                         string soundType = data["sound"].GetString();
-                        DateTime now = DateTime.Now;
-
-                        if (soundType == "buff")
-                            Buff?.Play();
-                        else if (soundType == "debuff")
-                            Debuff?.Play();
-                        else if (soundType == "hit_car")
-                        {
-                            Car_Hit?.Play();
-                            crashCount++;
-                        }
+                        PlaySoundEffect(soundType);
                         break;
 
-                    case "scoreboard_data":
-                        // Server trả về dữ liệu scoreboard
-                        string scoreData = data["data"].GetString();
+                    case "force_logout":
+                        // TÍNH NĂNG BẢO MẬT
+                        Music?.controls.stop();
+                        string logoutMsg = "Tài khoản của bạn đã được đăng nhập từ nơi khác.";
+                        if (data.ContainsKey("Message"))
+                        {
+                            logoutMsg = data["Message"].GetString();
+                        }
+                        MessageBox.Show(logoutMsg, "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                        // Kiểm tra nếu form Scoreboard đang mở thì cập nhật dữ liệu
+                        // Đóng form và thoát
+                        Application.Exit();
+                        break;
+
+                    // TÍNH NĂNG SCOREBOARD
+                    case "scoreboard_data":
+                        string scoreData = data["data"].GetString();
                         if (Application.OpenForms.OfType<Form_ScoreBoard>().Any())
                         {
                             var scoreboard = Application.OpenForms.OfType<Form_ScoreBoard>().First();
@@ -300,10 +295,7 @@ namespace Pixel_Drift
                         break;
 
                     case "search_result":
-                        // Server trả về kết quả tìm kiếm
                         string searchData = data["data"].GetString();
-
-                        // Kiểm tra nếu form Scoreboard đang mở thì cập nhật kết quả tìm kiếm
                         if (Application.OpenForms.OfType<Form_ScoreBoard>().Any())
                         {
                             var scoreboard = Application.OpenForms.OfType<Form_ScoreBoard>().First();
@@ -312,7 +304,6 @@ namespace Pixel_Drift
                         break;
 
                     case "add_score_result":
-                        // Server trả về kết quả thêm điểm
                         bool success = data["success"].GetBoolean();
                         break;
                 }
@@ -323,11 +314,11 @@ namespace Pixel_Drift
             }
         }
 
+        // TÍNH NĂNG SCOREBOARD
         private void EndGame()
         {
             try
             {
-                // Lấy thông tin người chơi
                 string playerName = myUsername;
                 int winCount = 0;
 
@@ -337,7 +328,7 @@ namespace Pixel_Drift
                 else if (myPlayerNumber == 2 && player2Score > player1Score)
                     winCount = 1;
 
-                // Tính tổng điểm dựa trên điểm số và số lần đâm xe
+                // Tính tổng điểm
                 double totalScore = CalculateTotalScore(winCount, crashCount);
 
                 // Gửi điểm lên server
@@ -368,17 +359,53 @@ namespace Pixel_Drift
 
         private double CalculateTotalScore(int winCount, int crashCount)
         {
-            // Lấy điểm số của người chơi hiện tại
             long currentPlayerScore = (myPlayerNumber == 1) ? player1Score : player2Score;
-
-            double baseScore = currentPlayerScore; // Điểm cơ bản từ game
-            double winBonus = winCount * 500; // Bonus thắng
-            double crashPenalty = crashCount * 50; // Phạt đâm xe
+            double baseScore = currentPlayerScore;
+            double winBonus = winCount * 500;
+            double crashPenalty = crashCount * 50;
 
             return baseScore + winBonus - crashPenalty;
         }
 
-        // Ẩn/hiện các đối tượng game
+        private void UpdateGameObjects(Dictionary<string, JsonElement> data)
+        {
+            // Cập nhật tất cả game objects
+            string[] objects = {
+                "ptb_player1", "ptb_player2",
+                "ptb_roadtrack1", "ptb_roadtrack1dup", "ptb_roadtrack2", "ptb_roadtrack2dup",
+                "ptb_AICar1", "ptb_AICar3", "ptb_AICar5", "ptb_AICar6",
+                "ptb_increasingroad1", "ptb_decreasingroad1", "ptb_increasingroad2", "ptb_decreasingroad2"
+            };
+
+            foreach (string objName in objects)
+            {
+                if (data.ContainsKey(objName))
+                {
+                    JsonElement el = data[objName];
+                    Control control = this.Controls.Find(objName, true).FirstOrDefault();
+                    if (control != null)
+                    {
+                        control.Location = new Point(el.GetProperty("X").GetInt32(), el.GetProperty("Y").GetInt32());
+                    }
+                }
+            }
+        }
+
+        private void PlaySoundEffect(string soundType)
+        {
+            DateTime now = DateTime.Now;
+
+            if (soundType == "buff")
+                Buff?.Play();
+            else if (soundType == "debuff")
+                Debuff?.Play();
+            else if (soundType == "hit_car")
+            {
+                Car_Hit?.Play();
+                crashCount++; // Đếm số lần va chạm
+            }
+        }
+
         private void ToggleGameObjects(bool show)
         {
             ptb_roadtrack1.Visible = show;
@@ -398,7 +425,6 @@ namespace Pixel_Drift
             ptb_decreasingroad2.Visible = show;
         }
 
-        // Bắt đầu game
         private void StartGame()
         {
             crashCount = 0;
@@ -449,7 +475,6 @@ namespace Pixel_Drift
             this.Focus();
         }
 
-        // Quay về phòng chờ
         private void ResetToLobby()
         {
             CountDown_5Sec?.Stop();
@@ -474,13 +499,15 @@ namespace Pixel_Drift
 
         private void btn_Ready_Click(object sender, EventArgs e)
         {
-            var readyRequest = new { action = "set_ready", ready_status = "true" };
+            var readyRequest = new
+            {
+                action = "set_ready",
+                ready_status = "true"
+            };
             Send(JsonSerializer.Serialize(readyRequest));
             btn_Ready.Enabled = false;
             btn_Ready.Text = "Đang chờ...";
         }
-
-        private void game_timer_Tick(object sender, EventArgs e) { }
 
         private void btn_Scoreboard_Click(object sender, EventArgs e)
         {
@@ -531,6 +558,9 @@ namespace Pixel_Drift
             reader?.Close();
             stream?.Close();
             client?.Close();
+        }
+        private void game_timer_Tick(object sender, EventArgs e)
+        {
         }
     }
 }
