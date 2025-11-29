@@ -78,8 +78,14 @@ namespace Pixel_Drift_Server
             {
                 StringBuilder result = new StringBuilder();
                 string query = @"
-                SELECT PlayerName, WinCount, CrashCount, TotalScore, DatePlayed 
+                SELECT 
+                    PlayerName, 
+                    SUM(WinCount) as WinCount, 
+                    SUM(CrashCount) as CrashCount, 
+                    SUM(TotalScore) as TotalScore, 
+                    MAX(DatePlayed) as DatePlayed 
                 FROM ScoreBoard 
+                GROUP BY PlayerName
                 ORDER BY TotalScore DESC, WinCount DESC, CrashCount ASC 
                 LIMIT @Limit";
 
@@ -119,9 +125,15 @@ namespace Pixel_Drift_Server
             {
                 StringBuilder result = new StringBuilder();
                 string query = @"
-                SELECT PlayerName, WinCount, CrashCount, TotalScore, DatePlayed 
+                SELECT 
+                    PlayerName, 
+                    SUM(WinCount) as WinCount, 
+                    SUM(CrashCount) as CrashCount, 
+                    SUM(TotalScore) as TotalScore, 
+                    MAX(DatePlayed) as DatePlayed 
                 FROM ScoreBoard 
                 WHERE PlayerName LIKE @SearchText 
+                GROUP BY PlayerName
                 ORDER BY TotalScore DESC 
                 LIMIT 50";
 

@@ -45,10 +45,9 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(191, 42);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(255, 34);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(177, 16);
+            this.label2.Size = new System.Drawing.Size(212, 19);
             this.label2.TabIndex = 1;
             this.label2.Text = "Nhập token được gửi về email";
             // 
@@ -56,10 +55,9 @@
             // 
             this.lb_mkmoi.AutoSize = true;
             this.lb_mkmoi.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_mkmoi.Location = new System.Drawing.Point(191, 93);
-            this.lb_mkmoi.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lb_mkmoi.Location = new System.Drawing.Point(255, 104);
             this.lb_mkmoi.Name = "lb_mkmoi";
-            this.lb_mkmoi.Size = new System.Drawing.Size(118, 16);
+            this.lb_mkmoi.Size = new System.Drawing.Size(139, 19);
             this.lb_mkmoi.TabIndex = 2;
             this.lb_mkmoi.Text = "Nhập mật khẩu mới";
             // 
@@ -67,38 +65,37 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(191, 144);
-            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Location = new System.Drawing.Point(255, 177);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(142, 16);
+            this.label4.Size = new System.Drawing.Size(166, 19);
             this.label4.TabIndex = 3;
             this.label4.Text = "Xác nhận mật khẩu mới";
             // 
             // txt_mkcu
             // 
-            this.txt_mkcu.Location = new System.Drawing.Point(194, 111);
-            this.txt_mkcu.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_mkcu.Location = new System.Drawing.Point(259, 55);
+            this.txt_mkcu.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txt_mkcu.Multiline = true;
             this.txt_mkcu.Name = "txt_mkcu";
-            this.txt_mkcu.Size = new System.Drawing.Size(268, 31);
+            this.txt_mkcu.Size = new System.Drawing.Size(356, 47);
             this.txt_mkcu.TabIndex = 4;
             // 
             // txt_mkmoi
             // 
-            this.txt_mkmoi.Location = new System.Drawing.Point(194, 162);
-            this.txt_mkmoi.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_mkmoi.Location = new System.Drawing.Point(259, 125);
+            this.txt_mkmoi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txt_mkmoi.Multiline = true;
             this.txt_mkmoi.Name = "txt_mkmoi";
-            this.txt_mkmoi.Size = new System.Drawing.Size(268, 31);
+            this.txt_mkmoi.Size = new System.Drawing.Size(356, 50);
             this.txt_mkmoi.TabIndex = 5;
             // 
             // txt_xacnhanmk
             // 
-            this.txt_xacnhanmk.Location = new System.Drawing.Point(194, 60);
-            this.txt_xacnhanmk.Margin = new System.Windows.Forms.Padding(2);
+            this.txt_xacnhanmk.Location = new System.Drawing.Point(259, 198);
+            this.txt_xacnhanmk.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txt_xacnhanmk.Multiline = true;
             this.txt_xacnhanmk.Name = "txt_xacnhanmk";
-            this.txt_xacnhanmk.Size = new System.Drawing.Size(268, 31);
+            this.txt_xacnhanmk.Size = new System.Drawing.Size(356, 47);
             this.txt_xacnhanmk.TabIndex = 6;
             // 
             // btn_doimk
@@ -106,10 +103,10 @@
             this.btn_doimk.BackColor = System.Drawing.Color.Green;
             this.btn_doimk.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_doimk.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btn_doimk.Location = new System.Drawing.Point(499, 35);
-            this.btn_doimk.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_doimk.Location = new System.Drawing.Point(665, 43);
+            this.btn_doimk.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_doimk.Name = "btn_doimk";
-            this.btn_doimk.Size = new System.Drawing.Size(66, 88);
+            this.btn_doimk.Size = new System.Drawing.Size(88, 108);
             this.btn_doimk.TabIndex = 7;
             this.btn_doimk.Text = "Đổi mật khẩu";
             this.btn_doimk.UseVisualStyleBackColor = false;
@@ -120,10 +117,10 @@
             this.btn_thoat.BackColor = System.Drawing.Color.Red;
             this.btn_thoat.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_thoat.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btn_thoat.Location = new System.Drawing.Point(499, 127);
-            this.btn_thoat.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_thoat.Location = new System.Drawing.Point(665, 156);
+            this.btn_thoat.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_thoat.Name = "btn_thoat";
-            this.btn_thoat.Size = new System.Drawing.Size(66, 72);
+            this.btn_thoat.Size = new System.Drawing.Size(88, 89);
             this.btn_thoat.TabIndex = 8;
             this.btn_thoat.Text = "Thoát";
             this.btn_thoat.UseVisualStyleBackColor = false;
@@ -131,19 +128,21 @@
             // 
             // ptb_Doi_MK
             // 
-            this.ptb_Doi_MK.Image = global::Pixel_Drift.Properties.Resources.Doi_MK;
+            this.ptb_Doi_MK.BackgroundImage = global::Pixel_Drift.Properties.Resources.Doi_MK;
+            this.ptb_Doi_MK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ptb_Doi_MK.Location = new System.Drawing.Point(0, 0);
+            this.ptb_Doi_MK.Margin = new System.Windows.Forms.Padding(4);
             this.ptb_Doi_MK.Name = "ptb_Doi_MK";
-            this.ptb_Doi_MK.Size = new System.Drawing.Size(752, 446);
+            this.ptb_Doi_MK.Size = new System.Drawing.Size(1003, 549);
             this.ptb_Doi_MK.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ptb_Doi_MK.TabIndex = 9;
             this.ptb_Doi_MK.TabStop = false;
             // 
             // Form_Doi_Mat_Khau
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(755, 450);
+            this.ClientSize = new System.Drawing.Size(1007, 554);
             this.Controls.Add(this.btn_thoat);
             this.Controls.Add(this.btn_doimk);
             this.Controls.Add(this.txt_xacnhanmk);
@@ -153,9 +152,9 @@
             this.Controls.Add(this.lb_mkmoi);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.ptb_Doi_MK);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form_Doi_Mat_Khau";
-            this.Text = "Form_DoiMatKhau";
+            this.Text = "Đổi Mật Khẩu";
             ((System.ComponentModel.ISupportInitialize)(this.ptb_Doi_MK)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

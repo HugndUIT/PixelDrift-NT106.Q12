@@ -28,7 +28,7 @@ namespace Pixel_Drift
             {
                 using (TcpClient client = new TcpClient())
                 {
-                    var result = client.BeginConnect("172.16.16.187", 1111, null, null);
+                    var result = client.BeginConnect("127.0.0.1", 1111, null, null);
                     var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
 
                     if (!success)
@@ -103,9 +103,9 @@ namespace Pixel_Drift
 
         private void btnVaoGame_Click(object sender, EventArgs e)
         {
-            this.Hide();
             Lobby lobby = new Lobby(mainClient, currentUsername);
-            lobby.ShowDialog();
+            lobby.Show();
+            this.Close();
         }
     }
 }

@@ -28,38 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ptb_ID = new System.Windows.Forms.PictureBox();
             this.tb_ID = new System.Windows.Forms.TextBox();
             this.btn_TimPhong = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_ID)).BeginInit();
             this.SuspendLayout();
-            // 
-            // ptb_ID
-            // 
-            this.ptb_ID.Image = global::Pixel_Drift.Properties.Resources.Gemini_Generated_Image_55ox6j55ox6j55ox;
-            this.ptb_ID.Location = new System.Drawing.Point(0, 0);
-            this.ptb_ID.Name = "ptb_ID";
-            this.ptb_ID.Size = new System.Drawing.Size(404, 111);
-            this.ptb_ID.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.ptb_ID.TabIndex = 0;
-            this.ptb_ID.TabStop = false;
             // 
             // tb_ID
             // 
             this.tb_ID.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tb_ID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tb_ID.ForeColor = System.Drawing.Color.DarkCyan;
-            this.tb_ID.Location = new System.Drawing.Point(108, 43);
+            this.tb_ID.Location = new System.Drawing.Point(144, 53);
+            this.tb_ID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tb_ID.Name = "tb_ID";
-            this.tb_ID.Size = new System.Drawing.Size(170, 22);
+            this.tb_ID.Size = new System.Drawing.Size(227, 27);
             this.tb_ID.TabIndex = 1;
             // 
             // btn_TimPhong
             // 
             this.btn_TimPhong.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_TimPhong.Location = new System.Drawing.Point(154, 71);
+            this.btn_TimPhong.Location = new System.Drawing.Point(205, 87);
+            this.btn_TimPhong.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_TimPhong.Name = "btn_TimPhong";
-            this.btn_TimPhong.Size = new System.Drawing.Size(75, 23);
+            this.btn_TimPhong.Size = new System.Drawing.Size(100, 28);
             this.btn_TimPhong.TabIndex = 2;
             this.btn_TimPhong.Text = "Tìm Phòng";
             this.btn_TimPhong.UseVisualStyleBackColor = true;
@@ -67,23 +57,22 @@
             // 
             // Form_ID
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 111);
+            this.BackgroundImage = global::Pixel_Drift.Properties.Resources.Gemini_Generated_Image_55ox6j55ox6j55ox;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClientSize = new System.Drawing.Size(514, 149);
             this.Controls.Add(this.btn_TimPhong);
             this.Controls.Add(this.tb_ID);
-            this.Controls.Add(this.ptb_ID);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form_ID";
             this.Text = "Form_ID";
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_ID)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox ptb_ID;
         private System.Windows.Forms.TextBox tb_ID;
         private System.Windows.Forms.Button btn_TimPhong;
     }

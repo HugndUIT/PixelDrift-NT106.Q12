@@ -98,22 +98,21 @@ namespace Pixel_Drift
                 // Phân tích phản hồi JSON
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
-                if (dict.ContainsKey("Status") && dict["Status"] == "success")
+                if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
                     DialogResult result = MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     if (result == DialogResult.OK)
                     {
-                        this.Hide();
                         Pixel_Drift.Form_Dang_Nhap formDangNhap = new Pixel_Drift.Form_Dang_Nhap();
-                        formDangNhap.ShowDialog();
+                        formDangNhap.Show();
                         this.Close();
                     }
                 }
 
                 else
                 {
-                    string msg = dict.ContainsKey("Message") ? dict["Message"] : "Đăng ký thất bại!";
+                    string msg = dict.ContainsKey("message") ? dict["message"] : "Đăng ký thất bại!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -139,7 +138,6 @@ namespace Pixel_Drift
             return null;
         }
 
-
         private async Task<string> SendRegisterRequest(string username, string email, string hashedPassword, string birthday)
         {
             // Dùng Task.Run để không làm treo giao diện
@@ -149,7 +147,7 @@ namespace Pixel_Drift
                 using (TcpClient client = new TcpClient())
                 {
 
-                    client.Connect("172.16.16.187", 1111);
+                    client.Connect("127.0.0.1", 1111);
 
                     using (NetworkStream stream = client.GetStream())
                     using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })

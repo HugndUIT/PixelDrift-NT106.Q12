@@ -34,22 +34,22 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.DarkRed;
-            this.label1.Location = new System.Drawing.Point(252, 9);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(336, 11);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(420, 44);
+            this.label1.Size = new System.Drawing.Size(516, 54);
             this.label1.TabIndex = 0;
             this.label1.Text = "🏆 SCORE BOARD 🏆";
             // 
             // dgv_ScoreBoard
             // 
             this.dgv_ScoreBoard.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_ScoreBoard.Location = new System.Drawing.Point(222, 147);
-            this.dgv_ScoreBoard.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgv_ScoreBoard.Location = new System.Drawing.Point(296, 181);
+            this.dgv_ScoreBoard.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgv_ScoreBoard.Name = "dgv_ScoreBoard";
+            this.dgv_ScoreBoard.ReadOnly = true;
             this.dgv_ScoreBoard.RowHeadersWidth = 51;
             this.dgv_ScoreBoard.RowTemplate.Height = 35;
-            this.dgv_ScoreBoard.Size = new System.Drawing.Size(483, 291);
+            this.dgv_ScoreBoard.Size = new System.Drawing.Size(644, 358);
             this.dgv_ScoreBoard.TabIndex = 1;
             // 
             // btn_Close
@@ -58,10 +58,10 @@
             this.btn_Close.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btn_Close.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
             this.btn_Close.ForeColor = System.Drawing.Color.White;
-            this.btn_Close.Location = new System.Drawing.Point(222, 472);
-            this.btn_Close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_Close.Location = new System.Drawing.Point(296, 581);
+            this.btn_Close.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_Close.Name = "btn_Close";
-            this.btn_Close.Size = new System.Drawing.Size(483, 62);
+            this.btn_Close.Size = new System.Drawing.Size(644, 76);
             this.btn_Close.TabIndex = 2;
             this.btn_Close.Text = "Đóng";
             this.btn_Close.UseVisualStyleBackColor = false;
@@ -70,10 +70,10 @@
             // txt_Search
             // 
             this.txt_Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 23F);
-            this.txt_Search.Location = new System.Drawing.Point(239, 72);
-            this.txt_Search.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txt_Search.Location = new System.Drawing.Point(319, 89);
+            this.txt_Search.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txt_Search.Name = "txt_Search";
-            this.txt_Search.Size = new System.Drawing.Size(238, 42);
+            this.txt_Search.Size = new System.Drawing.Size(316, 51);
             this.txt_Search.TabIndex = 3;
             this.txt_Search.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_Search_KeyPress);
             // 
@@ -82,10 +82,10 @@
             this.btn_Search.BackColor = System.Drawing.Color.DodgerBlue;
             this.btn_Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.btn_Search.ForeColor = System.Drawing.Color.White;
-            this.btn_Search.Location = new System.Drawing.Point(595, 72);
-            this.btn_Search.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_Search.Location = new System.Drawing.Point(793, 89);
+            this.btn_Search.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_Search.Name = "btn_Search";
-            this.btn_Search.Size = new System.Drawing.Size(110, 43);
+            this.btn_Search.Size = new System.Drawing.Size(147, 53);
             this.btn_Search.TabIndex = 4;
             this.btn_Search.Text = "🔍 Tìm kiếm";
             this.btn_Search.UseVisualStyleBackColor = false;
@@ -96,10 +96,10 @@
             this.btn_Refresh.BackColor = System.Drawing.Color.ForestGreen;
             this.btn_Refresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.btn_Refresh.ForeColor = System.Drawing.Color.White;
-            this.btn_Refresh.Location = new System.Drawing.Point(481, 72);
-            this.btn_Refresh.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_Refresh.Location = new System.Drawing.Point(641, 89);
+            this.btn_Refresh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_Refresh.Name = "btn_Refresh";
-            this.btn_Refresh.Size = new System.Drawing.Size(110, 43);
+            this.btn_Refresh.Size = new System.Drawing.Size(147, 53);
             this.btn_Refresh.TabIndex = 5;
             this.btn_Refresh.Text = "🔄 Làm mới";
             this.btn_Refresh.UseVisualStyleBackColor = false;
@@ -109,10 +109,9 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 23F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(60, 72);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(114, 92);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(157, 35);
+            this.label2.Size = new System.Drawing.Size(199, 44);
             this.label2.TabIndex = 6;
             this.label2.Text = "Tìm kiếm:";
             // 
@@ -120,19 +119,20 @@
             // 
             this.pictureBox1.Image = global::Pixel_Drift.Properties.Resources.ScoreBoard;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(927, 575);
+            this.pictureBox1.Size = new System.Drawing.Size(1236, 708);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
             // 
             // Form_ScoreBoard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.CancelButton = this.btn_Close;
-            this.ClientSize = new System.Drawing.Size(927, 576);
+            this.ClientSize = new System.Drawing.Size(1236, 709);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btn_Refresh);
             this.Controls.Add(this.btn_Search);
@@ -142,7 +142,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.Name = "Form_ScoreBoard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

@@ -79,7 +79,6 @@ namespace Pixel_Drift
             // game_timer
             // 
             this.game_timer.Interval = 20;
-            this.game_timer.Tick += new System.EventHandler(this.game_timer_Tick);
             // 
             // ptb_roadtrack1dup
             // 

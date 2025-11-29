@@ -62,7 +62,14 @@ namespace Pixel_Drift
                     Game_Window gameForm = new Game_Window(client, MyUsername, playerNum, roomID);
 
                     this.Hide();
+
                     gameForm.Show();
+                }
+                else if (action == "force_logout") 
+                {
+                    string logoutMsg = data["message"].GetString();
+                    MessageBox.Show(logoutMsg, "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Application.Exit();
                 }
                 else if (data.ContainsKey("status") && data["status"].GetString() == "error")
                 {

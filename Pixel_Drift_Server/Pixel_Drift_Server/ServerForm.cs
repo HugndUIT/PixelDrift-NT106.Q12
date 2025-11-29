@@ -122,7 +122,6 @@ namespace Pixel_Drift_Server
                 {
                     if (string.IsNullOrEmpty(Message)) continue;
 
-                    // Ẩn tin nhắn di chuyển cho đỡ lag
                     if (!Message.Contains("move"))
                         Log($"[{Client.Client.RemoteEndPoint}] gửi: {Message}");
 
@@ -307,7 +306,7 @@ namespace Pixel_Drift_Server
                             if (Old_Client != null && Old_Client.Connected)
                             {
                                 NetworkStream Old_Stream = Old_Client.GetStream();
-                                string kickMsg = JsonSerializer.Serialize(new { action = "force_logout", message = "Đăng nhập nơi khác" });
+                                string kickMsg = JsonSerializer.Serialize(new { action = "force_logout", message = "Tài khoản đã bị đăng nhập nơi khác" });
                                 Send_Message(Old_Stream, kickMsg);
                                 Old_Client.Close();
                             }
@@ -407,7 +406,7 @@ namespace Pixel_Drift_Server
                             return JsonSerializer.Serialize(new
                             {
                                 status = "success",
-                                Message = "Đăng ký thành công"
+                                message = "Đăng ký thành công"
                             });
                         }
                         else
@@ -415,7 +414,7 @@ namespace Pixel_Drift_Server
                             return JsonSerializer.Serialize(new
                             {
                                 status = "error",
-                                Message = "Đăng ký thất bại"
+                                message = "Đăng ký thất bại"
                             });
                         }
                     }
@@ -424,8 +423,8 @@ namespace Pixel_Drift_Server
                 {
                     return JsonSerializer.Serialize(new
                     {
-                        Status = "error",
-                        Message = $"Lỗi đăng ký: {ex.Message}"
+                        status = "error",
+                        message = $"Lỗi đăng ký: {ex.Message}"
                     });
                 }
             }
@@ -498,16 +497,16 @@ namespace Pixel_Drift_Server
                                 {
                                     return JsonSerializer.Serialize(new
                                     {
-                                        Status = "success",
-                                        Message = "Đã gửi token đặt lại mật khẩu"
+                                        status = "success",
+                                        message = "Đã gửi token đặt lại mật khẩu"
                                     });
                                 }
                                 else
                                 {
                                     return JsonSerializer.Serialize(new
                                     {
-                                        Status = "error",
-                                        Message = "Không thể gửi token"
+                                        status = "error",
+                                        message = "Không thể gửi token"
                                     });
                                 }
                             }
@@ -515,8 +514,8 @@ namespace Pixel_Drift_Server
                             {
                                 return JsonSerializer.Serialize(new
                                 {
-                                    Status = "error",
-                                    Message = "Email không tồn tại"
+                                    status = "error",
+                                    message = "Email không tồn tại"
                                 });
                             }
                         }
@@ -526,8 +525,8 @@ namespace Pixel_Drift_Server
                 {
                     return JsonSerializer.Serialize(new
                     {
-                        Status = "error",
-                        Message = $"Lỗi quên mật khẩu: {ex.Message}"
+                        status = "error",
+                        message = $"Lỗi quên mật khẩu: {ex.Message}"
                     });
                 }
             }
@@ -549,8 +548,8 @@ namespace Pixel_Drift_Server
                     {
                         return JsonSerializer.Serialize(new
                         {
-                            Status = "error",
-                            Message = "Mã xác thực không hợp lệ hoặc đã hết hạn"
+                            status = "error",
+                            message = "Mã xác thực không hợp lệ hoặc đã hết hạn"
                         });
                     }
 
@@ -570,24 +569,24 @@ namespace Pixel_Drift_Server
                     {
                         return JsonSerializer.Serialize(new
                         {
-                            Status = "success",
-                            Message = "Đổi mật khẩu thành công"
+                            status = "success",
+                            message = "Đổi mật khẩu thành công"
                         });
                     }
                 }
 
                 return JsonSerializer.Serialize(new
                 {
-                    Status = "error",
-                    Message = "Không thể đổi mật khẩu"
+                    status = "error",
+                    message = "Không thể đổi mật khẩu"
                 });
             }
             catch (Exception ex)
             {
                 return JsonSerializer.Serialize(new
                 {
-                    Status = "error",
-                    Message = $"Lỗi đổi mật khẩu: {ex.Message}"
+                    status = "error",
+                    message = $"Lỗi đổi mật khẩu: {ex.Message}"
                 });
             }
         }
@@ -737,13 +736,13 @@ namespace Pixel_Drift_Server
             try
             {
                 MailMessage Mail = new MailMessage();
-                Mail.From = new MailAddress("hoangphihung200706@gmail.com");
+                Mail.From = new MailAddress("pixeldriftsysop@gmail.com");
                 Mail.To.Add(To);
                 Mail.Subject = Subject;
                 Mail.Body = Body;
                 SmtpClient Smtp = new SmtpClient("smtp.gmail.com", 587);
 
-                Smtp.Credentials = new System.Net.NetworkCredential("hoangphihung200706@gmail.com", "jhtp vhhn bavf bqeo");
+                Smtp.Credentials = new System.Net.NetworkCredential("pixeldriftsysop@gmail.com", "empr bqxh cdwt vyrj");
                 Smtp.EnableSsl = true;
                 Smtp.Send(Mail);
                 return true;

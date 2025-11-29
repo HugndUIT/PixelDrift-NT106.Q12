@@ -20,7 +20,7 @@ namespace Pixel_Drift
         private void btn_dang_ki_Click(object sender, EventArgs e)
         {
             Form_Dang_Ki formdangki = new Form_Dang_Ki();
-            formdangki.ShowDialog();
+            formdangki.Show();
         }
 
         private void btn_thoat_Click(object sender, EventArgs e)
@@ -31,7 +31,7 @@ namespace Pixel_Drift
         private void btn_dang_nhap_Click(object sender, EventArgs e)
         {
             Form_Dang_Nhap formdangnhap = new Form_Dang_Nhap();
-            formdangnhap.ShowDialog();
+            formdangnhap.Show();
         }
     }
 }
