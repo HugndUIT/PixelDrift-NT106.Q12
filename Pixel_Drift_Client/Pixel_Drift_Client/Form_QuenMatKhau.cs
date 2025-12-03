@@ -21,8 +21,7 @@ namespace Pixel_Drift
 
             if (string.IsNullOrEmpty(email))
             {
-                MessageBox.Show("Vui lòng nhập email của bạn!", "Thông báo",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập email của bạn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -32,9 +31,8 @@ namespace Pixel_Drift
                 if (!ClientManager.IsConnected)
                 {
 
-                    if (!ClientManager.Connect("127.0.0.1", 1111))
+                    if (!ClientManager.Connect("172.16.16.187", 1111))
                     {
-
                         throw new SocketException();
                     }
                 }
@@ -44,7 +42,6 @@ namespace Pixel_Drift
                     action = "forgot_password",
                     email = email
                 };
-
 
                 string response = ClientManager.SendRequest(request);
 

@@ -597,6 +597,7 @@ namespace Pixel_Drift_Server
             return new Random().Next(100000, 999999).ToString();
         }
 
+        // Hàm xử lý tạo phòng
         private string Handle_Create_Room(TcpClient Client, Dictionary<string, JsonElement> Data)
         {
             string Username = Data.ContainsKey("username") ? Data["username"].GetString() : "Unknown";
@@ -622,6 +623,7 @@ namespace Pixel_Drift_Server
             }
         }
 
+        // Hàm xử lí vào phòng
         private string Handle_Join_Room(TcpClient Client, Dictionary<string, JsonElement> Data)
         {
             string Username = Data.ContainsKey("username") ? Data["username"].GetString() : "Unknown";

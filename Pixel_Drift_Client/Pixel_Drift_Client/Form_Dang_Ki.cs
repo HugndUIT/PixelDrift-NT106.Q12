@@ -149,8 +149,7 @@ namespace Pixel_Drift
                 using (TcpClient client = new TcpClient())
                 {
 
-                    client.Connect("127.0.0.1", 1111);
-
+                    client.Connect("172.16.16.187", 1111);
 
                     using (NetworkStream stream = client.GetStream())
                     using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })

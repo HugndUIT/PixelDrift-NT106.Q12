@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
-using System.Media;
 using WMPLib;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Pixel_Drift
 {
@@ -38,6 +39,23 @@ namespace Pixel_Drift
         {
             InitializeComponent();
             this.DoubleBuffered = true;
+        }
+
+        public Game_Window(TcpClient client,string myUsername,int playerNum,string roomID)
+        {
+            InitializeComponent();
+            this.DoubleBuffered = true;
+
+            this.client = client;
+            this.myUsername = myUsername;
+            this.myPlayerNumber = playerNum;
+            btn_ID.Text = "ID: " + roomID;
+
+            this.stream = client.GetStream();
+            this.reader = new StreamReader(stream, Encoding.UTF8);
+
+            string playerColor = (myPlayerNumber == 1) ? "Xe Đỏ" : "Xe Xanh";
+            this.Text = $"Pixel Drift - PLAYER {myPlayerNumber} ({playerColor}) - {myUsername}";
         }
 
         private void Game_Window_Load(object sender, EventArgs e)
@@ -68,36 +86,7 @@ namespace Pixel_Drift
 
                 ResetToLobby();
 
-                try
-                {
-                    client = new TcpClient();
-
-                    // TIMEOUT CONNECTION
-                    var result = client.BeginConnect("127.0.0.1", 1111, null, null);
-                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
-
-                    if (!success)
-                    {
-                        MessageBox.Show("Không thể kết nối đến server.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        this.Close();
-                        return;
-                    }
-
-                    client.EndConnect(result);
-                    stream = client.GetStream();
-                    stream.ReadTimeout = 10000;
-                    reader = new StreamReader(stream, Encoding.UTF8);
-
-                    Task.Run(() => ListenForServerMessages());
-
-                    var joinRequest = new { action = "join_lobby", username = myUsername };
-                    Send(JsonSerializer.Serialize(joinRequest));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    this.Close();
-                }
+                Task.Run(() => ListenForServerMessages());
             }
             catch (Exception ex)
             {
@@ -136,7 +125,7 @@ namespace Pixel_Drift
             }
         }
 
-        // Luồng lắng nghe với ERROR HANDLING 
+        // Luồng lắng nghe
         private async Task ListenForServerMessages()
         {
             string message;
@@ -152,7 +141,6 @@ namespace Pixel_Drift
             }
             catch (System.IO.IOException)
             {
-                // Kết nối bị đóng bởi server - không hiện lỗi
                 if (this.IsHandleCreated && !this.IsDisposed)
                 {
                     this.Invoke(new Action(() => {
@@ -162,7 +150,7 @@ namespace Pixel_Drift
             }
             catch (ObjectDisposedException)
             {
-                // Form đã đóng - bỏ qua
+                
             }
             catch (Exception ex)
             {
@@ -233,26 +221,22 @@ namespace Pixel_Drift
                     case "game_over":
                         Music?.controls.stop();
                         MessageBox.Show("Hết giờ!", "Trò chơi kết thúc");
-                        // THÊM XỬ LÝ END GAME
                         EndGame();
                         ResetToLobby();
                         break;
 
                     case "player_disconnected":
-                        // XỬ LÝ THÔNG MINH
                         string name = "";
-                        if (data.ContainsKey("Name") && data["Name"].ValueKind == JsonValueKind.String)
+                        if (data.ContainsKey("name") && data["name"].ValueKind == JsonValueKind.String)
                         {
-                            name = data["Name"].GetString();
+                            name = data["name"].GetString();
                         }
 
-                        // bỏ qua nếu là "Unknown" hoặc rỗng (đây là noise khi join lobby)
                         if (string.IsNullOrEmpty(name) || name == "Unknown" || name.Contains("Unknown"))
                         {
                             break;
                         }
 
-                        // Chỉ xử lý khi có tên người chơi thật
                         MessageBox.Show($"{name} đã ngắt kết nối. Trở về sảnh chờ.", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         ResetToLobby();
                         break;
@@ -271,7 +255,6 @@ namespace Pixel_Drift
                         break;
 
                     case "force_logout":
-                        // TÍNH NĂNG BẢO MẬT
                         Music?.controls.stop();
                         string logoutMsg = "Tài khoản của bạn đã được đăng nhập từ nơi khác.";
                         if (data.ContainsKey("Message"))
@@ -280,11 +263,9 @@ namespace Pixel_Drift
                         }
                         MessageBox.Show(logoutMsg, "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                        // Đóng form và thoát
                         Application.Exit();
                         break;
 
-                    // TÍNH NĂNG SCOREBOARD
                     case "scoreboard_data":
                         string scoreData = data["data"].GetString();
                         if (Application.OpenForms.OfType<Form_ScoreBoard>().Any())
@@ -314,7 +295,6 @@ namespace Pixel_Drift
             }
         }
 
-        // TÍNH NĂNG SCOREBOARD
         private void EndGame()
         {
             try

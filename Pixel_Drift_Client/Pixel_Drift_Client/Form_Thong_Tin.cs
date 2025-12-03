@@ -1,22 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Net.Sockets;
-using System.IO;
-using System.Text;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Pixel_Drift
 {
     public partial class Form_Thong_Tin : Form
     {
+        private TcpClient mainClient;
         private string currentUsername;
 
-        public Form_Thong_Tin(string username)
+        public Form_Thong_Tin(TcpClient clientFromLogin,string username)
         {
             InitializeComponent();
             currentUsername = username;
+            mainClient = clientFromLogin;
         }
 
         private void Form_Thong_Tin_Load(object sender, EventArgs e)
@@ -25,14 +28,12 @@ namespace Pixel_Drift
             {
                 using (TcpClient client = new TcpClient())
                 {
-                    // Timeout 5 giây khi kết nối
-                    var result = client.BeginConnect("127.0.0.1", 1111, null, null);
+                    var result = client.BeginConnect("172.16.16.187", 1111, null, null);
                     var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
 
                     if (!success)
                     {
-                        MessageBox.Show("Không thể kết nối tới server để lấy thông tin!",
-                            "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Không thể kết nối tới server để lấy thông tin!", "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -42,7 +43,7 @@ namespace Pixel_Drift
                     using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
                     using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                     {
-                        stream.ReadTimeout = 5000; // 5 giây timeout
+                        stream.ReadTimeout = 5000; 
 
                         var request = new
                         {
@@ -68,7 +69,6 @@ namespace Pixel_Drift
                             string status = dict["status"].GetString();
                             if (status == "success")
                             {
-                                // Lấy dữ liệu trực tiếp từ JSON, không qua property "Data"
                                 lbl_TenDangNhap.Text = dict.ContainsKey("username") ? dict["username"].GetString() : "N/A";
                                 lbl_Email.Text = dict.ContainsKey("email") ? dict["email"].GetString() : "N/A";
                                 lbl_Birthday.Text = dict.ContainsKey("birthday") ? dict["birthday"].GetString() : "N/A";
@@ -101,11 +101,11 @@ namespace Pixel_Drift
             }
         }
 
-        private void btnThoat_Click_1(object sender, EventArgs e)
+        private void btnVaoGame_Click(object sender, EventArgs e)
         {
-            Game_Window gameWindow = new Game_Window();
-            gameWindow.Show();
-            this.Close();
+            this.Hide();
+            Lobby lobby = new Lobby(mainClient, currentUsername);
+            lobby.ShowDialog();
         }
     }
 }

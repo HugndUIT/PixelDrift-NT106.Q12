@@ -93,6 +93,16 @@ namespace Pixel_Drift.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Doi_MK {
+            get {
+                object obj = ResourceManager.GetObject("Doi_MK", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap explosion {
             get {
                 object obj = ResourceManager.GetObject("explosion", resourceCulture);
@@ -123,9 +133,39 @@ namespace Pixel_Drift.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Gemini_Generated_Image_55ox6j55ox6j55ox {
+            get {
+                object obj = ResourceManager.GetObject("Gemini_Generated_Image_55ox6j55ox6j55ox", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Gemini_Generated_Image_5sxbbs5sxbbs5sxb {
             get {
                 object obj = ResourceManager.GetObject("Gemini_Generated_Image_5sxbbs5sxbbs5sxb", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Gemini_Generated_Image_afaixrafaixrafai {
+            get {
+                object obj = ResourceManager.GetObject("Gemini_Generated_Image_afaixrafaixrafai", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Gemini_Generated_Image_hs0qr3hs0qr3hs0q {
+            get {
+                object obj = ResourceManager.GetObject("Gemini_Generated_Image_hs0qr3hs0qr3hs0q", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,6 +193,16 @@ namespace Pixel_Drift.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Quen_MK {
+            get {
+                object obj = ResourceManager.GetObject("Quen_MK", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap RamB {
             get {
                 object obj = ResourceManager.GetObject("RamB", resourceCulture);
@@ -166,6 +216,16 @@ namespace Pixel_Drift.Properties {
         public static System.Drawing.Bitmap road {
             get {
                 object obj = ResourceManager.GetObject("road", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap ScoreBoard {
+            get {
+                object obj = ResourceManager.GetObject("ScoreBoard", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -206,6 +266,16 @@ namespace Pixel_Drift.Properties {
         public static System.Drawing.Bitmap SuperB {
             get {
                 object obj = ResourceManager.GetObject("SuperB", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Thong_Tin {
+            get {
+                object obj = ResourceManager.GetObject("Thong_Tin", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

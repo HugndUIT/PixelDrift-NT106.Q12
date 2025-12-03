@@ -291,6 +291,12 @@
     <Compile Include="Form_Doi_Mat_Khau.Designer.cs">
       <DependentUpon>Form_Doi_Mat_Khau.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form_ID.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_ID.Designer.cs">
+      <DependentUpon>Form_ID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form_QuenMatKhau.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -321,6 +327,12 @@
     <Compile Include="Form_Mo_Dau.Designer.cs">
       <DependentUpon>Form_Mo_Dau.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lobby.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Lobby.Designer.cs">
+      <DependentUpon>Lobby.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -341,6 +353,9 @@
     <EmbeddedResource Include="Form_Game_Play.resx">
       <DependentUpon>Form_Game_Play.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form_ID.resx">
+      <DependentUpon>Form_ID.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form_QuenMatKhau.resx">
       <DependentUpon>Form_QuenMatKhau.cs</DependentUpon>
     </EmbeddedResource>
@@ -352,6 +367,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_Mo_Dau.resx">
       <DependentUpon>Form_Mo_Dau.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Lobby.resx">
+      <DependentUpon>Lobby.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -472,6 +490,13 @@
     <Content Include="nhac_thi_dau.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Quen_MK.png" />
+    <None Include="Resources\Thong_Tin.png" />
+    <None Include="Resources\Doi_MK.png" />
+    <None Include="Resources\ScoreBoard.png" />
+    <None Include="Resources\Gemini_Generated_Image_hs0qr3hs0qr3hs0q.png" />
+    <None Include="Resources\Gemini_Generated_Image_55ox6j55ox6j55ox.png" />
+    <None Include="Resources\Gemini_Generated_Image_afaixrafaixrafai.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
