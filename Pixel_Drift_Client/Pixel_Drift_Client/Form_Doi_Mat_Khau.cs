@@ -67,9 +67,9 @@ namespace Pixel_Drift
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
-                if (dict.ContainsKey("Status") && dict["Status"] == "success")
+                if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
-                    MessageBox.Show(dict["Message"], "Thành công",
+                    MessageBox.Show(dict["message"], "Thành công",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.Hide();
@@ -79,7 +79,7 @@ namespace Pixel_Drift
                 }
                 else
                 {
-                    string msg = dict.ContainsKey("Message") ? dict["Message"] : "Đổi mật khẩu thất bại!";
+                    string msg = dict.ContainsKey("message") ? dict["message"] : "Đổi mật khẩu thất bại!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -114,11 +114,8 @@ namespace Pixel_Drift
         {
             this.Hide();
             Form_Dang_Nhap formdangnhap = new Form_Dang_Nhap();
-            // Đã sửa: Phải ShowDialog()
             formdangnhap.ShowDialog();
             this.Close();
         }
-
-
     }
 }

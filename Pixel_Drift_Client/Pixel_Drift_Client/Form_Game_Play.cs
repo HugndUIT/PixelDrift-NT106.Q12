@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -34,6 +35,8 @@ namespace Pixel_Drift
         private long player1Score = 0;
         private long player2Score = 0;
         private int crashCount = 0;
+
+        private bool isReturningToLobby = false;
 
         public Game_Window()
         {
@@ -226,19 +229,21 @@ namespace Pixel_Drift
                         break;
 
                     case "player_disconnected":
-                        string name = "";
-                        if (data.ContainsKey("name") && data["name"].ValueKind == JsonValueKind.String)
-                        {
-                            name = data["name"].GetString();
-                        }
+                        string name = data.ContainsKey("name") && data["name"].ValueKind == JsonValueKind.String ? data["name"].GetString() : "Đối thủ";
 
-                        if (string.IsNullOrEmpty(name) || name == "Unknown" || name.Contains("Unknown"))
-                        {
-                            break;
-                        }
+                        Music?.controls.stop();
+                        CountDown_5Sec?.Stop();
 
-                        MessageBox.Show($"{name} đã ngắt kết nối. Trở về sảnh chờ.", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        ResetToLobby();
+                        MessageBox.Show($"{name} đã ngắt kết nối. Game bị hủy. Bạn sẽ được chuyển về Lobby.", "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        this.isReturningToLobby = true;
+
+                        Lobby lobbyForm = new Lobby(this.client, myUsername);
+
+                        this.Close();
+
+                        lobbyForm.Show();
+
                         break;
 
                     case "lobby_full":
@@ -257,9 +262,9 @@ namespace Pixel_Drift
                     case "force_logout":
                         Music?.controls.stop();
                         string logoutMsg = "Tài khoản của bạn đã được đăng nhập từ nơi khác.";
-                        if (data.ContainsKey("Message"))
+                        if (data.ContainsKey("message"))
                         {
-                            logoutMsg = data["Message"].GetString();
+                            logoutMsg = data["message"].GetString();
                         }
                         MessageBox.Show(logoutMsg, "Thông Báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
@@ -492,7 +497,7 @@ namespace Pixel_Drift
         private void btn_Scoreboard_Click(object sender, EventArgs e)
         {
             Form_ScoreBoard scoreboardForm = new Form_ScoreBoard(client);
-            scoreboardForm.ShowDialog();
+            scoreboardForm.Show();
         }
 
         private void Game_Window_KeyDown(object sender, KeyEventArgs e)
@@ -535,12 +540,12 @@ namespace Pixel_Drift
             Buff?.Stop();
             Debuff?.Stop();
 
-            reader?.Close();
-            stream?.Close();
-            client?.Close();
-        }
-        private void game_timer_Tick(object sender, EventArgs e)
-        {
+            if (!isReturningToLobby)
+            {
+                reader?.Close();
+                stream?.Close();
+                client?.Close();
+            }
         }
     }
 }

@@ -51,6 +51,20 @@ namespace Pixel_Drift_Server
             Reusable_Game_State["action"] = "update_game_state";
         }
 
+        private string CleanUsername(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return username;
+
+            int lastParenIndex = username.LastIndexOf('(');
+            if (lastParenIndex > 0)
+            {
+                return username.Substring(0, lastParenIndex).Trim();
+            }
+
+            return username.Trim();
+        }
+
         public bool IsEmpty()
         {
             return Player_1 == null && Player_2 == null;
@@ -60,15 +74,17 @@ namespace Pixel_Drift_Server
         {
             lock (Player_Lock)
             {
+                string cleanUsername = CleanUsername(username);
+
                 if (Player_1 == null)
                 {
-                    Player_1 = new Game_Player { Client = client, Stream = client.GetStream(), Username = username, Player_ID = 1 };
+                    Player_1 = new Game_Player { Client = client, Stream = client.GetStream(), Username = cleanUsername, Player_ID = 1 };
                     Broadcast_Ready_Status();
                     return 1;
                 }
                 else if (Player_2 == null)
                 {
-                    Player_2 = new Game_Player { Client = client, Stream = client.GetStream(), Username = username, Player_ID = 2 };
+                    Player_2 = new Game_Player { Client = client, Stream = client.GetStream(), Username = cleanUsername, Player_ID = 2 };
                     Broadcast_Ready_Status();
                     return 2;
                 }
@@ -81,12 +97,19 @@ namespace Pixel_Drift_Server
             lock (Player_Lock)
             {
                 string leftUser = "Unknown";
-                if (Player_1 != null && Player_1.Client == client) 
-                { 
-                    leftUser = Player_1.Username; Player_1 = null; 
+                Game_Player remainingPlayer = null; 
+
+                if (Player_1 != null && Player_1.Client == client)
+                {
+                    leftUser = Player_1.Username;
+                    Player_1 = null;
+                    remainingPlayer = Player_2; 
                 }
-                else if (Player_2 != null && Player_2.Client == client) { 
-                    leftUser = Player_2.Username; Player_2 = null; 
+                else if (Player_2 != null && Player_2.Client == client)
+                {
+                    leftUser = Player_2.Username;
+                    Player_2 = null;
+                    remainingPlayer = Player_1; 
                 }
 
                 StopGame();
@@ -94,7 +117,8 @@ namespace Pixel_Drift_Server
                 var disconnectMsg = new
                 {
                     action = "player_disconnected",
-                    name = leftUser 
+                    name = leftUser,
+                    target_action = (remainingPlayer != null) ? "opponent_left" : null
                 };
 
                 Broadcast(JsonSerializer.Serialize(disconnectMsg));
@@ -492,10 +516,16 @@ namespace Pixel_Drift_Server
                     int p2CrashCount = Math.Max(0, (100 - P2_Speed) / 10);
 
                     if (Player_1 != null && !string.IsNullOrEmpty(Player_1.Username))
-                        SQL_Helper.AddScore(Player_1.Username, p1WinCount, p1CrashCount, P1_Score);
+                    {
+                        string cleanUsername = CleanUsername(Player_1.Username);
+                        SQL_Helper.AddScore(cleanUsername, p1WinCount, p1CrashCount, P1_Score);
+                    }
 
                     if (Player_2 != null && !string.IsNullOrEmpty(Player_2.Username))
-                        SQL_Helper.AddScore(Player_2.Username, p2WinCount, p2CrashCount, P2_Score);
+                    {
+                        string cleanUsername = CleanUsername(Player_2.Username);
+                        SQL_Helper.AddScore(cleanUsername, p2WinCount, p2CrashCount, P2_Score);
+                    }
                 }
             }
             catch (Exception ex)

@@ -46,7 +46,7 @@ namespace Pixel_Drift
             {
                 TcpClient client = new TcpClient();
                 
-                var result = client.BeginConnect("172.16.16.187", 1111, null, null);
+                var result = client.BeginConnect("127.0.0.1", 1111, null, null);
                 var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(5));
 
                 if (!success)
@@ -73,8 +73,7 @@ namespace Pixel_Drift
                     string json = JsonSerializer.Serialize(request);
                     writer.WriteLine(json);
 
-                    // Đọc response với timeout
-                    stream.ReadTimeout = 5000; // 5 giây
+                    stream.ReadTimeout = 5000; 
                     string response = reader.ReadLine();
 
                     if (string.IsNullOrEmpty(response))
@@ -95,12 +94,12 @@ namespace Pixel_Drift
                     }
                     else if (dict.ContainsKey("status") && dict["status"] == "force_logout")
                     {
-                        string msg = dict.ContainsKey("Message") ? dict["Message"] : "Tài khoản đang được đăng nhập ở nơi khác. Vui lòng thử lại sau";
+                        string msg = dict.ContainsKey("message") ? dict["message"] : "Tài khoản đang được đăng nhập ở nơi khác. Vui lòng thử lại sau";
                         MessageBox.Show(msg, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     else
                     {
-                        string msg = dict.ContainsKey("Message") ? dict["Message"] : "Sai tài khoản hoặc mật khẩu!";
+                        string msg = dict.ContainsKey("message") ? dict["message"] : "Sai tài khoản hoặc mật khẩu!";
                         MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -123,15 +122,15 @@ namespace Pixel_Drift
         private void btn_quenmatkhau_Click(object sender, EventArgs e)
         {
             Form_QuenMatKhau form = new Form_QuenMatKhau();
-            form.ShowDialog();
-            this.Hide();
+            form.Show();
+            this.Close();
         }
 
         private void btn_backdk_Click(object sender, EventArgs e)
         {
-            Form_Dang_Ki dk = new Form_Dang_Ki();
-            dk.Show();
-            this.Hide();
+            Form_Dang_Ki form = new Form_Dang_Ki();
+            form.Show();
+            this.Close();
         }
     }
 }

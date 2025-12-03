@@ -31,7 +31,7 @@ namespace Pixel_Drift
                 if (!ClientManager.IsConnected)
                 {
 
-                    if (!ClientManager.Connect("172.16.16.187", 1111))
+                    if (!ClientManager.Connect("127.0.0.1", 1111))
                     {
                         throw new SocketException();
                     }
@@ -52,20 +52,17 @@ namespace Pixel_Drift
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
-                if (dict.ContainsKey("Status") && dict["Status"] == "success")
+                if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
-                    MessageBox.Show(dict["Message"], "Thành công",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                    MessageBox.Show(dict["message"], "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                  
-                    this.Hide();
                     Form_Doi_Mat_Khau formDoi = new Form_Doi_Mat_Khau(email);
-                    formDoi.ShowDialog();
+                    formDoi.Show();
                     this.Close(); 
                 }
                 else
                 {
-                    string msg = dict.ContainsKey("Message") ? dict["Message"] : "Không thể gửi mật khẩu!";
+                    string msg = dict.ContainsKey("message") ? dict["message"] : "Không thể gửi mật khẩu!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -86,9 +83,8 @@ namespace Pixel_Drift
 
         private void btn_quaylai_Click(object sender, EventArgs e)
         {
-            this.Hide();
             Form_Dang_Nhap form = new Form_Dang_Nhap();
-            form.ShowDialog();
+            form.Show();
             this.Close();
         }
     }
