@@ -167,7 +167,7 @@ namespace Pixel_Drift
             this.ptb_player1.BackColor = System.Drawing.Color.Transparent;
             this.ptb_player1.Image = ((System.Drawing.Image)(resources.GetObject("ptb_player1.Image")));
             this.ptb_player1.Location = new System.Drawing.Point(271, 570);
-            this.ptb_player1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ptb_player1.Margin = new System.Windows.Forms.Padding(4);
             this.ptb_player1.Name = "ptb_player1";
             this.ptb_player1.Size = new System.Drawing.Size(80, 140);
             this.ptb_player1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -178,7 +178,7 @@ namespace Pixel_Drift
             // 
             this.ptb_AICar5.Image = global::Pixel_Drift.Properties.Resources.RamB;
             this.ptb_AICar5.Location = new System.Drawing.Point(151, 295);
-            this.ptb_AICar5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ptb_AICar5.Margin = new System.Windows.Forms.Padding(4);
             this.ptb_AICar5.Name = "ptb_AICar5";
             this.ptb_AICar5.Size = new System.Drawing.Size(80, 140);
             this.ptb_AICar5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -189,7 +189,7 @@ namespace Pixel_Drift
             // 
             this.ptb_AICar1.Image = global::Pixel_Drift.Properties.Resources.BuickerB;
             this.ptb_AICar1.Location = new System.Drawing.Point(407, 295);
-            this.ptb_AICar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ptb_AICar1.Margin = new System.Windows.Forms.Padding(4);
             this.ptb_AICar1.Name = "ptb_AICar1";
             this.ptb_AICar1.Size = new System.Drawing.Size(80, 140);
             this.ptb_AICar1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -211,7 +211,7 @@ namespace Pixel_Drift
             // 
             this.ptb_AICar6.Image = global::Pixel_Drift.Properties.Resources.GalardB;
             this.ptb_AICar6.Location = new System.Drawing.Point(403, 295);
-            this.ptb_AICar6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ptb_AICar6.Margin = new System.Windows.Forms.Padding(4);
             this.ptb_AICar6.Name = "ptb_AICar6";
             this.ptb_AICar6.Size = new System.Drawing.Size(80, 140);
             this.ptb_AICar6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -222,7 +222,7 @@ namespace Pixel_Drift
             // 
             this.ptb_AICar3.Image = global::Pixel_Drift.Properties.Resources.JeepB;
             this.ptb_AICar3.Location = new System.Drawing.Point(144, 295);
-            this.ptb_AICar3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ptb_AICar3.Margin = new System.Windows.Forms.Padding(4);
             this.ptb_AICar3.Name = "ptb_AICar3";
             this.ptb_AICar3.Size = new System.Drawing.Size(80, 140);
             this.ptb_AICar3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -285,7 +285,7 @@ namespace Pixel_Drift
             this.ptb_player2.BackColor = System.Drawing.Color.Transparent;
             this.ptb_player2.Image = ((System.Drawing.Image)(resources.GetObject("ptb_player2.Image")));
             this.ptb_player2.Location = new System.Drawing.Point(265, 577);
-            this.ptb_player2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ptb_player2.Margin = new System.Windows.Forms.Padding(4);
             this.ptb_player2.Name = "ptb_player2";
             this.ptb_player2.Size = new System.Drawing.Size(80, 140);
             this.ptb_player2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -316,14 +316,13 @@ namespace Pixel_Drift
             this.btn_Scoreboard.FillColor2 = System.Drawing.Color.Purple;
             this.btn_Scoreboard.Font = new System.Drawing.Font("Segoe UI Black", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Scoreboard.ForeColor = System.Drawing.Color.White;
-            this.btn_Scoreboard.Location = new System.Drawing.Point(103, 810);
+            this.btn_Scoreboard.Location = new System.Drawing.Point(119, 811);
             this.btn_Scoreboard.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
             this.btn_Scoreboard.Name = "btn_Scoreboard";
             this.btn_Scoreboard.Size = new System.Drawing.Size(380, 96);
             this.btn_Scoreboard.TabIndex = 4;
             this.btn_Scoreboard.Text = "🏆 SCORE BOARD 🏆";
             this.btn_Scoreboard.Click += new System.EventHandler(this.btn_Scoreboard_Click);
-
             // 
             // btn_Ready
             // 
@@ -337,20 +336,34 @@ namespace Pixel_Drift
             this.btn_Ready.FillColor2 = System.Drawing.Color.Teal;
             this.btn_Ready.Font = new System.Drawing.Font("Segoe UI Black", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
             this.btn_Ready.ForeColor = System.Drawing.Color.White;
-            this.btn_Ready.Location = new System.Drawing.Point(525, 810);
+            this.btn_Ready.Location = new System.Drawing.Point(534, 810);
             this.btn_Ready.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
             this.btn_Ready.Name = "btn_Ready";
             this.btn_Ready.Size = new System.Drawing.Size(224, 96);
             this.btn_Ready.TabIndex = 5;
             this.btn_Ready.Text = "READY";
             this.btn_Ready.Click += new System.EventHandler(this.btn_Ready_Click);
-
+            // 
+            // btn_ID
+            // 
+            this.btn_ID.BorderRadius = 20;
+            this.btn_ID.Enabled = false;
+            this.btn_ID.FillColor = System.Drawing.Color.Gray;
+            this.btn_ID.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.btn_ID.Font = new System.Drawing.Font("Segoe UI Black", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_ID.ForeColor = System.Drawing.Color.White;
+            this.btn_ID.Location = new System.Drawing.Point(804, 811);
+            this.btn_ID.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.btn_ID.Name = "btn_ID";
+            this.btn_ID.Size = new System.Drawing.Size(380, 96);
+            this.btn_ID.TabIndex = 12;
+            this.btn_ID.Text = "ID:";
             // 
             // lbl_P1_Status
             // 
             this.lbl_P1_Status.AutoSize = true;
             this.lbl_P1_Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_P1_Status.Location = new System.Drawing.Point(97, 756);
+            this.lbl_P1_Status.Location = new System.Drawing.Point(88, 754);
             this.lbl_P1_Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_P1_Status.Name = "lbl_P1_Status";
             this.lbl_P1_Status.Size = new System.Drawing.Size(350, 29);
@@ -361,7 +374,7 @@ namespace Pixel_Drift
             // 
             this.lbl_P2_Status.AutoSize = true;
             this.lbl_P2_Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_P2_Status.Location = new System.Drawing.Point(741, 756);
+            this.lbl_P2_Status.Location = new System.Drawing.Point(746, 756);
             this.lbl_P2_Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_P2_Status.Name = "lbl_P2_Status";
             this.lbl_P2_Status.Size = new System.Drawing.Size(343, 29);
@@ -371,11 +384,11 @@ namespace Pixel_Drift
             // lbl_Countdown
             // 
             this.lbl_Countdown.AutoSize = true;
-            this.lbl_Countdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Countdown.Location = new System.Drawing.Point(623, 757);
+            this.lbl_Countdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 22.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Countdown.Location = new System.Drawing.Point(626, 743);
             this.lbl_Countdown.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_Countdown.Name = "lbl_Countdown";
-            this.lbl_Countdown.Size = new System.Drawing.Size(27, 29);
+            this.lbl_Countdown.Size = new System.Drawing.Size(40, 42);
             this.lbl_Countdown.TabIndex = 8;
             this.lbl_Countdown.Text = "5";
             this.lbl_Countdown.Visible = false;
@@ -384,7 +397,7 @@ namespace Pixel_Drift
             // 
             this.lbl_GameTimer.AutoSize = true;
             this.lbl_GameTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_GameTimer.Location = new System.Drawing.Point(580, 757);
+            this.lbl_GameTimer.Location = new System.Drawing.Point(585, 747);
             this.lbl_GameTimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_GameTimer.Name = "lbl_GameTimer";
             this.lbl_GameTimer.Size = new System.Drawing.Size(112, 29);
@@ -395,7 +408,7 @@ namespace Pixel_Drift
             // lbl_Score1
             // 
             this.lbl_Score1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Score1.Location = new System.Drawing.Point(247, 790);
+            this.lbl_Score1.Location = new System.Drawing.Point(220, 792);
             this.lbl_Score1.Name = "lbl_Score1";
             this.lbl_Score1.Size = new System.Drawing.Size(143, 18);
             this.lbl_Score1.TabIndex = 10;
@@ -404,33 +417,16 @@ namespace Pixel_Drift
             // lbl_Score2
             // 
             this.lbl_Score2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Score2.Location = new System.Drawing.Point(884, 790);
+            this.lbl_Score2.Location = new System.Drawing.Point(862, 790);
             this.lbl_Score2.Name = "lbl_Score2";
             this.lbl_Score2.Size = new System.Drawing.Size(143, 18);
             this.lbl_Score2.TabIndex = 11;
             this.lbl_Score2.Text = "Score:";
             // 
-            // btn_ID
-            // 
-            this.btn_ID.BorderRadius = 20;
-            this.btn_ID.Enabled = false;
-            this.btn_ID.FillColor = System.Drawing.Color.Gray;
-            this.btn_ID.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.btn_ID.Font = new System.Drawing.Font("Segoe UI Black", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_ID.ForeColor = System.Drawing.Color.White;
-            this.btn_ID.Location = new System.Drawing.Point(791, 809);
-            this.btn_ID.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
-            this.btn_ID.Name = "btn_ID";
-            this.btn_ID.Size = new System.Drawing.Size(380, 96);
-            this.btn_ID.TabIndex = 12;
-            this.btn_ID.Text = "ID:";
-
-            // 
             // Game_Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::Pixel_Drift.Properties.Resources.backrou;
             this.ClientSize = new System.Drawing.Size(1285, 917);
             this.Controls.Add(this.btn_ID);
             this.Controls.Add(this.lbl_Score2);
