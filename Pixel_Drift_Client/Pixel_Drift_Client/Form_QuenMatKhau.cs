@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets; 
+using System.Linq;
+using System.Net.Sockets;
 using System.Text.Json;
 using System.Windows.Forms;
 
@@ -21,8 +22,7 @@ namespace Pixel_Drift
 
             if (string.IsNullOrEmpty(email))
             {
-                MessageBox.Show("Vui lòng nhập email của bạn!", "Thông báo",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập email của bạn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -34,7 +34,6 @@ namespace Pixel_Drift
 
                     if (!ClientManager.Connect("127.0.0.1", 1111))
                     {
-
                         throw new SocketException();
                     }
                 }
@@ -45,30 +44,35 @@ namespace Pixel_Drift
                     email = email
                 };
 
-
-                string response = ClientManager.SendRequest(request);
+                string response = ClientManager.Send_And_Wait(request);
 
                 if (response == null)
                 {
-                    throw new SocketException(); 
+                    throw new SocketException();
                 }
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
-                if (dict.ContainsKey("Status") && dict["Status"] == "success")
+                if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
-                    MessageBox.Show(dict["Message"], "Thành công",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(dict["message"], "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                 
-                    this.Hide();
-                    Form_Doi_Mat_Khau formDoi = new Form_Doi_Mat_Khau(email);
-                    formDoi.ShowDialog();
-                    this.Close(); 
+                    Form_Doi_Mat_Khau formDoi = Application.OpenForms.OfType<Form_Doi_Mat_Khau>().FirstOrDefault();
+
+                    if (formDoi != null)
+                    {
+                        formDoi.Show();
+                    }
+                    else
+                    {
+                        formDoi = new Form_Doi_Mat_Khau(email);
+                        formDoi.Show();
+                    }
+                    this.Close();
                 }
                 else
                 {
-                    string msg = dict.ContainsKey("Message") ? dict["Message"] : "Không thể gửi mật khẩu!";
+                    string msg = dict.ContainsKey("message") ? dict["message"] : "Không thể gửi mật khẩu!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -89,9 +93,17 @@ namespace Pixel_Drift
 
         private void btn_quaylai_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            Form_Dang_Nhap form = new Form_Dang_Nhap();
-            form.ShowDialog();
+            Form_Dang_Nhap form = Application.OpenForms.OfType<Form_Dang_Nhap>().FirstOrDefault();
+
+            if (form != null)
+            {
+                form.Show();
+            }
+            else
+            {
+                form = new Form_Dang_Nhap();
+                form.Show();
+            }
             this.Close();
         }
     }

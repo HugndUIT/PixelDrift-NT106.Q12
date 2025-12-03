@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets; 
+using System.Linq;
+using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
-using System.Security.Cryptography;
 
 namespace Pixel_Drift
 {
@@ -58,7 +59,7 @@ namespace Pixel_Drift
                     new_password = encryptedNewPassword // Gửi mật khẩu đã mã hóa
                 };
 
-                string response = ClientManager.SendRequest(request);
+                string response = ClientManager.Send_And_Wait(request);
 
                 if (response == null)
                 {
@@ -67,19 +68,27 @@ namespace Pixel_Drift
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
-                if (dict.ContainsKey("Status") && dict["Status"] == "success")
+                if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
-                    MessageBox.Show(dict["Message"], "Thành công",
+                    MessageBox.Show(dict["message"], "Thành công",
                                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                    Form_Dang_Nhap existingLogin = Application.OpenForms.OfType<Form_Dang_Nhap>().FirstOrDefault();
+
+                    if (existingLogin != null)
+                    {
+                        existingLogin.Show();
+                    }
+                    else
+                    {
+                        Form_Dang_Nhap dn = new Form_Dang_Nhap();
+                        dn.Show();
+                    }
                     this.Hide();
-                    Form_Dang_Nhap formDangNhap = new Form_Dang_Nhap();
-                    formDangNhap.ShowDialog();
-                    this.Close();
                 }
                 else
                 {
-                    string msg = dict.ContainsKey("Message") ? dict["Message"] : "Đổi mật khẩu thất bại!";
+                    string msg = dict.ContainsKey("message") ? dict["message"] : "Đổi mật khẩu thất bại!";
                     MessageBox.Show(msg, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -114,7 +123,6 @@ namespace Pixel_Drift
         {
             this.Hide();
             Form_Dang_Nhap formdangnhap = new Form_Dang_Nhap();
-            // Đã sửa: Phải ShowDialog()
             formdangnhap.ShowDialog();
             this.Close();
         }

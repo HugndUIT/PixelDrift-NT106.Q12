@@ -19,21 +19,49 @@ namespace Pixel_Drift
 
         private void btn_dang_ki_Click(object sender, EventArgs e)
         {
-            Form_Dang_Ki formdangki = new Form_Dang_Ki();
-            this.Hide();
-            formdangki.Show();
+            if (ClientManager.IsConnected && !string.IsNullOrEmpty(Form_Dang_Nhap.Current_Username))
+            {
+                MessageBox.Show("Bạn đã đăng nhập rồi!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Form_Dang_Ki form = Application.OpenForms.OfType<Form_Dang_Ki>().FirstOrDefault();
+
+            if (form != null)
+            {
+                form.Show();
+            }
+            else
+            {
+                form = new Form_Dang_Ki();
+                form.Show();
+            }
         }
 
         private void btn_thoat_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Application.Exit();
         }
 
         private void btn_dang_nhap_Click(object sender, EventArgs e)
         {
-            Form_Dang_Nhap formdangnhap = new Form_Dang_Nhap();
-            this.Hide();
-            formdangnhap.Show();
+            if (ClientManager.IsConnected && !string.IsNullOrEmpty(Form_Dang_Nhap.Current_Username))
+            {
+                MessageBox.Show("Bạn đã đăng nhập rồi!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Form_Dang_Nhap form = Application.OpenForms.OfType<Form_Dang_Nhap>().FirstOrDefault();
+
+            if (form != null)
+            {
+                form.Show();
+            }
+            else
+            {
+                form = new Form_Dang_Nhap();
+                form.Show();
+            }
         }
     }
 }
