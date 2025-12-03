@@ -1,16 +1,17 @@
+using Pixel_Drift;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Media;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using Pixel_Drift;
-using System.Globalization;
-using System.IO;
-using System.Media;
 
 namespace Pixel_Drift
 {
@@ -144,41 +145,45 @@ namespace Pixel_Drift
             return await Task.Run(() =>
             {
                 // Mở kết nối
-                using (TcpClient client = new TcpClient())
+                if (!ClientManager.IsConnected)
                 {
+                    string ip = ClientManager.Get_Server_IP();
 
-                    client.Connect("127.0.0.1", 1111);
+                    if (string.IsNullOrEmpty(ip)) ip = "127.0.0.1";
 
-                    using (NetworkStream stream = client.GetStream())
-                    using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
-                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                    if (!ClientManager.Connect(ip, 1111))
                     {
-
-                        var data = new
-                        {
-                            action = "register",
-                            email = email,
-                            username = username,
-                            password = hashedPassword,
-                            birthday = birthday
-                        };
-
-                        string json = JsonSerializer.Serialize(data);
-
-                        writer.WriteLine(json);
-
-                        string response = reader.ReadLine();
-
-                        return response;
+                        var error = new { status = "error", message = "Không thể kết nối đến server." };
+                        return JsonSerializer.Serialize(error);
                     }
                 }
+
+                var data = new
+                {
+                    action = "register",
+                    email = email,
+                    username = username,
+                    password = hashedPassword,
+                    birthday = birthday
+                };
+
+                return ClientManager.Send_And_Wait(data);
             });
         }
 
         private void btn_backdn_Click(object sender, EventArgs e)
         {
-            Form_Dang_Nhap dn = new Form_Dang_Nhap();
-            dn.Show();
+            Form_Dang_Nhap dn = Application.OpenForms.OfType<Form_Dang_Nhap>().FirstOrDefault();
+
+            if (dn != null)
+            {
+                dn.Show(); 
+            }
+            else
+            {
+                dn = new Form_Dang_Nhap();
+                dn.Show();
+            }
             this.Hide();
         }
     }

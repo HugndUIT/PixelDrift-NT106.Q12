@@ -142,7 +142,7 @@ namespace Pixel_Drift
             // 
             // Form_Thong_Tin
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 26F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.AliceBlue;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -156,6 +156,7 @@ namespace Pixel_Drift
             this.Name = "Form_Thong_Tin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Thông tin ";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_Thong_Tin_FormClosed);
             this.Load += new System.EventHandler(this.Form_Thong_Tin_Load);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ptb_Avatar)).EndInit();

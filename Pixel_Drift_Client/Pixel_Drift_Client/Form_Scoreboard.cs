@@ -1,56 +1,61 @@
 ﻿using System;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Pixel_Drift
 {
     public partial class Form_ScoreBoard : Form
     {
-        private TcpClient client;
-        private Timer refreshTimer;
-        private const int REFRESH_INTERVAL = 5000;
-
         public Form_ScoreBoard(TcpClient tcpClient)
         {
             InitializeComponent();
-            this.client = tcpClient;
-            InitializeTimer();
+
+            ClientManager.OnMessageReceived += HandleServerMessage;
+
             LoadScoreBoard();
         }
 
-        private void InitializeTimer()
+        private void HandleServerMessage(string message)
         {
-            refreshTimer = new Timer();
-            refreshTimer.Interval = REFRESH_INTERVAL;
-            refreshTimer.Tick += (s, e) => LoadScoreBoard();
-            refreshTimer.Start();
+            if (this.Disposing || this.IsDisposed || !this.IsHandleCreated) return;
+
+            this.Invoke(new Action(() =>
+            {
+                try
+                {
+                    var data = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(message);
+                    if (!data.ContainsKey("action")) return;
+
+                    string action = data["action"].GetString();
+
+                    if (action == "scoreboard_data" || action == "search_result")
+                    {
+                        if (data.ContainsKey("data"))
+                        {
+                            string scoreData = data["data"].GetString();
+                            DisplayScoreBoard(scoreData);
+                        }
+                    }
+                }
+                catch { }
+            }));
         }
 
         private void LoadScoreBoard()
         {
-            try
-            {
-                var request = new { action = "get_scoreboard", top_count = 50 };
-                SendToServer(JsonSerializer.Serialize(request));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải bảng xếp hạng: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            var request = new { action = "get_scoreboard", top_count = 50 };
+            ClientManager.Send_And_Forget(request);
         }
 
-        // Hiển thị dữ liệu lên DataGridView
         public void DisplayScoreBoard(string jsonData)
         {
             try
             {
-                if (jsonData == "EMPTY" || jsonData == "ERROR")
+                if (string.IsNullOrEmpty(jsonData) || jsonData == "EMPTY" || jsonData == "ERROR")
                 {
                     dgv_ScoreBoard.DataSource = null;
                     return;
@@ -78,8 +83,7 @@ namespace Pixel_Drift
                         double totalScore = double.Parse(parts[4]);
                         string datePlayed = parts[5];
 
-                        dt.Rows.Add(rank, playerName, winCount, crashCount, totalScore, datePlayed);
-                        rank++;
+                        dt.Rows.Add(rank++, playerName, winCount, crashCount, totalScore, datePlayed);
                     }
                 }
 
@@ -89,8 +93,38 @@ namespace Pixel_Drift
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi hiển thị dữ liệu: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Lỗi hiển thị bảng điểm: " + ex.Message);
+            }
+        }
+
+        private void btn_Search_Click(object sender, EventArgs e)
+        {
+            string searchText = txt_Search.Text.Trim();
+            if (string.IsNullOrEmpty(searchText))
+            {
+                LoadScoreBoard();
+                return;
+            }
+            var request = new { action = "search_player", search_text = searchText };
+            ClientManager.Send_And_Forget(request);
+        }
+
+        private void btn_Refresh_Click(object sender, EventArgs e)
+        {
+            LoadScoreBoard();
+        }
+
+        private void btn_Close_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void txt_Search_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                btn_Search_Click(sender, e);
+                e.Handled = true;
             }
         }
 
@@ -123,105 +157,30 @@ namespace Pixel_Drift
         {
             if (dgv_ScoreBoard.Rows.Count > 0)
             {
-                // Top 1 - Vàng
-                var row1 = dgv_ScoreBoard.Rows[0];
-                row1.DefaultCellStyle.BackColor = Color.Gold;
-                row1.DefaultCellStyle.ForeColor = Color.Black;
-                row1.DefaultCellStyle.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+                dgv_ScoreBoard.Rows[0].DefaultCellStyle.BackColor = Color.Gold;
+                dgv_ScoreBoard.Rows[0].DefaultCellStyle.ForeColor = Color.Black;
+                dgv_ScoreBoard.Rows[0].DefaultCellStyle.Font = new Font("Segoe UI", 11, FontStyle.Bold);
 
-                // Top 2 - Bạc
                 if (dgv_ScoreBoard.Rows.Count > 1)
                 {
-                    var row2 = dgv_ScoreBoard.Rows[1];
-                    row2.DefaultCellStyle.BackColor = Color.Silver;
-                    row2.DefaultCellStyle.ForeColor = Color.Black;
-                    row2.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                    dgv_ScoreBoard.Rows[1].DefaultCellStyle.BackColor = Color.Silver;
+                    dgv_ScoreBoard.Rows[1].DefaultCellStyle.ForeColor = Color.Black;
+                    dgv_ScoreBoard.Rows[1].DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
                 }
 
-                // Top 3 - Đồng
                 if (dgv_ScoreBoard.Rows.Count > 2)
                 {
-                    var row3 = dgv_ScoreBoard.Rows[2];
-                    row3.DefaultCellStyle.BackColor = Color.SandyBrown;
-                    row3.DefaultCellStyle.ForeColor = Color.Black;
-                    row3.DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                    dgv_ScoreBoard.Rows[2].DefaultCellStyle.BackColor = Color.SandyBrown;
+                    dgv_ScoreBoard.Rows[2].DefaultCellStyle.ForeColor = Color.Black;
+                    dgv_ScoreBoard.Rows[2].DefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
                 }
-            }
-        }
-
-        private void btn_Search_Click(object sender, EventArgs e)
-        {
-            string searchText = txt_Search.Text.Trim();
-
-            if (string.IsNullOrEmpty(searchText))
-            {
-                LoadScoreBoard();
-                return;
-            }
-
-            try
-            {
-                var request = new { action = "search_player", search_text = searchText };
-                SendToServer(JsonSerializer.Serialize(request));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tìm kiếm: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // Phương thức này để hiển thị kết quả tìm kiếm
-        public void DisplaySearchResults(string jsonData)
-        {
-            DisplayScoreBoard(jsonData); 
-        }
-
-        private void btn_Refresh_Click(object sender, EventArgs e)
-        {
-            LoadScoreBoard();
-        }
-
-        private void btn_Close_Click(object sender, EventArgs e)
-        {
-            refreshTimer?.Stop();
-            refreshTimer?.Dispose();
-            this.Close();
-        }
-
-        // Gửi dữ liệu đến server sử dụng TcpClient
-        private void SendToServer(string message)
-        {
-            if (client == null || !client.Connected) return;
-
-            try
-            {
-                NetworkStream stream = client.GetStream();
-                byte[] data = Encoding.UTF8.GetBytes(message + "\n");
-                stream.Write(data, 0, data.Length);
-                stream.Flush();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi kết nối: {ex.Message}", "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            refreshTimer?.Stop();
-            refreshTimer?.Dispose();
+            ClientManager.OnMessageReceived -= HandleServerMessage;
             base.OnFormClosing(e);
-        }
-
-        private void txt_Search_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                btn_Search_Click(sender, e);
-                e.Handled = true;
-            }
         }
     }
 }

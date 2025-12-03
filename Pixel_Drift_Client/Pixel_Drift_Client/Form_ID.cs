@@ -13,6 +13,7 @@ namespace Pixel_Drift
     public partial class Form_ID : Form
     {
         public string RoomID { get; private set; }
+
         public Form_ID()
         {
             InitializeComponent();

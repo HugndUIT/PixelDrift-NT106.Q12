@@ -345,7 +345,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TaiKhoanNguoiDung.cs" />
     <EmbeddedResource Include="Form_Dang_Ki.resx">
       <DependentUpon>Form_Dang_Ki.cs</DependentUpon>
     </EmbeddedResource>

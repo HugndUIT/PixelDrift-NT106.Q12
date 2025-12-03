@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets; 
+using System.Linq;
+using System.Net.Sockets;
 using System.Text.Json;
 using System.Windows.Forms;
 
@@ -43,11 +44,11 @@ namespace Pixel_Drift
                     email = email
                 };
 
-                string response = ClientManager.SendRequest(request);
+                string response = ClientManager.Send_And_Wait(request);
 
                 if (response == null)
                 {
-                    throw new SocketException(); 
+                    throw new SocketException();
                 }
 
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
@@ -55,10 +56,19 @@ namespace Pixel_Drift
                 if (dict.ContainsKey("status") && dict["status"] == "success")
                 {
                     MessageBox.Show(dict["message"], "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                 
-                    Form_Doi_Mat_Khau formDoi = new Form_Doi_Mat_Khau(email);
-                    formDoi.Show();
-                    this.Close(); 
+
+                    Form_Doi_Mat_Khau formDoi = Application.OpenForms.OfType<Form_Doi_Mat_Khau>().FirstOrDefault();
+
+                    if (formDoi != null)
+                    {
+                        formDoi.Show();
+                    }
+                    else
+                    {
+                        formDoi = new Form_Doi_Mat_Khau(email);
+                        formDoi.Show();
+                    }
+                    this.Close();
                 }
                 else
                 {
@@ -83,8 +93,17 @@ namespace Pixel_Drift
 
         private void btn_quaylai_Click(object sender, EventArgs e)
         {
-            Form_Dang_Nhap form = new Form_Dang_Nhap();
-            form.Show();
+            Form_Dang_Nhap form = Application.OpenForms.OfType<Form_Dang_Nhap>().FirstOrDefault();
+
+            if (form != null)
+            {
+                form.Show();
+            }
+            else
+            {
+                form = new Form_Dang_Nhap();
+                form.Show();
+            }
             this.Close();
         }
     }
