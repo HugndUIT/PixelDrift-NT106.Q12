@@ -56,6 +56,28 @@ namespace Pixel_Drift_Server
             }
         }
 
+        public static void Broadcast_IP()
+        {
+            Task.Run(async () =>
+            {
+                using (UdpClient udpServer = new UdpClient(2222))
+                {
+                    while (true)
+                    {
+                        var result = await udpServer.ReceiveAsync();
+                        string message = Encoding.UTF8.GetString(result.Buffer);
+
+                        if (message == "discover_server")
+                        {
+                            byte[] response = Encoding.UTF8.GetBytes("server_here");
+                            await udpServer.SendAsync(response, response.Length, result.RemoteEndPoint);
+                            Console.WriteLine($"Đã gửi IP cho {result.RemoteEndPoint.Address}");
+                        }
+                    }
+                }
+            });
+        }
+
         private void btn_Start_Server_Click(object sender, EventArgs e)
         {
             Task.Run(() => Start_Server());
@@ -82,13 +104,16 @@ namespace Pixel_Drift_Server
                 TCP_Server.Start();
                 Log("Server is listening on port 1111...");
 
+                Broadcast_IP();
+                Log("Server is broadcasting on port 2222...");
+
                 while (true)
                 {
                     TcpClient TCP_Client = TCP_Server.AcceptTcpClient();
                     Log($"Client {TCP_Client.Client.RemoteEndPoint} đã kết nối!");
                     Task.Run(() => Handle_Client(TCP_Client));
                 }
-            }   
+            }
             catch (Exception Ex)
             {
                 Log($"Lỗi máy chủ: {Ex.Message}");
@@ -238,13 +263,13 @@ namespace Pixel_Drift_Server
                             Send_Message(Stream, Response);
                         }
                     }
-                    catch (JsonException Ex) 
-                    { 
-                        
+                    catch (JsonException Ex)
+                    {
+
                     }
-                    catch (Exception Ex) 
-                    { 
-                        Log($" Lỗi xử lý client: {Ex.Message}. Data: {Message}"); 
+                    catch (Exception Ex)
+                    {
+                        Log($" Lỗi xử lý client: {Ex.Message}. Data: {Message}");
                     }
                 }
             }
@@ -306,7 +331,7 @@ namespace Pixel_Drift_Server
                             if (Old_Client != null && Old_Client.Connected)
                             {
                                 NetworkStream Old_Stream = Old_Client.GetStream();
-                                string kickMsg = JsonSerializer.Serialize(new { action = "force_logout", message = "Tài khoản đã bị đăng nhập nơi khác" });
+                                string kickMsg = JsonSerializer.Serialize(new { status = "force_logout", message = "Tài khoản đã bị đăng nhập nơi khác" });
                                 Send_Message(Old_Stream, kickMsg);
                                 Old_Client.Close();
                             }
@@ -370,7 +395,7 @@ namespace Pixel_Drift_Server
                             return JsonSerializer.Serialize(new
                             {
                                 status = "error",
-                                Message = "Email đã tồn tại"
+                                message = "Email đã tồn tại"
                             });
                         }
                     }
@@ -386,7 +411,7 @@ namespace Pixel_Drift_Server
                             return JsonSerializer.Serialize(new
                             {
                                 status = "error",
-                                Message = "Tên người dùng đã tồn tại"
+                                message = "Tên người dùng đã tồn tại"
                             });
                         }
                     }
@@ -531,7 +556,7 @@ namespace Pixel_Drift_Server
                 }
             }
         }
-        
+
         // Hàm xử lý đổi mật khẩu
         private string Handle_Change_Password(Dictionary<string, string> data)
         {
@@ -618,7 +643,7 @@ namespace Pixel_Drift_Server
                 Players[Client] = ID_Room;
 
                 Log($"Phòng mới tạo: {ID_Room} bởi {Username}");
-                return JsonSerializer.Serialize(new { action = "create_room_succes", room_id = ID_Room, player_number = Player_Number });
+                return JsonSerializer.Serialize(new { status = "create_room_success", room_id = ID_Room, player_number = Player_Number });
             }
         }
 
@@ -647,7 +672,7 @@ namespace Pixel_Drift_Server
                         Log($"Client {Username} đã vào phòng {ID_Room}");
                         return JsonSerializer.Serialize(new
                         {
-                            action = "join_room_success",
+                            status = "join_room_success",
                             room_id = ID_Room,
                             player_number = Player_Number
                         });
@@ -677,6 +702,20 @@ namespace Pixel_Drift_Server
             if (ID_Room != null && Rooms.ContainsKey(ID_Room))
             {
                 Rooms[ID_Room].Handle_Input(Client, action, Data);
+
+                if (action == "leave_room")
+                {
+                    lock (Room_Lock)
+                    {
+                        Players.Remove(Client);
+
+                        if (Rooms.ContainsKey(ID_Room) && Rooms[ID_Room].IsEmpty())
+                        {
+                            Rooms.Remove(ID_Room);
+                            Log($"Phòng {ID_Room} đã đóng do không còn người chơi.");
+                        }
+                    }
+                }
             }
         }
 
@@ -742,7 +781,7 @@ namespace Pixel_Drift_Server
                 Mail.Body = Body;
                 SmtpClient Smtp = new SmtpClient("smtp.gmail.com", 587);
 
-                Smtp.Credentials = new System.Net.NetworkCredential("pixeldriftsysop@gmail.com", "empr bqxh cdwt vyrj");
+                Smtp.Credentials = new NetworkCredential("pixeldriftsysop@gmail.com", "empr bqxh cdwt vyrj");
                 Smtp.EnableSsl = true;
                 Smtp.Send(Mail);
                 return true;

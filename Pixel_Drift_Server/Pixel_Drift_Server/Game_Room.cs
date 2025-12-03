@@ -19,7 +19,7 @@ namespace Pixel_Drift_Server
 
         // Cấu hình logic mạng
         private const int Logic_FPS = 60;       
-        private const int Network_FPS = 20;     
+        private const int Network_FPS = 80;     
         private DateTime Last_Network_Send = DateTime.Now;
 
         // Timer đếm ngược
@@ -373,8 +373,8 @@ namespace Pixel_Drift_Server
             {
                 if (Check_Collision("ptb_player1", "ptb_increasingroad1")) { P1_Speed += 3; Reposition_Object("ptb_increasingroad1", P1_Min_X, P1_Max_X); Send_Sound(Player_1, "buff"); }
                 if (Check_Collision("ptb_player1", "ptb_decreasingroad1")) { P1_Speed -= 3; Reposition_Object("ptb_decreasingroad1", P1_Min_X, P1_Max_X); Send_Sound(Player_1, "debuff"); }
-                if (Check_Collision("ptb_player1", "ptb_AICar1")) { P1_Speed -= 4; Reposition_Object("ptb_AICar1", P1_Min_X, P1_Max_X); Send_Sound(Player_2, "hit_car"); }
-                if (Check_Collision("ptb_player1", "ptb_AICar5")) { P1_Speed -= 4; Reposition_Object("ptb_AICar5", P1_Min_X, P1_Max_X); Send_Sound(Player_2, "hit_car"); }
+                if (Check_Collision("ptb_player1", "ptb_AICar1")) { P1_Speed -= 4; Reposition_Object("ptb_AICar1", P1_Min_X, P1_Max_X); Send_Sound(Player_1, "hit_car"); }
+                if (Check_Collision("ptb_player1", "ptb_AICar5")) { P1_Speed -= 4; Reposition_Object("ptb_AICar5", P1_Min_X, P1_Max_X); Send_Sound(Player_1, "hit_car"); }
                 P1_Speed = Math.Max(4, P1_Speed);
             }
 
@@ -382,8 +382,8 @@ namespace Pixel_Drift_Server
             {
                 if (Check_Collision("ptb_player2", "ptb_increasingroad2")) { P2_Speed += 3; Reposition_Object("ptb_increasingroad2", P2_Min_X, P2_Max_X); Send_Sound(Player_2, "buff"); }
                 if (Check_Collision("ptb_player2", "ptb_decreasingroad2")) { P2_Speed -= 3; Reposition_Object("ptb_decreasingroad2", P2_Min_X, P2_Max_X); Send_Sound(Player_2, "debuff"); }
-                if (Check_Collision("ptb_player2", "ptb_AICar3")) { P2_Speed -= 4; Reposition_Object("ptb_AICar3", P2_Min_X, P2_Max_X); Send_Sound(Player_1, "hit_car"); }
-                if (Check_Collision("ptb_player2", "ptb_AICar6")) { P2_Speed -= 4; Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X); Send_Sound(Player_1, "hit_car"); }
+                if (Check_Collision("ptb_player2", "ptb_AICar3")) { P2_Speed -= 4; Reposition_Object("ptb_AICar3", P2_Min_X, P2_Max_X); Send_Sound(Player_2, "hit_car"); }
+                if (Check_Collision("ptb_player2", "ptb_AICar6")) { P2_Speed -= 4; Reposition_Object("ptb_AICar6", P2_Min_X, P2_Max_X); Send_Sound(Player_2, "hit_car"); }
                 P2_Speed = Math.Max(4, P2_Speed);
             }
         }
