@@ -629,9 +629,9 @@ namespace Pixel_Drift_Server
 
             lock (Room_Lock)
             {
-                if (Rooms.ContainsKey(ID_Room))
+                while (Rooms.ContainsKey(ID_Room))
                 {
-                    return JsonSerializer.Serialize(new { status = "error", message = "Phòng đã tồn tại" });
+                    ID_Room = GenerateRoomID();
                 }
 
                 Game_Room New_Room = new Game_Room(ID_Room);

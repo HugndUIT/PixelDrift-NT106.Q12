@@ -107,6 +107,7 @@
             this.Controls.Add(this.btn_CreateRoom);
             this.Controls.Add(this.ptb_Lobby);
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
             this.Name = "Lobby";
             this.Text = "Lobby";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Lobby_FormClosed);

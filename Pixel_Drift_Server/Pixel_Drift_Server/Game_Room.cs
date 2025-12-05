@@ -19,7 +19,7 @@ namespace Pixel_Drift_Server
 
         // Cấu hình logic mạng
         private const int Logic_FPS = 60;       
-        private const int Network_FPS = 80;     
+        private const int Network_FPS = 60;     
         private DateTime Last_Network_Send = DateTime.Now;
 
         // Timer đếm ngược

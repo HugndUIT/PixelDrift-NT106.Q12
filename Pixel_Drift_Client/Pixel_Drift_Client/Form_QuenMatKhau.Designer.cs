@@ -93,6 +93,7 @@
             this.Controls.Add(this.btn_guimahoa);
             this.Controls.Add(this.txt_email);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximizeBox = false;
             this.Name = "Form_QuenMatKhau";
             this.Text = "Quên Mật Khẩu";
             this.ResumeLayout(false);

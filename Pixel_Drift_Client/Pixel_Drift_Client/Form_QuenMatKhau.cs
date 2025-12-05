@@ -32,7 +32,7 @@ namespace Pixel_Drift
                 if (!ClientManager.IsConnected)
                 {
 
-                    if (!ClientManager.Connect("127.0.0.1", 1111))
+                    if (!ClientManager.Connect(ClientManager.Get_Server_IP(), 1111))
                     {
                         throw new SocketException();
                     }

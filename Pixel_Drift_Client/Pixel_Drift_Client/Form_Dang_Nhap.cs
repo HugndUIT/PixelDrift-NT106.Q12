@@ -33,6 +33,38 @@ namespace Pixel_Drift
             }
         }
 
+        private void btn_quenmatkhau_Click(object sender, EventArgs e)
+        {
+            Form_QuenMatKhau form = Application.OpenForms.OfType<Form_QuenMatKhau>().FirstOrDefault();
+            
+            if (form != null)
+            {
+                form.Show();
+            }
+            else
+            {
+                form = new Form_QuenMatKhau();
+                form.Show();
+            }
+            this.Hide();
+        }
+
+        private void btn_backdk_Click(object sender, EventArgs e)
+        {
+            Form_Dang_Ki form = Application.OpenForms.OfType<Form_Dang_Ki>().FirstOrDefault();
+            
+            if (form != null)
+            {
+                form.Show();
+            }
+            else
+            {
+                form = new Form_Dang_Ki();
+                form.Show();
+            }
+            this.Hide();
+        }
+
         private void btn_vaogame_Click(object sender, EventArgs e)
         {
             string username = textBox1.Text.Trim();
@@ -86,11 +118,6 @@ namespace Pixel_Drift
                     Form_Thong_Tin formThongTin = new Form_Thong_Tin(username);
                     formThongTin.ShowDialog();
                 }
-                else if (dict.ContainsKey("status") && dict["status"] == "force_logout")
-                {
-                    string msg = dict.ContainsKey("message") ? dict["message"] : "Tài khoản đang được đăng nhập ở nơi khác. Vui lòng thử lại sau";
-                    MessageBox.Show(msg, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
                 else
                 {
                     string msg = dict.ContainsKey("message") ? dict["message"] : "Sai tài khoản hoặc mật khẩu!";
@@ -109,38 +136,6 @@ namespace Pixel_Drift
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void btn_quenmatkhau_Click(object sender, EventArgs e)
-        {
-            Form_QuenMatKhau form = Application.OpenForms.OfType<Form_QuenMatKhau>().FirstOrDefault();
-            
-            if (form != null)
-            {
-                form.Show();
-            }
-            else
-            {
-                form = new Form_QuenMatKhau();
-                form.Show();
-            }
-            this.Hide();
-        }
-
-        private void btn_backdk_Click(object sender, EventArgs e)
-        {
-            Form_Dang_Ki form = Application.OpenForms.OfType<Form_Dang_Ki>().FirstOrDefault();
-            
-            if (form != null)
-            {
-                form.Show();
-            }
-            else
-            {
-                form = new Form_Dang_Ki();
-                form.Show();
-            }
-            this.Hide();
         }
     }
 }

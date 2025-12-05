@@ -200,6 +200,7 @@
             this.Controls.Add(this.txt_xacnhanmk);
             this.Controls.Add(this.ptb_Doi_MK);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximizeBox = false;
             this.Name = "Form_Doi_Mat_Khau";
             this.Text = "Đổi Mật Khẩu";
             ((System.ComponentModel.ISupportInitialize)(this.ptb_Doi_MK)).EndInit();

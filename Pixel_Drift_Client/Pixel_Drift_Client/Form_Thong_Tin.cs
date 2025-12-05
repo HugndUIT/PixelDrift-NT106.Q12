@@ -34,12 +34,6 @@ namespace Pixel_Drift
 
                 if (string.IsNullOrEmpty(response))
                 {
-                    MessageBox.Show("Server không phản hồi!");
-                    return;
-                }
-
-                if (string.IsNullOrEmpty(response))
-                {
                     MessageBox.Show("Server không phản hồi!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }

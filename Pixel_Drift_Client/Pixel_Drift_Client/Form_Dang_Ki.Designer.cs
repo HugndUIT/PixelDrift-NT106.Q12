@@ -284,6 +284,7 @@ namespace Pixel_Drift
             this.ClientSize = new System.Drawing.Size(1064, 765);
             this.Controls.Add(this.Panel_Chua_Form);
             this.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.MaximizeBox = false;
             this.Name = "Form_Dang_Ki";
             this.Text = "Form Đăng Kí";
             this.Panel_Chua_Form.ResumeLayout(false);

@@ -38,7 +38,7 @@
             this.tb_ID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tb_ID.ForeColor = System.Drawing.Color.DarkCyan;
             this.tb_ID.Location = new System.Drawing.Point(144, 53);
-            this.tb_ID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tb_ID.Margin = new System.Windows.Forms.Padding(4);
             this.tb_ID.Name = "tb_ID";
             this.tb_ID.Size = new System.Drawing.Size(227, 27);
             this.tb_ID.TabIndex = 1;
@@ -47,7 +47,7 @@
             // 
             this.btn_TimPhong.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_TimPhong.Location = new System.Drawing.Point(205, 87);
-            this.btn_TimPhong.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_TimPhong.Margin = new System.Windows.Forms.Padding(4);
             this.btn_TimPhong.Name = "btn_TimPhong";
             this.btn_TimPhong.Size = new System.Drawing.Size(100, 28);
             this.btn_TimPhong.TabIndex = 2;
@@ -64,7 +64,8 @@
             this.ClientSize = new System.Drawing.Size(514, 149);
             this.Controls.Add(this.btn_TimPhong);
             this.Controls.Add(this.tb_ID);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
             this.Name = "Form_ID";
             this.Text = "Form_ID";
             this.ResumeLayout(false);

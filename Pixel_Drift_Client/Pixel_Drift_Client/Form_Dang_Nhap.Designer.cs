@@ -224,6 +224,7 @@ namespace Pixel_Drift
             this.Controls.Add(this.Panel_Chua_Form);
             this.ForeColor = System.Drawing.Color.DarkGoldenrod;
             this.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.MaximizeBox = false;
             this.Name = "Form_Dang_Nhap";
             this.Text = "Pixel Drift - Login";
             this.Panel_Chua_Form.ResumeLayout(false);

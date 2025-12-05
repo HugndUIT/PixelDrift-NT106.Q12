@@ -408,7 +408,7 @@ namespace Pixel_Drift
             // lbl_Score1
             // 
             this.lbl_Score1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Score1.Location = new System.Drawing.Point(220, 792);
+            this.lbl_Score1.Location = new System.Drawing.Point(279, 785);
             this.lbl_Score1.Name = "lbl_Score1";
             this.lbl_Score1.Size = new System.Drawing.Size(143, 18);
             this.lbl_Score1.TabIndex = 10;
@@ -417,7 +417,7 @@ namespace Pixel_Drift
             // lbl_Score2
             // 
             this.lbl_Score2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Score2.Location = new System.Drawing.Point(862, 790);
+            this.lbl_Score2.Location = new System.Drawing.Point(921, 785);
             this.lbl_Score2.Name = "lbl_Score2";
             this.lbl_Score2.Size = new System.Drawing.Size(143, 18);
             this.lbl_Score2.TabIndex = 11;
@@ -441,6 +441,7 @@ namespace Pixel_Drift
             this.Controls.Add(this.panel1);
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
+            this.MaximizeBox = false;
             this.Name = "Game_Window";
             this.Text = "Game_Window";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Game_Window_FormClosing);

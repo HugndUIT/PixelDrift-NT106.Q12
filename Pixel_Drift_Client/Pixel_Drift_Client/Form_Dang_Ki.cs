@@ -47,7 +47,7 @@ namespace Pixel_Drift
             return coChuHoa && coChuThuong && coSo && coKyTuDacBiet;
         }
 
-        private async void btn_xacnhan_Click(object sender, EventArgs e)
+        private void btn_xacnhan_Click(object sender, EventArgs e)
         {
             string username = tb_tendangnhap.Text.Trim();
             string password = tb_matkhau.Text.Trim();
@@ -94,9 +94,8 @@ namespace Pixel_Drift
 
             try
             {
-                string response = await SendRegisterRequest(username, email, hashedPassword, birthday);
+                string response = SendRegisterRequest(username, email, hashedPassword, birthday);
 
-                // Phân tích phản hồi JSON
                 var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(response);
 
                 if (dict.ContainsKey("status") && dict["status"] == "success")
@@ -110,7 +109,6 @@ namespace Pixel_Drift
                         this.Close();
                     }
                 }
-
                 else
                 {
                     string msg = dict.ContainsKey("message") ? dict["message"] : "Đăng ký thất bại!";
@@ -131,7 +129,6 @@ namespace Pixel_Drift
             }
         }
 
-        //Định dạng ngày sinh nhật
         private string DinhDangNgay(string day)
         {
             if (DateTime.TryParse(day, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime parsedDay))
@@ -139,36 +136,31 @@ namespace Pixel_Drift
             return null;
         }
 
-        private async Task<string> SendRegisterRequest(string username, string email, string hashedPassword, string birthday)
+        private string SendRegisterRequest(string username, string email, string hashedPassword, string birthday)
         {
-            // Dùng Task.Run để không làm treo giao diện
-            return await Task.Run(() =>
+            if (!ClientManager.IsConnected)
             {
-                // Mở kết nối
-                if (!ClientManager.IsConnected)
+                string ip = ClientManager.Get_Server_IP();
+
+                if (string.IsNullOrEmpty(ip)) ip = "127.0.0.1";
+
+                if (!ClientManager.Connect(ip, 1111))
                 {
-                    string ip = ClientManager.Get_Server_IP();
-
-                    if (string.IsNullOrEmpty(ip)) ip = "127.0.0.1";
-
-                    if (!ClientManager.Connect(ip, 1111))
-                    {
-                        var error = new { status = "error", message = "Không thể kết nối đến server." };
-                        return JsonSerializer.Serialize(error);
-                    }
+                    var error = new { status = "error", message = "Không thể kết nối đến server." };
+                    return JsonSerializer.Serialize(error);
                 }
+            }
 
-                var data = new
-                {
-                    action = "register",
-                    email = email,
-                    username = username,
-                    password = hashedPassword,
-                    birthday = birthday
-                };
+            var data = new
+            {
+                action = "register",
+                email = email,
+                username = username,
+                password = hashedPassword,
+                birthday = birthday
+            };
 
-                return ClientManager.Send_And_Wait(data);
-            });
+            return ClientManager.Send_And_Wait(data);
         }
 
         private void btn_backdn_Click(object sender, EventArgs e)
@@ -177,7 +169,7 @@ namespace Pixel_Drift
 
             if (dn != null)
             {
-                dn.Show(); 
+                dn.Show();
             }
             else
             {

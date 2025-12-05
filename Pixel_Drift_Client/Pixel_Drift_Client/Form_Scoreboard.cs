@@ -88,7 +88,14 @@ namespace Pixel_Drift
                 }
 
                 dgv_ScoreBoard.DataSource = dt;
-                StyleDataGridView();
+
+                // Giữ lại phần chỉnh kích thước cột ở đây vì cột được tạo động
+                if (dgv_ScoreBoard.Columns.Count > 0)
+                {
+                    dgv_ScoreBoard.Columns[0].Width = 60;
+                    dgv_ScoreBoard.Columns[1].Width = 200;
+                }
+
                 HighlightTopPlayers();
             }
             catch (Exception ex)
@@ -125,31 +132,6 @@ namespace Pixel_Drift
             {
                 btn_Search_Click(sender, e);
                 e.Handled = true;
-            }
-        }
-
-        private void StyleDataGridView()
-        {
-            dgv_ScoreBoard.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgv_ScoreBoard.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgv_ScoreBoard.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgv_ScoreBoard.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            dgv_ScoreBoard.ColumnHeadersDefaultCellStyle.BackColor = Color.Navy;
-            dgv_ScoreBoard.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgv_ScoreBoard.DefaultCellStyle.Font = new Font("Segoe UI", 10);
-            dgv_ScoreBoard.BackgroundColor = Color.WhiteSmoke;
-            dgv_ScoreBoard.BorderStyle = BorderStyle.None;
-            dgv_ScoreBoard.GridColor = Color.LightGray;
-            dgv_ScoreBoard.RowHeadersVisible = false;
-            dgv_ScoreBoard.AllowUserToAddRows = false;
-            dgv_ScoreBoard.ReadOnly = true;
-            dgv_ScoreBoard.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgv_ScoreBoard.RowTemplate.Height = 35;
-
-            if (dgv_ScoreBoard.Columns.Count > 0)
-            {
-                dgv_ScoreBoard.Columns[0].Width = 60;
-                dgv_ScoreBoard.Columns[1].Width = 200;
             }
         }
 
