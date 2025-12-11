@@ -48,9 +48,10 @@
             this.lbl_TitleBanner.ForeColor = System.Drawing.Color.Cyan;
             this.lbl_TitleBanner.HoverState.BorderColor = System.Drawing.Color.Magenta;
             this.lbl_TitleBanner.HoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(60)))));
-            this.lbl_TitleBanner.Location = new System.Drawing.Point(363, 12);
+            this.lbl_TitleBanner.Location = new System.Drawing.Point(272, 10);
+            this.lbl_TitleBanner.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lbl_TitleBanner.Name = "lbl_TitleBanner";
-            this.lbl_TitleBanner.Size = new System.Drawing.Size(516, 65);
+            this.lbl_TitleBanner.Size = new System.Drawing.Size(387, 53);
             this.lbl_TitleBanner.TabIndex = 0;
             this.lbl_TitleBanner.Text = "🏆 SCORE BOARD 🏆";
             // 
@@ -60,9 +61,7 @@
             this.dgv_ScoreBoard.AllowUserToDeleteRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
             this.dgv_ScoreBoard.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dgv_ScoreBoard.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_ScoreBoard.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            this.dgv_ScoreBoard.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.Navy;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
@@ -84,14 +83,13 @@
             this.dgv_ScoreBoard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_ScoreBoard.GridColor = System.Drawing.Color.LightGray;
             this.dgv_ScoreBoard.Location = new System.Drawing.Point(2, 2);
-            this.dgv_ScoreBoard.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dgv_ScoreBoard.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dgv_ScoreBoard.Name = "dgv_ScoreBoard";
             this.dgv_ScoreBoard.ReadOnly = true;
             this.dgv_ScoreBoard.RowHeadersVisible = false;
             this.dgv_ScoreBoard.RowHeadersWidth = 51;
             this.dgv_ScoreBoard.RowTemplate.Height = 35;
-            this.dgv_ScoreBoard.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_ScoreBoard.Size = new System.Drawing.Size(640, 354);
+            this.dgv_ScoreBoard.Size = new System.Drawing.Size(479, 287);
             this.dgv_ScoreBoard.TabIndex = 1;
             this.dgv_ScoreBoard.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
             this.dgv_ScoreBoard.ThemeStyle.AlternatingRowsStyle.Font = null;
@@ -131,10 +129,10 @@
             this.btn_Close.FillColor2 = System.Drawing.Color.DarkRed;
             this.btn_Close.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
             this.btn_Close.ForeColor = System.Drawing.Color.White;
-            this.btn_Close.Location = new System.Drawing.Point(296, 581);
-            this.btn_Close.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_Close.Location = new System.Drawing.Point(222, 472);
+            this.btn_Close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btn_Close.Name = "btn_Close";
-            this.btn_Close.Size = new System.Drawing.Size(644, 76);
+            this.btn_Close.Size = new System.Drawing.Size(483, 62);
             this.btn_Close.TabIndex = 2;
             this.btn_Close.Text = "ĐÓNG";
             this.btn_Close.Click += new System.EventHandler(this.btn_Close_Click);
@@ -155,13 +153,12 @@
             this.txt_Search.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.txt_Search.ForeColor = System.Drawing.Color.White;
             this.txt_Search.HoverState.BorderColor = System.Drawing.Color.Magenta;
-            this.txt_Search.Location = new System.Drawing.Point(319, 89);
-            this.txt_Search.Margin = new System.Windows.Forms.Padding(4);
+            this.txt_Search.Location = new System.Drawing.Point(239, 72);
             this.txt_Search.Name = "txt_Search";
             this.txt_Search.PlaceholderForeColor = System.Drawing.Color.Gray;
             this.txt_Search.PlaceholderText = "Nhập tên để tìm...";
             this.txt_Search.SelectedText = "";
-            this.txt_Search.Size = new System.Drawing.Size(316, 51);
+            this.txt_Search.Size = new System.Drawing.Size(237, 41);
             this.txt_Search.TabIndex = 3;
             this.txt_Search.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_Search_KeyPress);
             // 
@@ -179,10 +176,10 @@
             this.btn_Search.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btn_Search.ForeColor = System.Drawing.Color.White;
             this.btn_Search.HoverState.FillColor = System.Drawing.Color.DodgerBlue;
-            this.btn_Search.Location = new System.Drawing.Point(793, 89);
-            this.btn_Search.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_Search.Location = new System.Drawing.Point(595, 72);
+            this.btn_Search.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btn_Search.Name = "btn_Search";
-            this.btn_Search.Size = new System.Drawing.Size(147, 53);
+            this.btn_Search.Size = new System.Drawing.Size(110, 43);
             this.btn_Search.TabIndex = 4;
             this.btn_Search.Text = "🔍Tìm kiếm";
             this.btn_Search.Click += new System.EventHandler(this.btn_Search_Click);
@@ -201,10 +198,10 @@
             this.btn_Refresh.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btn_Refresh.ForeColor = System.Drawing.Color.White;
             this.btn_Refresh.HoverState.FillColor = System.Drawing.Color.ForestGreen;
-            this.btn_Refresh.Location = new System.Drawing.Point(641, 89);
-            this.btn_Refresh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_Refresh.Location = new System.Drawing.Point(481, 72);
+            this.btn_Refresh.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btn_Refresh.Name = "btn_Refresh";
-            this.btn_Refresh.Size = new System.Drawing.Size(147, 53);
+            this.btn_Refresh.Size = new System.Drawing.Size(110, 43);
             this.btn_Refresh.TabIndex = 5;
             this.btn_Refresh.Text = "🔄Làm mới";
             this.btn_Refresh.Click += new System.EventHandler(this.btn_Refresh_Click);
@@ -214,9 +211,8 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Image = global::Pixel_Drift.Properties.Resources.ScoreBoard;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1236, 709);
+            this.pictureBox1.Size = new System.Drawing.Size(927, 576);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
@@ -229,19 +225,20 @@
             this.pnl_GridContainer.BorderThickness = 2;
             this.pnl_GridContainer.Controls.Add(this.dgv_ScoreBoard);
             this.pnl_GridContainer.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(60)))));
-            this.pnl_GridContainer.Location = new System.Drawing.Point(296, 181);
+            this.pnl_GridContainer.Location = new System.Drawing.Point(222, 147);
+            this.pnl_GridContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pnl_GridContainer.Name = "pnl_GridContainer";
             this.pnl_GridContainer.Padding = new System.Windows.Forms.Padding(2);
-            this.pnl_GridContainer.Size = new System.Drawing.Size(644, 358);
+            this.pnl_GridContainer.Size = new System.Drawing.Size(483, 291);
             this.pnl_GridContainer.TabIndex = 8;
             // 
             // Form_ScoreBoard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(40)))));
             this.CancelButton = this.btn_Close;
-            this.ClientSize = new System.Drawing.Size(1236, 709);
+            this.ClientSize = new System.Drawing.Size(927, 576);
             this.Controls.Add(this.pnl_GridContainer);
             this.Controls.Add(this.btn_Refresh);
             this.Controls.Add(this.btn_Search);
@@ -250,7 +247,7 @@
             this.Controls.Add(this.lbl_TitleBanner);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.Name = "Form_ScoreBoard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

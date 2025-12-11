@@ -34,21 +34,21 @@
             // 
             // tb_hienthi
             // 
-            this.tb_hienthi.Location = new System.Drawing.Point(12, 78);
-            this.tb_hienthi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tb_hienthi.Location = new System.Drawing.Point(9, 63);
+            this.tb_hienthi.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tb_hienthi.Multiline = true;
             this.tb_hienthi.Name = "tb_hienthi";
             this.tb_hienthi.ReadOnly = true;
-            this.tb_hienthi.Size = new System.Drawing.Size(833, 354);
+            this.tb_hienthi.Size = new System.Drawing.Size(626, 288);
             this.tb_hienthi.TabIndex = 10;
             // 
             // btn_Start_Server
             // 
             this.btn_Start_Server.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.btn_Start_Server.Location = new System.Drawing.Point(12, 11);
-            this.btn_Start_Server.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_Start_Server.Location = new System.Drawing.Point(9, 9);
+            this.btn_Start_Server.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btn_Start_Server.Name = "btn_Start_Server";
-            this.btn_Start_Server.Size = new System.Drawing.Size(833, 59);
+            this.btn_Start_Server.Size = new System.Drawing.Size(625, 48);
             this.btn_Start_Server.TabIndex = 8;
             this.btn_Start_Server.Text = "Start Server";
             this.btn_Start_Server.UseVisualStyleBackColor = true;
@@ -56,12 +56,12 @@
             // 
             // ServerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(860, 446);
+            this.ClientSize = new System.Drawing.Size(645, 362);
             this.Controls.Add(this.tb_hienthi);
             this.Controls.Add(this.btn_Start_Server);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ServerForm";
             this.Text = "Server";
             this.Load += new System.EventHandler(this.ServerForm_Load);
